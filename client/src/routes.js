@@ -23,6 +23,8 @@ import Icons from "views/Icons.js";
 import Maps from "views/Maps.js";
 import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
+import Login from "views/Login";
+import Register from "views/Register";
 
 const dashboardRoutes = [
   {
@@ -81,6 +83,20 @@ const dashboardRoutes = [
     icon: "nc-icon nc-bell-55",
     component: Notifications,
     layout: "/admin"
+  },
+  {
+    path: "/login",
+    name: "Login",
+    icon: "nc-icon nc-bell-55",
+    component: Login,
+    layout: "/auth"
+  },
+  {
+    path: "/register",
+    name: "Register",
+    icon: "nc-icon nc-bell-55",
+    component: Register,
+    layout: "/auth"
   }
 ];
 

@@ -51,6 +51,7 @@ function Sidebar({ color, image, routes }) {
         </div>
         <Nav>
           {routes.map((prop, key) => {
+            if(prop.layout === '/auth') return
             if (!prop.redirect)
               return (
                 <li
