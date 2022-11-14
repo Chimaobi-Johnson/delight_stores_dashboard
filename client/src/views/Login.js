@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+
+import axios from 'axios';
 
 // react-bootstrap components
 import {
@@ -16,6 +18,34 @@ import {
 } from "react-bootstrap";
 
 function Login() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const loginHandler = () => {
+        const formData = new FormData();
+        formData.append('email', email)
+        formData.append('password', password)
+        const data = {
+            email: email,
+            password: password
+        }
+        axios.post('/api/login', data).then(data => {
+            console.log(data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const changeTextHandler = (type, e) => {
+        console.log(type)
+        if(type === 'email') {
+            setEmail(e.target.value)
+        } else if(type === 'password') {
+            setPassword(e.target.value)
+        } else return
+    }
+
   return (
     <>
       <Row className="justify-content-center">
@@ -29,17 +59,17 @@ function Login() {
               <Form>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" />
+                  <Form.Control type="email" onChange={(e) => changeTextHandler('email', e)} value={email} placeholder="Enter email" />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
+                  <Form.Control type="password" onChange={(e) => changeTextHandler('password', e)} value={password} placeholder="Password" />
                   <Form.Text className="text-muted">
                     {/* Password must not be less than 8 characters */}
                   </Form.Text>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={() => loginHandler()}>
                   Submit
                 </Button>
                 <Form.Text className="text-muted">
