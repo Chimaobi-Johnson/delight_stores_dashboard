@@ -4,6 +4,8 @@ const path = require('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+
 const keys = require('./config/keys');
 
 const app = express();
@@ -15,9 +17,7 @@ require('./models/User');
 
 const authRoutes = require('./routes/authRoutes');
 
-
-
-app.use(bodyParser.raw()) // to parse incoming json data
+app.use(bodyParser.json()) // to parse incoming json data
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {
@@ -27,12 +27,15 @@ app.use((req, res, next) => {
     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
   );
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Content-Type', 'text/plain')
   next();
 });
 
 
-app.use(authRoutes);
+
+let upload = multer();
+
+app.use(upload.fields([]), authRoutes);
+
 
 app.use('/', (req, res) => {
     res.send("Server connected")

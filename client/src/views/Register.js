@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
-
+import axios from 'axios';
 // react-bootstrap components
 import {
   Badge,
@@ -16,6 +16,63 @@ import {
 } from "react-bootstrap";
 
 function Register() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [inputData, setInputData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+
+  const editTextHandler = (type, e) => {
+    setInputData(prevState => {
+        return {
+            ...prevState,
+            [type]: e.target.value
+        }
+    })
+  }
+
+  const [errorMessages, setErrorMessages] = useState([])
+
+  const [errorObj, setErrorObj] = useState({
+    empty: true
+  })
+
+  const validateData = (inputObj) => {
+     for(const[key, value] of Object.entries(inputObj)) {
+        console.log(value)
+        if(value === '') {
+            const errArr = [...errorMessages]
+            errArr.push('All fields are mandatory');
+            setErrorMessages(errArr)
+        }
+     }
+  }
+
+
+  const submitFormHandler = () => {
+    if(inputData.password !== inputData.confirmPassword) {
+        setErrorMessage('Password and confirm password does not match!')
+        return
+    } else {
+        validateData(inputData)
+        if(errorMessages.length === 0) {
+            console.log('Form submitted')
+        }
+           // axios.post('/api/register', )
+    }
+ 
+  }
+
+  console.log(errorMessages)
+
   return (
     <>
       <Row className="justify-content-center">
@@ -25,40 +82,61 @@ function Register() {
               <Card.Title as="h2">SIGN UP</Card.Title>
               {/* <p className="card-category">Here is a subtitle for this table</p> */}
             </Card.Header>
-            <Card.Body style={{ padding: '3rem 2rem'}}>
+            <Card.Body style={{ padding: "3rem 2rem" }}>
               <Form>
-                 <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasicFirstName">
                   <Form.Label>First Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter First Name" />
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => editTextHandler("firstName", e)}
+                    placeholder="Enter First Name"
+                  />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3" controlId="formBasicLastName">
                   <Form.Label>Last Name</Form.Label>
-                  <Form.Control type="text" placeholder="Enter Last Name" />
+                  <Form.Control
+                    type="text"
+                    onChange={(e) => editTextHandler("lastName", e)}
+                    placeholder="Enter Last Name"
+                  />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                   <Form.Label>Email address</Form.Label>
-                  <Form.Control type="email" placeholder="Enter email" />
+                  <Form.Control
+                    type="email"
+                    onChange={(e) => editTextHandler("email", e)}
+                    placeholder="Enter email"
+                  />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicPassword">
                   <Form.Label>Password</Form.Label>
-                  <Form.Control type="password" placeholder="Password" />
-                  <Form.Text className="text-muted">
+                  <Form.Control
+                    type="password"
+                    onChange={(e) => editTextHandler("password", e)}
+                    placeholder="Password"
+                  />
+                  {/* <Form.Text className="text-muted">
                     Password must not be less than 8 characters
-                  </Form.Text>
+                  </Form.Text> */}
                 </Form.Group>
-                <Form.Group className="mb-4" controlId="formBasicPassword">
+                <Form.Group className="mb-4" controlId="formBasicConfirmPassword">
                   <Form.Label>Confirm Password</Form.Label>
-                  <Form.Control type="password" placeholder="Confirm Password" />
+                  <Form.Control
+                    type="password"
+                    onChange={(e) => editTextHandler("confirmPassword", e)}
+                    placeholder="Confirm Password"
+                  />
                   <Form.Text className="text-muted">
-                    {/* Password must not be less than 8 characters */}
+                    {}
                   </Form.Text>
                 </Form.Group>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" onClick={() => submitFormHandler()}>
                   Submit
                 </Button>
                 <Form.Text className="text-muted">
-                    Already have an account? <NavLink to='/auth/login'>Click to login</NavLink>
+                  Already have an account?{" "}
+                  <NavLink to="/auth/login">Click to login</NavLink>
                 </Form.Text>
               </Form>
             </Card.Body>

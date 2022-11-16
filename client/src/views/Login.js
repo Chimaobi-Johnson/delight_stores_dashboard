@@ -23,14 +23,15 @@ function Login() {
     const [password, setPassword] = useState('');
 
     const loginHandler = () => {
-        const formData = new FormData();
-        formData.append('email', email)
-        formData.append('password', password)
+        let customData = new FormData();
+        customData.append('email', email)
+        customData.append('password', password)
+        console.log(customData)
         const data = {
             email: email,
             password: password
         }
-        axios.post('/api/login', data).then(data => {
+        axios.post('/api/login', customData).then(data => {
             console.log(data)
         }).catch(err => {
             console.log(err)
@@ -38,7 +39,6 @@ function Login() {
     }
 
     const changeTextHandler = (type, e) => {
-        console.log(type)
         if(type === 'email') {
             setEmail(e.target.value)
         } else if(type === 'password') {
