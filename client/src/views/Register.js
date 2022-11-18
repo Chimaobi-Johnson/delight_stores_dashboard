@@ -16,11 +16,6 @@ import {
 } from "react-bootstrap";
 
 function Register() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [inputData, setInputData] = useState({
     firstName: '',
@@ -42,12 +37,12 @@ function Register() {
   const [errorMessages, setErrorMessages] = useState([])
 
   const [errorObj, setErrorObj] = useState({
-    empty: true
+    
   })
 
   const validateData = (inputObj) => {
      for(const[key, value] of Object.entries(inputObj)) {
-        console.log(value)
+        // console.log(value)
         if(value === '') {
             const errArr = [...errorMessages]
             errArr.push('All fields are mandatory');
@@ -57,16 +52,28 @@ function Register() {
   }
 
 
-  const submitFormHandler = () => {
+  const submitFormHandler = async () => {
     if(inputData.password !== inputData.confirmPassword) {
         setErrorMessage('Password and confirm password does not match!')
         return
     } else {
-        validateData(inputData)
-        if(errorMessages.length === 0) {
-            console.log('Form submitted')
+        // validateData(inputData)
+        // if(errorMessages.length === 0) {
+        //     console.log('Form submitted')
+        // }
+        const formData = new FormData();
+        formData.append('firstName', inputData.firstName)
+        formData.append('lastName', inputData.lastName)
+        formData.append('email', inputData.email)
+        formData.append('password', inputData.password)
+
+        const result = await axios.post('/api/register', formData);
+        if(result.data.status === 200) {
+            alert('User created successfully')
+        } else {
+            alert('Error')
+            console.log(result)
         }
-           // axios.post('/api/register', )
     }
  
   }
