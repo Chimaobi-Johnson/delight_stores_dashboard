@@ -28,6 +28,7 @@ import Register from "views/Register";
 import Users from "views/Users";
 import Products from "views/Products";
 import Categories from "views/Categories";
+import AddProduct from "views/AddProduct";
 
 const dashboardRoutes = [
   {
@@ -100,6 +101,14 @@ const dashboardRoutes = [
     icon: "nc-icon nc-notes",
     component: Products,
     layout: "/admin"
+  },
+  {
+    path: "/product/add",
+    name: "Add Product",
+    icon: "nc-icon nc-notes",
+    component: AddProduct,
+    layout: "/admin",
+    removeLink: "true"
   },
   {
     path: "/categories",

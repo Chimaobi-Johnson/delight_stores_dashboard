@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const productSchema = new Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
     },
@@ -40,6 +40,7 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Category"    
     },
+    sizes: [ String ],
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",

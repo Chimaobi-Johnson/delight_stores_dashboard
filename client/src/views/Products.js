@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 // react-bootstrap components
 import {
@@ -16,7 +17,7 @@ import axios from 'axios';
 
 function Products() {
 
-    const [products, setproducts] = useState(null)
+    const [products, setProducts] = useState(null)
     const [loadingData, setLoading] = useState(false);
 
     useEffect(() => {
@@ -25,7 +26,8 @@ function Products() {
             axios.get('/api/products')
             .then(products => {
                 setLoading(false)
-                setproducts(products.data.products)
+                console.log(products.data.products)
+                setProducts(products.data.products)
             })
             .catch(err => {
                 setLoading(false)
@@ -45,10 +47,26 @@ function Products() {
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
-                <Card.Title as="h4">Products Table</Card.Title>
-                <p className="card-category">
-                  This is the list of registered products for Delight stores E-commerce site
-                </p>
+                <Row>
+                    <Col lg="6">
+                        <Card.Title as="h4">Products Table</Card.Title>
+                        <p className="card-category">
+                        This is the list of registered products for Delight stores E-commerce site
+                        </p>
+                    </Col>
+                    <Col lg="6">
+                        <Button
+                            style={{ float: 'right' }} 
+                            className="btn-fill pull-right"
+                            variant="info"
+                            >
+                             <NavLink to="/admin/product/add" style={{ color: 'white' }}>
+                                 Add Product  
+                             </NavLink>
+                        </Button>
+                    </Col>
+                </Row>
+
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Table className="table-hover table-striped">
