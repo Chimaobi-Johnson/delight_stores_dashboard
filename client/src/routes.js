@@ -25,6 +25,7 @@ import Notifications from "views/Notifications.js";
 import Upgrade from "views/Upgrade.js";
 import Login from "views/Login";
 import Register from "views/Register";
+import Users from "views/Users";
 
 const dashboardRoutes = [
   {
@@ -82,6 +83,13 @@ const dashboardRoutes = [
     name: "Notifications",
     icon: "nc-icon nc-bell-55",
     component: Notifications,
+    layout: "/admin"
+  },
+  {
+    path: "/users",
+    name: "Users",
+    icon: "nc-icon nc-notes",
+    component: Users,
     layout: "/admin"
   },
   {
