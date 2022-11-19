@@ -59,6 +59,7 @@ function Users() {
                       <th className="border-0">Last Name</th>
                       <th className="border-0">Email</th>
                       <th className="border-0">Role</th>
+                      <th className="border-0">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -70,6 +71,7 @@ function Users() {
                                     <td>{user.lastName}</td>
                                     <td>{user.email}</td>
                                     <td>{user.role}</td>
+                                    <td>Edit/Delete</td>
                                 </tr>
                         )
                     }) : 'No users found' : ''}

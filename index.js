@@ -16,10 +16,14 @@ const app = express();
 
 require('./models/Product');
 require('./models/User');
+require('./models/Category');
+
 require('./services/passport');
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 let upload = multer();
 
@@ -48,6 +52,8 @@ app.use((req, res, next) => {
 
 app.use(upload.fields([]), authRoutes);
 app.use(upload.fields([]), userRoutes);
+app.use(upload.fields([]), productRoutes);
+app.use(upload.fields([]), categoryRoutes);
 
 
 app.use('/', (req, res) => {

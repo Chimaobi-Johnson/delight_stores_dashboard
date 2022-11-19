@@ -26,6 +26,8 @@ import Upgrade from "views/Upgrade.js";
 import Login from "views/Login";
 import Register from "views/Register";
 import Users from "views/Users";
+import Products from "views/Products";
+import Categories from "views/Categories";
 
 const dashboardRoutes = [
   {
@@ -90,6 +92,20 @@ const dashboardRoutes = [
     name: "Users",
     icon: "nc-icon nc-notes",
     component: Users,
+    layout: "/admin"
+  },
+  {
+    path: "/products",
+    name: "Products",
+    icon: "nc-icon nc-notes",
+    component: Products,
+    layout: "/admin"
+  },
+  {
+    path: "/categories",
+    name: "Categories",
+    icon: "nc-icon nc-notes",
+    component: Categories,
     layout: "/admin"
   },
   {
