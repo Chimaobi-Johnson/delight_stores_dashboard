@@ -68,7 +68,7 @@ function Register() {
         formData.append('password', inputData.password)
 
         const result = await axios.post('/api/register', formData);
-        if(result.data.status === 200) {
+        if(result.data.status === 200 || result.data.status === 201 ) {
             alert('User created successfully')
         } else {
             alert('Error')

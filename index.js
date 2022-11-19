@@ -5,6 +5,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const multer = require('multer');
+const passport = require('passport');
+const cookieSession = require('cookie-session');
 
 const keys = require('./config/keys');
 
@@ -14,8 +16,21 @@ const app = express();
 
 require('./models/Product');
 require('./models/User');
+require('./services/passport');
 
 const authRoutes = require('./routes/authRoutes');
+
+let upload = multer();
+
+app.use(cookieSession({
+    name: 'session',
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    keys: [keys.cookieKey]
+}))
+
+app.use(passport.initialize());
+// app.use(passport.session());
+app.use(passport.authenticate('session'));
 
 app.use(bodyParser.json()) // to parse incoming json data
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,10 +44,6 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-
-
-
-let upload = multer();
 
 app.use(upload.fields([]), authRoutes);
 

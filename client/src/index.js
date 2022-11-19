@@ -29,9 +29,25 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
+
+import thunk from 'redux-thunk';
+import User from './store/reducers/userReducer';
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
+const rootReducer = combineReducers({
+  user: User
+});
+
+
+// const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : null || compose;
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)));
+
 root.render(
+  <Provider store={store}>
   <BrowserRouter>
     <Switch>
       <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
@@ -39,4 +55,5 @@ root.render(
       <Redirect from="/" to="/admin/dashboard" />
     </Switch>
   </BrowserRouter>
+  </Provider>
 );

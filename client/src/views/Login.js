@@ -32,8 +32,19 @@ function Login() {
             password: password
         }
         axios.post('/api/login', customData).then(data => {
-            console.log(data)
+            if(data.status === 200) {
+           localStorage.setItem('dlight_userId', data.data.user._id);
+
+          // set one hour expiration time
+          const remainingMilliseconds = 60 * 60 * 1000;
+          const expiryDate = new Date(
+            new Date().getTime() + remainingMilliseconds
+          );
+          localStorage.setItem('dlight_expiryDate', expiryDate.toISOString());
+          window.location.pathname = '/admin'
+          }
         }).catch(err => {
+          // alert(err)
             console.log(err)
         })
     }

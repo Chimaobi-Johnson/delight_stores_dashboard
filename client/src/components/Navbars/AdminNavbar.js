@@ -18,8 +18,10 @@
 import React, { Component } from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar, Container, Nav, Dropdown, Button } from "react-bootstrap";
+import { useSelector } from 'react-redux';
 
 import routes from "routes.js";
+import { isEmpty } from "utils/utilityFunctions";
 
 function Header() {
   const location = useLocation();
@@ -43,6 +45,9 @@ function Header() {
     }
     return "Brand";
   };
+
+  const user = useSelector(data => data.user);
+  
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
@@ -195,10 +200,9 @@ function Header() {
             <Nav.Item>
               <Nav.Link
                 className="m-0"
-                href="#pablo"
-                onClick={(e) => e.preventDefault()}
+                href={isEmpty(user) ? "/auth/login": "/api/logout"}
               >
-                <span className="no-icon">Log out</span>
+                <span className="no-icon">{isEmpty(user) ? 'Log in': 'Log out'}</span>
               </Nav.Link>
             </Nav.Item>
           </Nav>

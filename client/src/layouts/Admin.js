@@ -24,8 +24,13 @@ import Sidebar from "components/Sidebar/Sidebar";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import axios from 'axios';
 
 import sidebarImage from "assets/img/sidebar-3.jpg";
+import { getUser } from "requests/requests";
+import { isEmpty } from "utils/utilityFunctions";
+import { useDispatch } from 'react-redux';
+import { storeLoggedInUser } from "store/actions/user";
 
 function Admin() {
   const [image, setImage] = React.useState(sidebarImage);
@@ -61,6 +66,27 @@ function Admin() {
       element.parentNode.removeChild(element);
     }
   }, [location]);
+
+  const dispatch = useDispatch();
+
+  React.useEffect( () => {
+
+    const getUser = () => {
+      axios.get('/api/current_user')
+      .then(data => {
+        console.log(data.data.user)
+        dispatch(storeLoggedInUser(data.data.user))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
+    getUser()
+
+  }, [])
+
+
   return (
     <>
       <div className="wrapper">

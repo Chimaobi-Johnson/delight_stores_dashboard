@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
+const passport = require('passport');
 
 exports.registerUser = (req, res, next) => {
     const { firstName, lastName, email, password } = req.body;
@@ -20,3 +21,5 @@ exports.registerUser = (req, res, next) => {
         console.log(err)
     });
 }
+
+exports.loginUser = passport.authenticate('local', { failureRedirect: '/auth/login' });
