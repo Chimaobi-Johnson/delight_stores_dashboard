@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
+const cloudinary = require('cloudinary').v2;
 
 const keys = require('./config/keys');
 
@@ -25,7 +26,14 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 
-let upload = multer();
+let upload = multer({ dest: "uploads/" });
+
+cloudinary.config({ 
+  cloud_name: keys.cloudinaryName, 
+  api_key: keys.cloudinaryAPIKey, 
+  api_secret: keys.cloudinarySecretKey,
+  secure: true
+});
 
 app.use(cookieSession({
     name: 'session',

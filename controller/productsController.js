@@ -19,3 +19,8 @@ exports.getAllProducts = (req, res) => {
     })
 }
 
+exports.storeProduct = (req, res) => {
+    console.log(req.body)
+    // console.log(req.file)
+    // console.log(req.files)
+}

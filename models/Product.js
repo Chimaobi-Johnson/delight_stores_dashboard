@@ -17,14 +17,8 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    imageUrl: {
-      type: String,
-      required: true,
-    },
-    imageId: { 
-      type: String, 
-      required: true 
-    },
+    imagesUrl: [ String ],
+    imagesId: [ String ],
     status: { 
       type: String, 
       default: "published" 

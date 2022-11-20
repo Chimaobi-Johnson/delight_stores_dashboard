@@ -13,6 +13,7 @@ import {
   Col,
 } from "react-bootstrap";
 import { Input } from "reactstrap";
+import axios from 'axios';
 
 function AddProduct() {
   const [productInput, setProductInput] = useState({
@@ -20,8 +21,9 @@ function AddProduct() {
     price: null,
     subheading: "",
     description: "",
-    imageUrl: "",
-    image: "",
+    category: "",
+    imagesUrl: [],
+    imagesId: [],
     deliveryStatus: "",
     tags: [],
     sizes: [],
@@ -29,6 +31,8 @@ function AddProduct() {
 
   const [tag, setTag] = useState("");
   const [size, setSize] = useState("");
+  const [imagesUrl, setImageUrl] = useState([]);
+  const [images, setImage] = useState([]);
 
   const addTag = (e) => {
     e.preventDefault();
@@ -88,8 +92,60 @@ function AddProduct() {
     setSize(e.target.value);
   };
 
-  console.log(productInput);
+  const getImageFile = e => {
+    console.log(e.target.files)
+    const fileLength = e.target.files.length;
+    const fileArr = [...imagesUrl];
+    const imagesArr = [ ...images ]
+    for(let i = 0; i < fileLength; i++) {
+        fileArr.push(URL.createObjectURL(e.target.files[i]))
+        // imagesArr.push(e.target.files.files[i])
+    }
+    setImageUrl(fileArr)
+    setImage(imagesArr)
+  }
 
+  const removeImageHandler = (index) => {
+    console.log(index)
+    const newFileArr = [ ...imagesUrl ];
+    newFileArr.splice(index, 1);
+    setImageUrl(newFileArr)
+  }
+
+  const changeInputHandler = (input, e) => {
+    setProductInput(prevState => {
+        return {
+            ...prevState,
+            [input]: e.target.value
+        }
+    })
+  }
+
+  const submitFormHandler = e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('name', productInput.name)
+    formData.append('price', productInput.price)
+    formData.append('subheading', productInput.subheading)
+    formData.append('imagesUrl', imagesUrl)
+    formData.append('description', productInput.description)
+    formData.append('category', productInput.category)
+    formData.append('deliveryStatus', productInput.deliveryStatus)
+    formData.append('sizes', size)
+    formData.append('tags', tag)
+
+    axios.post('/api/product/add', formData)
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+
+  }
+
+  console.log(productInput);
+  console.log(images);
   return (
     <>
       <Container fluid>
@@ -108,7 +164,8 @@ function AddProduct() {
                         <Form.Control
                           placeholder="Enter name of product"
                           type="text"
-                          value=""
+                          value={productInput.name}
+                          onChange={(e) => changeInputHandler('name', e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -118,7 +175,8 @@ function AddProduct() {
                         <Form.Control
                           placeholder="Product sub heading"
                           type="text"
-                          value=""
+                          value={productInput.subheading}
+                          onChange={(e) => changeInputHandler('subheading', e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -128,8 +186,9 @@ function AddProduct() {
                       <Form.Group>
                         <label>Price</label>
                         <Form.Control
-                          defaultValue={0}
                           type="number"
+                          value={productInput.price}
+                          onChange={(e) => changeInputHandler('price', e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -138,19 +197,25 @@ function AddProduct() {
                     <Col md="6">
                       <Form.Group controlId="formControlsSelectMultiple">
                         <label>Select Category</label>
-                        <Input type="select">
-                          <option value="">...</option>
-                          <option value="other">Others</option>
+                        <Input 
+                            type="select" 
+                            value={productInput.category}
+                            onChange={(e) => changeInputHandler('category', e)}>
+                            <option value="">...</option>
+                            <option value="other">Others</option>
                         </Input>
                       </Form.Group>
                     </Col>
                     <Col md="6">
                       <Form.Group controlId="formControlsSelectMultiple2">
                         <label>Delivery Status</label>
-                        <Input type="select">
-                          <option value="">...</option>
-                          <option value="ready">Ready for delivery</option>
-                          <option value="ready">Pickup only</option>
+                        <Input 
+                            type="select"    
+                            value={productInput.deliveryStatus}
+                            onChange={(e) => changeInputHandler('deliveryStatus', e)}>
+                            <option value="">...</option>
+                            <option value="ready">Ready for delivery</option>
+                            <option value="pickup">Pickup only</option>
                         </Input>
                       </Form.Group>
                     </Col>
@@ -161,10 +226,11 @@ function AddProduct() {
                         <label>Product Description</label>
                         <Form.Control
                           cols="80"
-                          value=""
                           placeholder="Give full description product"
                           rows="4"
                           as="textarea"
+                          value={productInput.description}
+                          onChange={(e) => changeInputHandler('description', e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -251,20 +317,35 @@ function AddProduct() {
                   <Row style={{ alignItems: "flex-end" }}>
                     <Col className="pr-1" md="6">
                       <Form.Group>
-                        <label>Product Images</label>
+                        <label>Product Images (Max 6)</label>
                         <Form.Control
                           type="file"
+                          onChange={getImageFile}
+                          multiple
                         ></Form.Control>
+                            <Form.Text className="text-muted">
+                                Click on image to remove
+                            </Form.Text>
                       </Form.Group>
                     </Col>
-                    <Col className="pr-1" md="6">
-                      <Button variant="primary">Upload</Button>
-                    </Col>
                   </Row>
+                  <Row>
+                        <Col md="12">
+                            <div style={imagesContainer}>
+                                {imagesUrl.length !== 0 ? imagesUrl.map((image, index) => {
+                                    return (
+                                        <div key={index + Math.random()} onClick={(param) => removeImageHandler(index)}>
+                                           <img style={productImage} src={image} />
+                                        </div>
+                                    )
+                                }): ''}
+                            </div>
+                        </Col>
+                    </Row>
                   <Button
                     className="btn-fill pull-right"
-                    type="submit"
                     variant="info"
+                    onClick={submitFormHandler}
                   >
                     Add Product
                   </Button>
@@ -332,6 +413,21 @@ function AddProduct() {
       </Container>
     </>
   );
+}
+
+const imagesContainer = {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexWrap: 'wrap',
+    padding: '1rem 2rem',
+    width: '100%'
+}
+
+const productImage = {
+    width: '200px',
+    height: '170px',
+    marginRight: '2rem',
+    marginBottom: '2rem',
 }
 
 export default AddProduct;
