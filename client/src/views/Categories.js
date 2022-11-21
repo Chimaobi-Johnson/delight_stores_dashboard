@@ -13,6 +13,7 @@ import {
   Col,
 } from "react-bootstrap";
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 
 function Categories() {
 
@@ -45,10 +46,25 @@ function Categories() {
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header>
-                <Card.Title as="h4">Categories Table</Card.Title>
-                <p className="card-category">
-                  This is the list of registered Categories for Delight stores E-commerce site
-                </p>
+                <Row>
+                  <Col md="6">
+                    <Card.Title as="h4">Categories Table</Card.Title>
+                    <p className="card-category">
+                      This is the list of Categories for products
+                    </p>
+                  </Col>
+                  <Col md="6">
+                          <Button
+                              style={{ float: 'right' }} 
+                              className="btn-fill pull-right"
+                              variant="info"
+                              >
+                              <NavLink to="/admin/category/new" style={{ color: 'white' }}>
+                                  New Category  
+                              </NavLink>
+                          </Button>
+                  </Col>               
+                </Row>
               </Card.Header>
               <Card.Body className="table-full-width table-responsive px-0">
                 <Table className="table-hover table-striped">

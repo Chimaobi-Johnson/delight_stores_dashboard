@@ -93,7 +93,6 @@ function AddProduct() {
   };
 
   const getImageFile = e => {
-    console.log(e.target.files)
     const fileLength = e.target.files.length;
     const fileArr = [...imagesUrl];
     const imagesArr = [ ...images ]
@@ -106,7 +105,6 @@ function AddProduct() {
   }
 
   const removeImageHandler = (index) => {
-    console.log(index)
     const newFileArr = [ ...imagesUrl ];
     newFileArr.splice(index, 1);
     setImageUrl(newFileArr)
