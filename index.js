@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 
 app.use(upload.fields([]), authRoutes);
 app.use(upload.fields([]), userRoutes);
-app.use(upload.fields([]), productRoutes);
+app.use(productRoutes);
 app.use(upload.fields([]), categoryRoutes);
 
 

@@ -125,7 +125,7 @@ function AddProduct() {
     formData.append('name', productInput.name)
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
-    formData.append('imagesUrl', imagesUrl)
+    // formData.append('imagesUrl', imagesUrl)
     formData.append('description', productInput.description)
     formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
