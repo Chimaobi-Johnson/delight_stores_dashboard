@@ -48,6 +48,31 @@ app.use(passport.authenticate('session'));
 app.use(bodyParser.json()) // to parse incoming json data
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const storage = multer.diskStorage({
+  destination: null,
+  filename: function(req, file, cb) {
+      cb(null, uuidv4() + file.originalname)
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+if(file.mimetype === 'image/png' ||
+   file.mimetype === 'image/jpg' ||
+   file.mimetype === 'image/jpeg'
+   ) {
+  cb(null, true);
+} else {
+  cb(null, false);
+}
+};
+
+app.use(multer({storage: storage, fileFilter: fileFilter}).fields([
+  { name: 'profilePic', maxCount: 1 },
+  { name: 'productImage', maxCount: 1 },
+  { name: 'coverImage', maxCount: 1 },
+  { name: 'file', maxCount: 10 }
+]));
+
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
@@ -58,10 +83,11 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(upload.fields([]), authRoutes);
-app.use(upload.fields([]), userRoutes);
+app.use(authRoutes);
+app.use(userRoutes);
 app.use(productRoutes);
-app.use(upload.fields([]), categoryRoutes);
+app.use(categoryRoutes);
+
 
 
 app.use('/', (req, res) => {

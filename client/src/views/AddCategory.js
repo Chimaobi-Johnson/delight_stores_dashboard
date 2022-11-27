@@ -44,11 +44,12 @@ function AddCategory() {
 
     const submitFormHandler = e => {
         e.preventDefault()
-        const formData = new FormData();
-        formData.append('name', inputData.name);
-        formData.append('description', inputData.description)
+        const data = new FormData();
+        data.append('name', inputData.name);
+        data.append('description', inputData.description);
+        data.append('imageUrl', inputData.imageUrl)
         
-        axios.post('/api/category/new', formData)
+        axios.post('/api/category/new', data)
         .then(res => {
             console.log(res)
         })
