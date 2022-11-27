@@ -41,10 +41,7 @@ function AddCategory() {
             }
         })
     }
-    // https://alx-intranet.hbtn.io/corrections/6645117/correct
-    // git config --global user.email "woguchimaobi@gmail.com"
-    // git clone https://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@github.com/Chimaobi-Johnson/alx-pre_course.git 
-    // git config --global user.name "Chimaobi Wogu"
+
     const submitFormHandler = e => {
         e.preventDefault()
         const formData = new FormData();

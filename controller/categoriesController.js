@@ -22,7 +22,7 @@ exports.getAllCategories = (req, res) => {
 
 
 exports.addCategory = (req, res) => {
-    console.log(req.body)
+    console.log('req.body')
     console.log(req.file)
     console.log(req.files)
 }
