@@ -27,13 +27,27 @@ exports.addCategory = (req, res) => {
         const error = new Error("Image is required");
         return error
     } else {
-        const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores" })
-        .then(result => {
-            console.log(result)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        if(req.file.size > 1700000) {
+            res.status(500).json({ message: "Image is too large" })
+        } else {
+            const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores" })
+            .then(result => {
+                const category = new Category({
+                    name: req.body.name,
+                    description: req.body.name,
+                    imageUrl: result.secure_url,
+                    imageId: result.public_id
+                  });
+               return category.save()
+            })
+            .then(savedCategory => {
+                res.status(201).json({ category: savedCategory })
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+
       
     }
 }

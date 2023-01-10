@@ -20,7 +20,8 @@ function AddCategory() {
     const [inputData, setInputData ] = useState({
         name: '',
         description: '',
-        imageUrl: null
+        imageUrl: null,
+        imagePreviewUrl: null
     })
 
     const changeInputHandler = (input, e) => {
@@ -33,19 +34,17 @@ function AddCategory() {
     }
 
     const getImageFile = e => {
-        // setImageUrl(URL.createObjectURL(e.target.files[0]))
-        console.log(e.target.files[0])
         setInputData(prevState => {
             return {
                 ...prevState,
-                imageUrl: e.target.files[0]
+                imageUrl: e.target.files[0],
+                imagePreviewUrl: URL.createObjectURL(e.target.files[0])
             }
         })
     }
 
     const submitFormHandler = e => {
 
-      console.log(inputData.imageUrl)
         e.preventDefault()
         const data = new FormData();
         data.append('name', inputData.name);
@@ -54,7 +53,18 @@ function AddCategory() {
         
         axios.post('/api/category/new', data)
         .then(res => {
-            console.log(res)
+          if(res.status === 201) {
+            alert("saved successfully")
+            setInputData(prevState => {
+              return {
+                  ...prevState,
+                  name: '',
+                  description: '',
+                  imageUrl: null,
+                  imagePreviewUrl: null
+              }
+          })
+          }
         })
         .catch(err => {
             console.log(err)
@@ -112,7 +122,7 @@ function AddCategory() {
                   <Row>
                         <Col md="12">
                             <div>
-                                {inputData.imageUrl ? <img style={imageStyles} src={inputData.imageUrl} /> : '' }
+                                {inputData.imagePreviewUrl ? <img style={imageStyles} src={inputData.imagePreviewUrl} /> : '' }
                             </div>
                         </Col>
                     </Row>

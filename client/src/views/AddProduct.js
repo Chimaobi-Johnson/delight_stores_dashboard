@@ -93,21 +93,23 @@ function AddProduct() {
   };
 
   const getImageFile = e => {
+    console.log(e.target.files)
     const fileLength = e.target.files.length;
-    const fileArr = [...imagesUrl];
+    const imageUrlArray = [...imagesUrl];
     const imagesArr = [ ...images ]
     for(let i = 0; i < fileLength; i++) {
-        fileArr.push(URL.createObjectURL(e.target.files[i]))
-        // imagesArr.push(e.target.files.files[i])
+        imageUrlArray.push(URL.createObjectURL(e.target.files[i]))
+        imagesArr.push(e.target.files[i])
     }
-    setImageUrl(fileArr)
+    setImageUrl(imageUrlArray)
     setImage(imagesArr)
+
   }
 
   const removeImageHandler = (index) => {
-    const newFileArr = [ ...imagesUrl ];
-    newFileArr.splice(index, 1);
-    setImageUrl(newFileArr)
+    const newImageUrlArr = [ ...imagesUrl ];
+    newImageUrlArr.splice(index, 1);
+    setImageUrl(newImageUrlArr)
   }
 
   const changeInputHandler = (input, e) => {
@@ -125,25 +127,25 @@ function AddProduct() {
     formData.append('name', productInput.name)
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
-    // formData.append('imagesUrl', imagesUrl)
+    formData.append('images', images)
     formData.append('description', productInput.description)
     formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
     formData.append('sizes', size)
     formData.append('tags', tag)
 
-    axios.post('/api/product/add', formData)
-    .then(res => {
-        console.log(res)
-    })
-    .catch(err => {
-        console.log(err)
-    })
+    console.log(images)
+
+    // axios.post('/api/product/add', formData)
+    // .then(res => {
+    //     console.log(res)
+    // })
+    // .catch(err => {
+    //     console.log(err)
+    // })
 
   }
 
-  console.log(productInput);
-  console.log(images);
   return (
     <>
       <Container fluid>
@@ -334,6 +336,7 @@ function AddProduct() {
                                     return (
                                         <div key={index + Math.random()} onClick={(param) => removeImageHandler(index)}>
                                            <img style={productImage} src={image} />
+                                           
                                         </div>
                                     )
                                 }): ''}

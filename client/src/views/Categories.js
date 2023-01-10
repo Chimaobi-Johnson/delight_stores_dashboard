@@ -71,22 +71,20 @@ function Categories() {
                   <thead>
                     <tr>
                       <th className="border-0">ID</th>
-                      <th className="border-0">First Name</th>
-                      <th className="border-0">Last Name</th>
-                      <th className="border-0">Email</th>
-                      <th className="border-0">Role</th>
+                      <th className="border-0">Name</th>
+                      <th className="border-0">Description</th>
+                      <th className="border-0">Image</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {loadingData ? <p>Loading Categories....</p> : categories ? categories.length !== 0 ? categories.map((Category, index) => {
+                    {loadingData ? <p>Loading Categories....</p> : categories ? categories.length !== 0 ? categories.map((category, index) => {
                         return (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{Category.firstName}</td>
-                                    <td>{Category.lastName}</td>
-                                    <td>{Category.email}</td>
-                                    <td>{Category.role}</td>
+                                    <td>{category.name}</td>
+                                    <td>{category.description}</td>
+                                    <td><img style={{ width: '80px', height: '60px' }} src={category.imageUrl} alt="" /></td>
                                     <td>Edit/Delete</td>
                                 </tr>
                         )
