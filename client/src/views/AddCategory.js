@@ -34,20 +34,23 @@ function AddCategory() {
 
     const getImageFile = e => {
         // setImageUrl(URL.createObjectURL(e.target.files[0]))
+        console.log(e.target.files[0])
         setInputData(prevState => {
             return {
                 ...prevState,
-                imageUrl: URL.createObjectURL(e.target.files[0])
+                imageUrl: e.target.files[0]
             }
         })
     }
 
     const submitFormHandler = e => {
+
+      console.log(inputData.imageUrl)
         e.preventDefault()
         const data = new FormData();
         data.append('name', inputData.name);
         data.append('description', inputData.description);
-        data.append('imageUrl', inputData.imageUrl)
+        data.append('image', inputData.imageUrl)
         
         axios.post('/api/category/new', data)
         .then(res => {

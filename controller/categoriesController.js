@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const Product = require("../models/Product");
+const cloudinary = require('../utils/cloudinary');
 
 exports.getAllCategories = (req, res) => {
     const currentPage = req.query.page || 1;  // if page is not set default to page 1
@@ -22,8 +23,18 @@ exports.getAllCategories = (req, res) => {
 
 
 exports.addCategory = (req, res) => {
-    console.log(req.body)
-    console.log(req.file)
-    console.log(req.files)
+    if(!req.file) {
+        const error = new Error("Image is required");
+        return error
+    } else {
+        const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores" })
+        .then(result => {
+            console.log(result)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+      
+    }
 }
 
