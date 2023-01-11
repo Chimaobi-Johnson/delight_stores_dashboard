@@ -30,7 +30,7 @@ exports.addCategory = (req, res) => {
         if(req.file.size > 1700000) {
             res.status(500).json({ message: "Image is too large" })
         } else {
-            const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores" })
+            const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores/categories" })
             .then(result => {
                 const category = new Category({
                     name: req.body.name,
