@@ -33,9 +33,7 @@ exports.storeProduct = async (req, res) => {
 //     sizes,
 //     tags,
 //   } = req.body;
-  const product = new Product({
-    ...req.body
-  });
+
   if(!req.files || req.files.length === 0) {
     console.log("No images use default")
     return
@@ -43,13 +41,28 @@ exports.storeProduct = async (req, res) => {
     const images = req.files;
     const imagesUrl = []
     const imagesId = []
+
     for(const image of images ) {
         const { path } = image;
+        // HANDLE ERROR
         const result = await cloudinary.uploader.upload(path, { folder: "dlight_stores/products" })
         imagesUrl.push(result.secure_url) 
         imagesId.push(result.public_id) 
     }
-    console.log(imagesUrl)
-    console.log(imagesId)
+
+    tags.push(req.body.tags);
+    sizes.push(req.body.sizes)
+    const product = new Product({
+        ...req.body,
+        imagesUrl: imagesUrl,
+        imagesId: imagesId
+    })
+    product.save().then(savedProduct => {
+        res.status(201).json({ product: savedProduct })
+    }).catch(err => {
+        // DELETE IMAGES WHEN SAVING FAILS 
+        console.log(err)
+    })
+
   }
 };

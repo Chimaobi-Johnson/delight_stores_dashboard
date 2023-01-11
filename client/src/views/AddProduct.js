@@ -127,10 +127,10 @@ function AddProduct() {
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
     formData.append('description', productInput.description)
-    formData.append('category', productInput.category)
+    // formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
-    formData.append('sizes', size)
-    formData.append('tags', tag)
+    formData.append('sizes', productInput.sizes)
+    formData.append('tags', productInput.tags)
     
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i])
