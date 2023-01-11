@@ -93,17 +93,16 @@ function AddProduct() {
   };
 
   const getImageFile = e => {
-    console.log(e.target.files)
     const fileLength = e.target.files.length;
     const imageUrlArray = [...imagesUrl];
-    const imagesArr = [ ...images ]
+    const imagesArr = [...images];
     for(let i = 0; i < fileLength; i++) {
         imageUrlArray.push(URL.createObjectURL(e.target.files[i]))
         imagesArr.push(e.target.files[i])
     }
     setImageUrl(imageUrlArray)
-    setImage(imagesArr)
-
+    setImage(e.target.files)
+    console.log(e.target.files.file)
   }
 
   const removeImageHandler = (index) => {
@@ -127,22 +126,23 @@ function AddProduct() {
     formData.append('name', productInput.name)
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
-    formData.append('images', images)
     formData.append('description', productInput.description)
     formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
     formData.append('sizes', size)
     formData.append('tags', tag)
-
-    console.log(images)
-
-    // axios.post('/api/product/add', formData)
-    // .then(res => {
-    //     console.log(res)
-    // })
-    // .catch(err => {
-    //     console.log(err)
-    // })
+    
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i])
+   }
+  
+    axios.post('/api/product/add', formData)
+    .then(res => {
+        console.log(res) 
+    })
+    .catch(err => {
+        console.log(err)
+    })
 
   }
 
@@ -321,6 +321,7 @@ function AddProduct() {
                         <Form.Control
                           type="file"
                           onChange={getImageFile}
+                          name="images"
                           multiple
                         ></Form.Control>
                             <Form.Text className="text-muted">

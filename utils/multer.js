@@ -3,12 +3,15 @@ const path = require('path');
 
 module.exports = multer({
     storage: multer.diskStorage({}),
+    limits: { fileSize: 1.8 * 1024 * 1024 }, // 1.8MB
     fileFilter: (req, file, cb) => {
-        let ext = path.extname(file.originalname);
-        if(ext !== '.jpg' && ext !== ".jpeg" && ext !== ".png") {
-            cb(new Error("file type is not supported"), false);
-            return;
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            const err = new Error('Only .png, .jpg and .jpeg format allowed!')
+            err.name = 'ExtensionError'
+            return cb(err);
         }
-        cb(null, true)
-    }
+    },
 })
