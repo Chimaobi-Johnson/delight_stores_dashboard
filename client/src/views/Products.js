@@ -73,10 +73,9 @@ function Products() {
                   <thead>
                     <tr>
                       <th className="border-0">ID</th>
-                      <th className="border-0">First Name</th>
-                      <th className="border-0">Last Name</th>
-                      <th className="border-0">Email</th>
-                      <th className="border-0">Role</th>
+                      <th className="border-0">Name</th>
+                      <th className="border-0">Description</th>
+                      <th className="border-0">price</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>
@@ -85,11 +84,10 @@ function Products() {
                         return (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{product.firstName}</td>
-                                    <td>{product.lastName}</td>
-                                    <td>{product.email}</td>
-                                    <td>{product.role}</td>
-                                    <td>Edit/Delete</td>
+                                    <td>{product.name}</td>
+                                    <td>{product.description}</td>
+                                    <td>{product.price}</td>
+                                    <td>Edit/View/Delete</td>
                                 </tr>
                         )
                     }) : 'No products found' : ''}

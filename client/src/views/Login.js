@@ -26,7 +26,6 @@ function Login() {
         let customData = new FormData();
         customData.append('email', email)
         customData.append('password', password)
-        console.log(customData)
         const data = {
             email: email,
             password: password

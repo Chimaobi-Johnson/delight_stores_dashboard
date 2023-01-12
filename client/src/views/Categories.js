@@ -85,7 +85,12 @@ function Categories() {
                                     <td>{category.name}</td>
                                     <td>{category.description}</td>
                                     <td><img style={{ width: '80px', height: '60px' }} src={category.imageUrl} alt="" /></td>
-                                    <td>Edit/Delete</td>
+                                    <td>
+                                      <NavLink to="#">
+                                       Edit
+                                      </NavLink> / 
+                                      <NavLink to="#" style={{ color: 'red' }}> Delete</NavLink>
+                                    </td>
                                 </tr>
                         )
                     }) : 'No Categories found' : ''}

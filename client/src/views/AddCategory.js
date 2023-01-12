@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Alert } from 'reactstrap';
 
 // react-bootstrap components
 import {
@@ -43,32 +44,88 @@ function AddCategory() {
         })
     }
 
+    const [loading, setLoading] = useState(false)
+    const [hasError, setError] = useState(true)
+
+    const [responseData, setResponseData] = useState({
+      loading: false,
+      initAlert: false,
+      alertType: 'Info',
+      alertMessage: ''
+    })
+
     const submitFormHandler = e => {
 
-        e.preventDefault()
-        const data = new FormData();
-        data.append('name', inputData.name);
-        data.append('description', inputData.description);
-        data.append('image', inputData.imageUrl)
-        
-        axios.post('/api/category/new', data)
-        .then(res => {
-          if(res.status === 201) {
-            alert("saved successfully")
-            setInputData(prevState => {
-              return {
-                  ...prevState,
-                  name: '',
-                  description: '',
-                  imageUrl: null,
-                  imagePreviewUrl: null
-              }
-          })
+       if(inputData.name === '') {
+        setResponseData(prevState => {
+          return {
+            ...prevState,
+            initAlert: true,
+            alertType: 'warning',
+            alertMessage: 'Name field cannot be empty'
           }
         })
-        .catch(err => {
-            console.log(err)
+        return
+       } else {
+
+        setResponseData(prevState => {
+          return {
+            ...prevState,
+            loading: true
+          }
         })
+
+          e.preventDefault()
+          const data = new FormData();
+          data.append('name', inputData.name);
+          data.append('description', inputData.description);
+          data.append('image', inputData.imageUrl)
+          
+          axios.post('/api/category/new', data)
+          .then(res => {
+            if(res.status === 201) {
+              setInputData(prevState => {
+                return {
+                    ...prevState,
+                    name: '',
+                    description: '',
+                    imageUrl: null,
+                    imagePreviewUrl: null
+                }
+            })
+            setResponseData(prevState => {
+              return {
+                ...prevState,
+                loading: false,
+                initAlert: true,
+                alertType: 'success',
+                alertMessage: 'Category added successfully'
+              }
+            })
+            }
+          })
+          .catch(err => {
+            setResponseData(prevState => {
+              return {
+                ...prevState,
+                loading: false,
+                initAlert: true,
+                alertType: 'danger',
+                alertMessage: 'Server error. Check connection or try again later'
+              }
+            })
+          })
+                  
+       }
+    }
+
+    const closeNotification = () => {
+      setResponseData(prevState => {
+        return {
+          ...prevState,
+          initAlert: false
+        }
+      })
     }
 
   return (
@@ -81,6 +138,13 @@ function AddCategory() {
                 <Card.Title as="h4">Add New Product</Card.Title>
               </Card.Header>
               <Card.Body>
+              <Alert
+                color={responseData.alertType}
+                isOpen={responseData.initAlert}
+                toggle={closeNotification}
+            >
+                <span>{responseData.alertMessage}</span>
+            </Alert>
                 <Form>
                   <Row>
                     <Col className="pr-1" md="6">
@@ -131,7 +195,7 @@ function AddCategory() {
                     variant="info"
                     onClick={submitFormHandler}
                   >
-                    Add Category
+                    {responseData.loading ? 'Saving...' : 'Add Category'}
                   </Button>
                   <div className="clearfix"></div>
                 </Form>
