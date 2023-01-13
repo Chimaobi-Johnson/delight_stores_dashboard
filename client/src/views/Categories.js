@@ -86,7 +86,7 @@ function Categories() {
                                     <td>{category.description}</td>
                                     <td><img style={{ width: '80px', height: '60px' }} src={category.imageUrl} alt="" /></td>
                                     <td>
-                                      <NavLink to="#">
+                                      <NavLink to={"/admin/category/edit/" + category._id}>
                                        Edit
                                       </NavLink> / 
                                       <NavLink to="#" style={{ color: 'red' }}> Delete</NavLink>

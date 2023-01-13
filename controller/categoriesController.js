@@ -25,6 +25,8 @@ exports.getAllCategories = (req, res) => {
 exports.addCategory = (req, res) => {
     if(!req.file) {
         const error = new Error("Image is required");
+        console.log(error)
+        
         return error
     } else {
         if(req.file.size > 1700000) {
@@ -50,5 +52,19 @@ exports.addCategory = (req, res) => {
 
       
     }
+}
+
+
+exports.editCategory = (req, res) => {
+    Category.findById(req.query.id)
+    .then(data => {
+        if(!data) {
+            res.status(404).json({ message: "Category not found"})
+        } else {
+            res.status(200).json({ category: data })
+        } 
+    }).catch(err => {
+        console.log(err)
+    })
 }
 

@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const cookieSession = require('cookie-session');
 const keys = require('./config/keys');
+const multer = require('./utils/multer');
 
 const app = express();
 
@@ -17,6 +18,7 @@ require('./models/User');
 require('./models/Category');
 
 require('./services/passport');
+
 
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -54,9 +56,8 @@ app.use(productRoutes);
 app.use(categoryRoutes);
 
 
-
 app.use('/', (req, res) => {
-    res.send("Server connected")
+  res.send("Server connected")
 })
 
 mongoose.connect(keys.mongoURI).then(connect => {
