@@ -25,6 +25,7 @@ function EditCategory (props) {
                 setInputData(prevState => {
                     return {
                         ...prevState,
+                        id: categoryId,
                         name: res.data.category.name,
                         description: res.data.category.description,
                         imagePreviewUrl: res.data.category.imageUrl
@@ -37,6 +38,7 @@ function EditCategory (props) {
     }, [])
 
     const [inputData, setInputData ] = useState({
+        id: null,
         name: '',
         description: '',
         imageUrl: null,
@@ -95,11 +97,12 @@ function EditCategory (props) {
 
           e.preventDefault()
           const data = new FormData();
+          data.append('categoryId', inputData.id);
           data.append('name', inputData.name);
           data.append('description', inputData.description);
           data.append('image', inputData.imageUrl)
           
-          axios.post('/api/category/new', data)
+          axios.post('/api/category/update', data)
           .then(res => {
             if(res.status === 201) {
               setInputData(prevState => {
@@ -117,7 +120,7 @@ function EditCategory (props) {
                 loading: false,
                 initAlert: true,
                 alertType: 'success',
-                alertMessage: 'Category added successfully'
+                alertMessage: 'Category updated successfully'
               }
             })
             }
