@@ -7,6 +7,7 @@ const router = express.Router();
 
 
 router.post('/api/category/new', upload.single('image'), categoriesController.addCategory)
+router.post('/api/category/update', upload.single('image'), categoriesController.updateCategory)
 router.get('/api/category', categoriesController.editCategory)
 router.get('/api/categories', categoriesController.getAllCategories)
 

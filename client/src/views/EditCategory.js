@@ -104,7 +104,7 @@ function EditCategory (props) {
           
           axios.post('/api/category/update', data)
           .then(res => {
-            if(res.status === 201) {
+            if(res.status === 201 || res.status === 200) {
               setInputData(prevState => {
                 return {
                     ...prevState,
