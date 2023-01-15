@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { Alert } from 'reactstrap';
 // react-bootstrap components
 import {
   Badge,
@@ -16,6 +16,14 @@ import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
 function Categories() {
+
+
+    const [responseData, setResponseData] = useState({
+      loading: false,
+      initAlert: false,
+      alertType: 'Info',
+      alertMessage: ''
+    })
 
     const [categories, setCategories] = useState(null)
     const [loadingData, setLoading] = useState(false);
@@ -39,14 +47,42 @@ function Categories() {
     }, [])
 
     const deleteCategoryHandler = (id) => {
+      setResponseData(prevState => {
+        return {
+          ...prevState,
+          loading: true
+        }
+      })
       axios.post(`/api/category/delete/?id=${id}`).then(res => {
-        console.log(res)
         if(res.status === 200) {
-          alert("delete successful")
-          window.location.reload()
+          window.location.reload();
+          setResponseData(prevState => {
+            return {
+              ...prevState,
+              initAlert: true,
+              alertType: 'success',
+              alertMessage: 'Category deleted successfully'
+            }
+          })
         }
       }).catch(err => {
-        console.log(err)
+        setResponseData(prevState => {
+          return {
+            ...prevState,
+            initAlert: true,
+            alertType: 'warning',
+            alertMessage: 'Error deleting category'
+          }
+        })
+      })
+    }
+
+    const closeNotification = () => {
+      setResponseData(prevState => {
+        return {
+          ...prevState,
+          initAlert: false
+        }
       })
     }
 
@@ -64,6 +100,13 @@ function Categories() {
                     <p className="card-category">
                       This is the list of Categories for products
                     </p>
+                    <Alert
+                      color={responseData.alertType}
+                      isOpen={responseData.initAlert}
+                      toggle={closeNotification}
+                    >
+                        <span>{responseData.alertMessage}</span>
+                    </Alert>
                   </Col>
                   <Col md="6">
                           <Button
