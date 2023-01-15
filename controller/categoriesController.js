@@ -74,26 +74,7 @@ exports.updateCategory = async (req, res) => {
 
     if(req.file) {
         // find link to old image
-        Category.findById(categoryId)
-        .then(data => {
-            if(!data) {
-                res.status(404).json({ message: "Category may have been deleted, create new category"})
-            } else {
-                cloudinary.uploader.destroy(data.imageUrl, (error, result) => {
-                    if(result) {
-                        const result = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores/categories" })
 
-                    }
-                });
-                data.name = name;
-                data.description = description
-                return data.save()
-            } 
-        }).then(updatedCategory => {
-            res.status(200).json({ category: updatedCategory })
-        }).catch(err => {
-            console.log(err)
-        })
         // delete old image
 
         //add new image
@@ -116,29 +97,26 @@ exports.updateCategory = async (req, res) => {
         })
     }
 
-    
-    imageData = cloudinary.uploader.upload(req.file.path, { folder: "dlight_stores/categories" })
-    Category.findById(categoryId)
+}
+
+exports.deleteCategory = (req, res) => {
+    Category.findById(req.query.id)
     .then(data => {
         if(!data) {
-            res.status(404).json({ message: "Category may have been deleted, create new category"})
+            res.status(404).json({ message: "Category not found"})
         } else {
-            if(req.file) {
-              console.log(imageData)
-            }
-            data.name = name;
-            data.description = description
-            if(imageData !== null) {
-                console.log(imageData)
-                data.imageUrl = imageData.secure_url,
-                data.imageId = imageData.public_id
-            }
-            return data.save()
+            cloudinary.uploader.destroy(data.imageId, (error, result) => {
+                if(result) {
+                    Category.findByIdAndDelete(req.query.id).then(deletedCat => {
+                        res.status(200).json({ category: result })
+                    }).catch(err => {
+                        console.log(err)
+                    })
+                }
+            })
+
         } 
-    }).then(updatedCategory => {
-        res.status(200).json({ category: updatedCategory })
     }).catch(err => {
         console.log(err)
     })
 }
-

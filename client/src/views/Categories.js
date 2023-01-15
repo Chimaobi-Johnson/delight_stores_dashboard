@@ -38,6 +38,18 @@ function Categories() {
         getCategories()
     }, [])
 
+    const deleteCategoryHandler = (id) => {
+      axios.post(`/api/category/delete/?id=${id}`).then(res => {
+        console.log(res)
+        if(res.status === 200) {
+          alert("delete successful")
+          window.location.reload()
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+
   return (
     <>
       <Container fluid>
@@ -89,7 +101,7 @@ function Categories() {
                                       <NavLink to={"/admin/category/edit/" + category._id}>
                                        Edit
                                       </NavLink> / 
-                                      <NavLink to="#" style={{ color: 'red' }}> Delete</NavLink>
+                                      <NavLink to="#" onClick={(id) => deleteCategoryHandler(category._id)} style={{ color: 'red' }}> Delete</NavLink>
                                     </td>
                                 </tr>
                         )
