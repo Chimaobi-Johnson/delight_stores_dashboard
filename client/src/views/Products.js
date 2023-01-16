@@ -87,7 +87,9 @@ function Products() {
                                     <td>{product.name}</td>
                                     <td>{product.description}</td>
                                     <td>{product.price}</td>
-                                    <td>Edit/View/Delete</td>
+                                    <td><NavLink to={'/admin/product/edit/' + product._id}>Edit </NavLink>|
+                                    <NavLink to='#'  style={{ color: 'green' }}> View </NavLink>|
+                                    <NavLink to='#'  style={{ color: 'red' }}> Delete </NavLink></td>
                                 </tr>
                         )
                     }) : 'No products found' : ''}

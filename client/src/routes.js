@@ -31,6 +31,7 @@ import Categories from "views/Categories";
 import AddProduct from "views/AddProduct";
 import AddCategory from "views/AddCategory";
 import EditCategory from "views/EditCategory";
+import EditProduct from "views/EditProduct";
 
 const dashboardRoutes = [
   {
@@ -132,6 +133,14 @@ const dashboardRoutes = [
     name: "Edit Category",
     icon: "nc-icon nc-notes",
     component: EditCategory,
+    layout: "/admin",
+    removeLink: "true"
+  },
+  {
+    path: "/product/edit/",
+    name: "Edit Product",
+    icon: "nc-icon nc-notes",
+    component: EditProduct,
     layout: "/admin",
     removeLink: "true"
   },

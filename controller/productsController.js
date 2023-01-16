@@ -66,3 +66,17 @@ exports.storeProduct = async (req, res) => {
 
   }
 };
+
+
+exports.editProduct = (req, res) => {
+  Product.findById(req.query.id)
+  .then(data => {
+      if(!data) {
+          res.status(404).json({ message: "Category not found"})
+      } else {
+          res.status(200).json({ product: data })
+      } 
+  }).catch(err => {
+      console.log(err)
+  })
+}
