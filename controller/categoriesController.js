@@ -36,7 +36,7 @@ exports.addCategory = (req, res) => {
             .then(result => {
                 const category = new Category({
                     name: req.body.name,
-                    description: req.body.name,
+                    description: req.body.description,
                     imageUrl: result.secure_url,
                     imageId: result.public_id
                   });
@@ -73,13 +73,28 @@ exports.updateCategory = async (req, res) => {
     const { categoryId, name, description } = req.body;
 
     if(req.file) {
-        // find link to old image
-
-        // delete old image
-
-        //add new image
-
-        // save cat
+        Category.findById(categoryId)
+        .then(data => {
+            if(!data) {
+                res.status(404).json({ message: "Category may have been deleted, create new category"})
+            } else {
+                return data
+            } 
+        }).then(category => {
+           return cloudinary.uploader.upload(req.file.path, { public_id: category.imageId, overwrite: true }, (error, result) => {
+                if(result) {
+                    category.name = name;
+                    category.description = description
+                    category.imageUrl = result.secure_url
+                    return category.save()
+                }
+           })
+        })
+        .then(updatedCategory => {
+            res.status(200).json({ category: updatedCategory })
+        }).catch(err => {
+            console.log(err)
+        })
     } else {
         Category.findById(categoryId)
         .then(data => {

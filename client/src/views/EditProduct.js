@@ -177,6 +177,22 @@ function EditProduct(props) {
 
   }
 
+  const [responseData, setResponseData] = useState({
+    loading: false,
+    initAlert: false,
+    alertType: 'Info',
+    alertMessage: ''
+  })
+
+  const closeNotification = () => {
+    setResponseData(prevState => {
+      return {
+        ...prevState,
+        initAlert: false
+      }
+    })
+  }
+
   return (
     <>
       <Container fluid>
@@ -365,7 +381,6 @@ function EditProduct(props) {
                         <Col md="12">
                             <div style={imagesContainer}>
                                 {imagesUrl.length !== 0 ? imagesUrl.map((image, index) => {
-                                    console.log(image)
                                     return (
                                         <div key={index + Math.random()} onClick={(param) => removeImageHandler(index)}>
                                            <img style={productImage} src={image} />
@@ -381,10 +396,17 @@ function EditProduct(props) {
                     variant="info"
                     onClick={submitFormHandler}
                   >
-                    Add Product
+                    Update Product
                   </Button>
                   <div className="clearfix"></div>
                 </Form>
+                <Alert
+                    color={responseData.alertType}
+                    isOpen={responseData.initAlert}
+                    toggle={closeNotification}
+                >
+                    <span>{responseData.alertMessage}</span>
+                </Alert>
               </Card.Body>
             </Card>
           </Col>

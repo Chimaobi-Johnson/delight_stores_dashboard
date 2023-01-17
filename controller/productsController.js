@@ -115,3 +115,25 @@ exports.updateProduct = (req, res) => {
       })
   }
 }
+
+exports.deleteProduct = (req, res) => {
+  Product.findById(req.query.id)
+  .then(data => {
+      if(!data) {
+          res.status(404).json({ message: "Product not found"})
+      } else {
+          cloudinary.uploader.destroy(data.imageId, (error, result) => {
+              if(result) {
+                  Category.findByIdAndDelete(req.query.id).then(deletedCat => {
+                      res.status(200).json({ category: result })
+                  }).catch(err => {
+                      console.log(err)
+                  })
+              }
+          })
+
+      } 
+  }).catch(err => {
+      console.log(err)
+  })
+}
