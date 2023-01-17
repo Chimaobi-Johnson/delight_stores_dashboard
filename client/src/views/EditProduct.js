@@ -38,6 +38,7 @@ function EditProduct(props) {
                         sizes: res.data.product.sizes,
                     }
                 })
+                setImageUrl(res.data.product.imagesUrl)
             }
         }).catch(err => {
             console.log(err)
@@ -45,6 +46,7 @@ function EditProduct(props) {
     }, [])
 
   const [productInput, setProductInput] = useState({
+    id: null,
     name: "",
     price: null,
     subheading: "",
@@ -151,6 +153,7 @@ function EditProduct(props) {
   const submitFormHandler = e => {
     e.preventDefault();
     const formData = new FormData();
+    formData.append('productId', productInput.id)
     formData.append('name', productInput.name)
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
@@ -164,7 +167,7 @@ function EditProduct(props) {
       formData.append('images', images[i])
    }
   
-    axios.post('/api/product/add', formData)
+    axios.post('/api/product/update', formData)
     .then(res => {
         console.log(res) 
     })
@@ -362,6 +365,7 @@ function EditProduct(props) {
                         <Col md="12">
                             <div style={imagesContainer}>
                                 {imagesUrl.length !== 0 ? imagesUrl.map((image, index) => {
+                                    console.log(image)
                                     return (
                                         <div key={index + Math.random()} onClick={(param) => removeImageHandler(index)}>
                                            <img style={productImage} src={image} />

@@ -80,3 +80,38 @@ exports.editProduct = (req, res) => {
       console.log(err)
   })
 }
+
+
+exports.updateProduct = (req, res) => {
+  const { productId, name, price, subheading, description, deliveryStatus, sizes, tags } = req.body;
+
+  if(req.file) {
+      // find link to old image
+
+      // delete old image
+
+      //add new image
+
+      // save product
+  } else {
+      Product.findById(productId)
+      .then(data => {
+          if(!data) {
+              res.status(404).json({ message: "Product may have been deleted, create new product"})
+          } else {
+              data.name = name;
+              data.price = price;
+              data.subheading = subheading;
+              data.description = description;
+              data.deliveryStatus = deliveryStatus;
+              data.sizes = sizes;
+              data.tags = tags;
+              return data.save()
+          } 
+      }).then(updatedProduct => {
+          res.status(200).json({ product: updatedProduct })
+      }).catch(err => {
+          console.log(err)
+      })
+  }
+}
