@@ -23,16 +23,6 @@ exports.getAllProducts = (req, res) => {
 };
 
 exports.storeProduct = async (req, res) => {
-//   const {
-//     name,
-//     body,
-//     subheading,
-//     description,
-//     category,
-//     deliveryStatus,
-//     sizes,
-//     tags,
-//   } = req.body;
 
   if(!req.files || req.files.length === 0) {
     console.log("No images use default")
@@ -46,18 +36,20 @@ exports.storeProduct = async (req, res) => {
         const { path } = image;
         // HANDLE ERROR
         const result = await cloudinary.uploader.upload(path, { folder: "dlight_stores/products" })
+        console.log(result.public_id)
         imagesUrl.push(result.secure_url) 
         imagesId.push(result.public_id) 
     }
-
-    tags.push(req.body.tags);
-    sizes.push(req.body.sizes)
+    console.log(imagesId)
     const product = new Product({
         ...req.body,
+        tags: req.body.tags,
+        sizes: req.body.sizes,
         imagesUrl: imagesUrl,
         imagesId: imagesId
     })
-    product.save().then(savedProduct => {
+    product.save()
+    .then(savedProduct => {
         res.status(201).json({ product: savedProduct })
     }).catch(err => {
         // DELETE IMAGES WHEN SAVING FAILS 
@@ -72,7 +64,7 @@ exports.editProduct = (req, res) => {
   Product.findById(req.query.id)
   .then(data => {
       if(!data) {
-          res.status(404).json({ message: "Category not found"})
+          res.status(404).json({ message: "Product not found"})
       } else {
           res.status(200).json({ product: data })
       } 
@@ -85,15 +77,67 @@ exports.editProduct = (req, res) => {
 exports.updateProduct = (req, res) => {
   const { productId, name, price, subheading, description, deliveryStatus, sizes, tags } = req.body;
 
-  if(req.file) {
-      // find link to old image
+  if(req.files.length !== 0) {
+    console.log('files tampered with')
+    Product.findById(productId)
+    .then(data => {
+        if(!data) {
+            res.status(404).json({ message: "Product may have been deleted, create new product"  })
+        } else {
+          const oldImages = data.imagesId;
+          const newImages = req.files;
+          const imagesUrl = []
+          const imagesId = []
 
-      // delete old image
+          // delete old images
+          for(const image of oldImages ) {
+            cloudinary.uploader.destroy(image, (error, data) => {
+              console.log(data)
+              console.log(error)
 
-      //add new image
+              if(result) {
+                return
+              } else {
+                console.log(err)
+              }
+          })
 
-      // save product
+         
+        }
+       // add current images
+        for(const image of newImages ) {
+            const { path } = image;
+            // HANDLE ERROR
+            cloudinary.uploader.upload(path, { folder: "dlight_stores/products" }, (error, result) => {
+              if(result) {
+                imagesUrl.push(result.secure_url) 
+                imagesId.push(result.public_id) 
+              } else {
+                return
+              }
+            })
+
+        }
+
+        data.name = name;
+        data.price = price;
+        data.subheading = subheading;
+        data.description = description;
+        data.deliveryStatus = deliveryStatus;
+        data.sizes = sizes;
+        data.tags = tags;
+        data.imagesId = imagesId;
+        data.imagesUrl
+        return data.save()
+      }
+
+    }).then(updatedProduct => {
+        res.status(200).json({ product: updatedProduct })
+    }).catch(err => {
+        console.log(err)
+    })
   } else {
+    console.log('updated without image change')
       Product.findById(productId)
       .then(data => {
           if(!data) {
@@ -122,17 +166,14 @@ exports.deleteProduct = (req, res) => {
       if(!data) {
           res.status(404).json({ message: "Product not found"})
       } else {
-          cloudinary.uploader.destroy(data.imageId, (error, result) => {
-              if(result) {
-                  Category.findByIdAndDelete(req.query.id).then(deletedCat => {
-                      res.status(200).json({ category: result })
-                  }).catch(err => {
-                      console.log(err)
-                  })
-              }
-          })
-
+          return cloudinary.api.delete_resources(data.imagesId)
       } 
+  }).then(result => {
+    if(result) {
+      return Product.findByIdAndDelete(req.query.id)
+    }
+  }).then(deletedProduct => {
+    res.status(200).json({ product: deletedProduct })
   }).catch(err => {
       console.log(err)
   })

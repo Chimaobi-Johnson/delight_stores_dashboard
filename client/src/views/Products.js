@@ -39,6 +39,16 @@ function Products() {
         getproducts()
     }, [])
 
+    const deleteProductHandler = (id) => {
+      axios.post(`/api/product/delete/?id=${id}`).then(res => {
+        if(res.status === 200) {
+          window.location.reload();
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+
   return (
     <>
       <Container fluid>
@@ -88,8 +98,8 @@ function Products() {
                                     <td>{product.description}</td>
                                     <td>{product.price}</td>
                                     <td><NavLink to={'/admin/product/edit/' + product._id}>Edit </NavLink>|
-                                    <NavLink to='#'  style={{ color: 'green' }}> View </NavLink>|
-                                    <NavLink to='#'  style={{ color: 'red' }}> Delete </NavLink></td>
+                                    <NavLink to='#' style={{ color: 'green' }}> View </NavLink>|
+                                    <NavLink to='#' style={{ color: 'red' }} onClick={(id) => deleteProductHandler(product._id)}> Delete </NavLink></td>
                                 </tr>
                         )
                     }) : 'No products found' : ''}

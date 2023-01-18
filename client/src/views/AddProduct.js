@@ -101,14 +101,16 @@ function AddProduct() {
         imagesArr.push(e.target.files[i])
     }
     setImageUrl(imageUrlArray)
-    setImage(e.target.files)
-    console.log(e.target.files.file)
+    setImage(imagesArr)
   }
 
   const removeImageHandler = (index) => {
     const newImageUrlArr = [ ...imagesUrl ];
+    const newImageArr = [ ...images ]
     newImageUrlArr.splice(index, 1);
+    newImageArr.splice(index, 1);
     setImageUrl(newImageUrlArr)
+    setImage(newImageArr)
   }
 
   const changeInputHandler = (input, e) => {
@@ -146,6 +148,8 @@ function AddProduct() {
 
   }
 
+  console.log(images)
+  console.log(imagesUrl)
   return (
     <>
       <Container fluid>
