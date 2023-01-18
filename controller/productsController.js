@@ -73,69 +73,54 @@ exports.editProduct = (req, res) => {
 }
 
 
-exports.updateProduct = (req, res) => {
+exports.updateProduct = async (req, res) => {
   const { productId, name, price, subheading, description, deliveryStatus, sizes, tags } = req.body;
 
   if(req.files.length !== 0) {
-    console.log('files tampered with')
-    Product.findById(productId)
-    .then(data => {
-        if(!data) {
-            res.status(404).json({ message: "Product may have been deleted, create new product"  })
-        } else {
-          const oldImages = data.imagesId;
-          const newImages = req.files;
-          const imagesUrl = []
-          const imagesId = []
 
-          // delete old images
-          for(const image of oldImages ) {
-            cloudinary.uploader.destroy(image, (error, data) => {
-              console.log(data)
-              console.log(error)
-
-              if(result) {
-                return
-              } else {
-                console.log(err)
-              }
-          })
-
-         
+    const newImages = req.files;
+    const imagesId = [];
+    const imagesUrl = [];
+    
+    for(const image of newImages ) {
+      const { path } = image;
+      const result = await cloudinary.uploader.upload(path, { folder: "dlight_stores/products" })
+        if(result) {
+          imagesUrl.push(result.secure_url) 
+          imagesId.push(result.public_id) 
         }
-       // add current images
-        for(const image of newImages ) {
-            const { path } = image;
-            // HANDLE ERROR
-            cloudinary.uploader.upload(path, { folder: "dlight_stores/products" }, (error, result) => {
-              if(result) {
-                imagesUrl.push(result.secure_url) 
-                imagesId.push(result.public_id) 
-              } else {
-                return
-              }
-            })
-
-        }
-
-        data.name = name;
-        data.price = price;
-        data.subheading = subheading;
-        data.description = description;
-        data.deliveryStatus = deliveryStatus;
-        data.sizes = sizes;
-        data.tags = tags;
-        data.imagesId = imagesId;
-        data.imagesUrl
-        return data.save()
       }
+      Product.findById(productId)
+        .then(data => {
+            if(!data) {
+                res.status(404).json({ message: "Product may have been deleted, create new product"  })
+            } else {
+              return data
+            }
+        }).then(productData => {
+              const newImages = req.files;
+              const newImagesID = [...productData.imagesId, ...imagesId];
+              const newImagesURL = [...productData.imagesUrl, ...imagesUrl];
 
-    }).then(updatedProduct => {
-        res.status(200).json({ product: updatedProduct })
-    }).catch(err => {
-        console.log(err)
-    })
+              productData.name = name;
+              productData.price = price;
+              productData.subheading = subheading;
+              productData.description = description;
+              productData.deliveryStatus = deliveryStatus;
+              productData.sizes = sizes;
+              productData.tags = tags;
+              productData.imagesId = newImagesID;
+              productData.imagesUrl = newImagesURL
+              return productData.save()
+
+        }).then(updatedProduct => {
+          res.status(200).json({ product: updatedProduct })
+        }).catch(err => {
+          console.log(err)
+        })
+
   } else {
+
     console.log('updated without image change')
       Product.findById(productId)
       .then(data => {
