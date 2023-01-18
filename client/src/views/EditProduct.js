@@ -11,6 +11,7 @@ import {
   Container,
   Row,
   Col,
+  Modal
 } from "react-bootstrap";
 import { Input } from "reactstrap";
 import axios from 'axios';
@@ -33,6 +34,7 @@ function EditProduct(props) {
                         subheading: res.data.product.subheading,
                         description: res.data.product.description,
                         category: res.data.product.category,
+                        imagesId:  res.data.product.imagesId,
                         imagesUrl: res.data.product.imagesUrl,
                         deliveryStatus: res.data.product.deliveryStatus,
                         tags: res.data.product.tags,
@@ -40,6 +42,7 @@ function EditProduct(props) {
                     }
                 })
                 setImageUrl(res.data.product.imagesUrl)
+
             }
         }).catch(err => {
             console.log(err)
@@ -135,13 +138,59 @@ function EditProduct(props) {
     setImage(imagesArr)
   }
 
-  const removeImageHandler = (index) => {
-    const newImageUrlArr = [ ...imagesUrl ];
-    const newImageArr = [ ...images ]
-    newImageUrlArr.splice(index, 1);
-    newImageArr.splice(index, 1);
-    setImageUrl(newImageUrlArr)
-    setImage(newImageArr)
+  const [currentPublicId, setCurrentPublicId] = useState(null)
+
+  const removeImageHandler = (image) => {
+    const location = image.split('/').slice(-3)[0];
+    const subLocation = image.split('/').slice(-2)[0];
+    const id = image.split('/').pop().split('.')[0];
+    const cloudinaryId = `${location}/${subLocation}/${id}`;
+
+    setCurrentPublicId(cloudinaryId)
+
+    setModalData(prevState => {
+        return {
+            ...prevState,
+            show: true,
+            title: 'Delete Image',
+            body: 'Are you sure you want to delete image?',
+            options: true
+        }
+    })
+  }
+
+  const deleteImageHandler = () => {
+    setModalData(prevState => {
+        return {
+            ...prevState,
+            show: false
+        }
+    })
+    axios.post('/api/product/image/delete', { id: currentPublicId })
+    .then(res => {
+        if(res.status === 200) {
+            setModalData(prevState => {
+                return {
+                    ...prevState,
+                    show: true,
+                    title: 'Delete Image',
+                    body: 'Image deleted successfully',
+                    options: false
+                }
+            })
+        }
+    }).catch(err => {
+        console.log(err)
+        setModalData(prevState => {
+            return {
+                ...prevState,
+                show: true,
+                title: 'Delete failed',
+                body: 'Error. Check connection or try again later',
+                options: false
+            }
+        })
+    })
   }
 
 
@@ -197,13 +246,42 @@ function EditProduct(props) {
     })
   }
 
-  
-  console.log(images)
-  console.log(imagesUrl)
+  const [modalData, setModalData] = useState({
+    show: false,
+    title: '',
+    body: '',
+    options: false
+  })
+  const [show, setShow] = useState(true);
+
+  const handleClose = () => {
+    setModalData(prevState => {
+        return {
+            ...prevState,
+            show: false
+        }
+    })
+    }
 
   return (
     <>
       <Container fluid>
+      <Modal show={modalData.show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalData.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalData.body}</Modal.Body>
+            {modalData.options ? (
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={deleteImageHandler}>
+                        Yes
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        No
+                    </Button>
+                </Modal.Footer>
+            ) : null}
+      </Modal>
         <Row>
           <Col md="8">
             <Card>
@@ -390,7 +468,7 @@ function EditProduct(props) {
                             <div style={imagesContainer}>
                                 {imagesUrl.length !== 0 ? imagesUrl.map((image, index) => {
                                     return (
-                                        <div key={index + Math.random()} onClick={(param) => removeImageHandler(index)}>
+                                        <div key={index + Math.random()} onClick={(param) => removeImageHandler(image)}>
                                            <img style={productImage} src={image} />
                                            
                                         </div>

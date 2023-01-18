@@ -10,6 +10,7 @@ router.get('/api/product/edit', productsController.editProduct)
 router.post('/api/product/add',  upload.array('images', 6), productsController.storeProduct)
 router.post('/api/product/update',  upload.array('images', 6), productsController.updateProduct)
 router.post('/api/product/delete', upload.none(), productsController.deleteProduct)
+router.post('/api/product/image/delete', upload.none(), productsController.deleteSingleImage)
 
 
 

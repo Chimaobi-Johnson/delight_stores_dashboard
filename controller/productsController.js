@@ -162,3 +162,8 @@ exports.deleteProduct = (req, res) => {
       console.log(err)
   })
 }
+
+
+exports.deleteSingleImage = (req, res) => {
+  console.log(req.body)
+}
