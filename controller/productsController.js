@@ -40,7 +40,6 @@ exports.storeProduct = async (req, res) => {
         imagesUrl.push(result.secure_url) 
         imagesId.push(result.public_id) 
     }
-    console.log(imagesId)
     const product = new Product({
         ...req.body,
         tags: req.body.tags,
