@@ -246,10 +246,29 @@ function EditProduct(props) {
   
     axios.post('/api/product/update', formData)
     .then(res => {
-        console.log(res) 
+        if(res.status === 200) {
+            setModalData(prevState => {
+                return {
+                    ...prevState,
+                    show: true,
+                    title: 'Update Product',
+                    body: 'Product updated successfully',
+                    options: false
+                }
+            })
+        }
     })
     .catch(err => {
         console.log(err)
+        setModalData(prevState => {
+            return {
+                ...prevState,
+                show: true,
+                title: 'Update failed',
+                body: 'Check connection or try again later',
+                options: false
+            }
+        })
     })
 
   }
