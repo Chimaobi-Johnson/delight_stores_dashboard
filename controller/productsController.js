@@ -165,5 +165,25 @@ exports.deleteProduct = (req, res) => {
 
 
 exports.deleteSingleImage = (req, res) => {
-  console.log(req.body)
+  const { cloudinaryId, cloudinaryUrl, productId } = req.body;
+  cloudinary.uploader.destroy(cloudinaryId, (error, result) => {
+    if(result) {
+        Product.findById(productId).then(product => {
+          const newImagesId = [ ...product.imagesId ];
+          const newImagesUrl = [ ...product.imagesUrl ];
+          const indexId = newImagesId.indexOf(cloudinaryId);
+          const indexUrl = newImagesUrl.indexOf(cloudinaryUrl);
+          newImagesId.splice(indexId, 1);
+          newImagesUrl.splice(indexUrl, 1);
+          product.imagesId = newImagesId;
+          product.imagesUrl = newImagesUrl;
+          return product.save();
+        }).then(updatedProduct => {
+           res.status(200).json({ product: updatedProduct })
+        }).catch(err => {
+            console.log(err)
+        })
+      }
+  })
+
 }

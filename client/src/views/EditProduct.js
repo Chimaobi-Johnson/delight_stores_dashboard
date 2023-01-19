@@ -138,7 +138,12 @@ function EditProduct(props) {
     setImage(imagesArr)
   }
 
-  const [currentPublicId, setCurrentPublicId] = useState(null)
+  const [currentImageDetails, setCurrentImageDetails] = useState({
+    cloudinaryId: null,
+    cloudinaryUrl: null,
+    productId: null
+  })
+
 
   const removeImageHandler = (image) => {
     const location = image.split('/').slice(-3)[0];
@@ -146,7 +151,14 @@ function EditProduct(props) {
     const id = image.split('/').pop().split('.')[0];
     const cloudinaryId = `${location}/${subLocation}/${id}`;
 
-    setCurrentPublicId(cloudinaryId)
+    setCurrentImageDetails(prevState => {
+        return {
+            ...prevState,
+            cloudinaryId: cloudinaryId,
+            cloudinaryUrl: image,
+            productId: productInput.id
+        }
+    })
 
     setModalData(prevState => {
         return {
@@ -166,9 +178,21 @@ function EditProduct(props) {
             show: false
         }
     })
-    axios.post('/api/product/image/delete', { id: currentPublicId })
+    axios.post('/api/product/image/delete', currentImageDetails)
     .then(res => {
         if(res.status === 200) {
+            const newImagesUrl = [ ...imagesUrl]
+            const currentIndex = newImagesUrl.indexOf(currentImageDetails.cloudinaryUrl);
+            newImagesUrl.splice(currentIndex, 1)
+            setImageUrl(newImagesUrl)
+            setCurrentImageDetails(prevState => {
+                return {
+                    ...prevState,
+                    cloudinaryId: null,
+                    cloudinaryUrl: null,
+                    productId: null
+                }
+            })
             setModalData(prevState => {
                 return {
                     ...prevState,
