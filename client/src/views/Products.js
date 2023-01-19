@@ -52,6 +52,7 @@ function Products() {
     }
 
     const [show, showModal] = useState(false)
+    const [currentProduct, setCurrentProduct] = useState(null)
     const handleProductView = () => {
       showModal(!show)
     }
@@ -86,11 +87,16 @@ function Products() {
       })
     }
 
+    const initProduct = (product) => {
+      setCurrentProduct(product)
+      showModal(true)
+    }
+
   return (
     <>
       <Container fluid>
         <Row>
-        <ProductDetails open={show} handleProductView={handleProductView} data={products} /> 
+        <ProductDetails open={show} handleProductView={handleProductView} data={currentProduct} /> 
         <Modal show={modalData.show} onHide={handleModalInit}>
         <Modal.Header closeButton>
           <Modal.Title>{modalData.title}</Modal.Title>
@@ -151,7 +157,7 @@ function Products() {
                                     <td>{product.description}</td>
                                     <td>{product.price}</td>
                                     <td><NavLink to={'/admin/product/edit/' + product._id}>Edit </NavLink>|
-                                    <NavLink to='#' style={{ color: 'green' }} onClick={handleProductView}> View </NavLink>|
+                                    <NavLink to='#' style={{ color: 'green' }} onClick={(prod) => initProduct(product)}> View </NavLink>|
                                     <NavLink to='#' style={{ color: 'red' }} onClick={(id) => handleDelete(product._id)}> Delete </NavLink></td>
                                 </tr>
                         )
