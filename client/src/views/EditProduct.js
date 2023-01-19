@@ -295,7 +295,6 @@ function EditProduct(props) {
     body: '',
     options: false
   })
-  const [show, setShow] = useState(true);
 
   const handleClose = () => {
     setModalData(prevState => {

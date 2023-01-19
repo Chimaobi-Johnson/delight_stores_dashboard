@@ -11,6 +11,7 @@ import {
   Container,
   Row,
   Col,
+  Modal
 } from "react-bootstrap";
 import { Input } from "reactstrap";
 import axios from 'axios';
@@ -137,22 +138,81 @@ function AddProduct() {
     for (let i = 0; i < images.length; i++) {
       formData.append('images', images[i])
    }
+
+   setLoading(true)
   
     axios.post('/api/product/add', formData)
     .then(res => {
-        console.log(res) 
+      if(res.status === 201) {
+        setLoading(false)
+        setModalData(prevState => {
+            return {
+                ...prevState,
+                show: true,
+                title: 'Add Product',
+                body: 'Product added successfully',
+                options: false
+            }
+        })
+        setProductInput(prevState => {
+          return {
+            ...prevState,
+            name: "",
+            price: null,
+            subheading: "",
+            description: "",
+            category: "",
+            imagesUrl: [],
+            imagesId: [],
+            deliveryStatus: "",
+            tags: [],
+            sizes: [],
+          }
+        })
+        setImage([]);
+        setImageUrl([])
+    }
     })
     .catch(err => {
         console.log(err)
+        setLoading(false)
     })
 
   }
 
-  console.log(images)
-  console.log(imagesUrl)
+  const [modalData, setModalData] = useState({
+    show: false,
+    title: '',
+    body: '',
+    options: false
+  })
+  const [loading, setLoading] = useState(false)
+
+  const handleClose = () => {
+    setModalData(prevState => {
+        return {
+            ...prevState,
+            show: false
+        }
+    })
+  }
+
   return (
     <>
       <Container fluid>
+      <Modal show={modalData.show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{modalData.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{modalData.body}</Modal.Body>
+              {modalData.options ? (
+                  <Modal.Footer>
+                      <Button variant="primary" onClick={handleClose}>
+                          Close
+                      </Button>
+                  </Modal.Footer>
+              ) : null}
+          </Modal>
         <Row>
           <Col md="8">
             <Card>
@@ -353,7 +413,7 @@ function AddProduct() {
                     variant="info"
                     onClick={submitFormHandler}
                   >
-                    Add Product
+                    {loading ? 'Adding Product...' : 'Add Product'}
                   </Button>
                   <div className="clearfix"></div>
                 </Form>

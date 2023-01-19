@@ -12,8 +12,10 @@ import {
   Container,
   Row,
   Col,
+  Modal
 } from "react-bootstrap";
 import axios from 'axios';
+import ProductDetails from "components/Product/ProductDetails/ProductDetails";
 
 function Products() {
 
@@ -39,8 +41,8 @@ function Products() {
         getproducts()
     }, [])
 
-    const deleteProductHandler = (id) => {
-      axios.post(`/api/product/delete/?id=${id}`).then(res => {
+    const deleteProductHandler = () => {
+      axios.post(`/api/product/delete/?id=${modalData.id}`).then(res => {
         if(res.status === 200) {
           window.location.reload();
         }
@@ -49,11 +51,62 @@ function Products() {
       })
     }
 
+    const [show, showModal] = useState(false)
+    const handleProductView = () => {
+      showModal(!show)
+    }
+
+    const [modalData, setModalData] = useState({
+      id: null,
+      show: false,
+      title: '',
+      body: '',
+      options: false
+    })
+  
+    const handleModalInit = () => {
+      setModalData(prevState => {
+          return {
+              ...prevState,
+              show: !modalData.show
+          }
+      })
+    }
+
+    const handleDelete = (productId) => {
+      setModalData(prevState => {
+        return {
+            ...prevState,
+            id: productId,
+            show: true,
+            title: 'Delete product',
+            body: 'Are you sure you want to delete this product',
+            options: true
+        }
+      })
+    }
+
   return (
     <>
       <Container fluid>
         <Row>
-
+        <ProductDetails open={show} handleProductView={handleProductView} data={products} /> 
+        <Modal show={modalData.show} onHide={handleModalInit}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalData.title}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>{modalData.body}</Modal.Body>
+                  {modalData.options ? (
+                      <Modal.Footer>
+                          <Button variant="secondary" onClick={deleteProductHandler}>
+                              Yes
+                          </Button>
+                          <Button variant="primary" onClick={handleModalInit}>
+                              No
+                          </Button>
+                      </Modal.Footer>
+                  ) : null}
+            </Modal>
           <Col md="12">
             <Card className="card-plain table-plain-bg">
               <Card.Header>
@@ -98,8 +151,8 @@ function Products() {
                                     <td>{product.description}</td>
                                     <td>{product.price}</td>
                                     <td><NavLink to={'/admin/product/edit/' + product._id}>Edit </NavLink>|
-                                    <NavLink to='#' style={{ color: 'green' }}> View </NavLink>|
-                                    <NavLink to='#' style={{ color: 'red' }} onClick={(id) => deleteProductHandler(product._id)}> Delete </NavLink></td>
+                                    <NavLink to='#' style={{ color: 'green' }} onClick={handleProductView}> View </NavLink>|
+                                    <NavLink to='#' style={{ color: 'red' }} onClick={(id) => handleDelete(product._id)}> Delete </NavLink></td>
                                 </tr>
                         )
                     }) : 'No products found' : ''}
