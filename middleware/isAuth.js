@@ -1,4 +1,8 @@
 
 module.exports.isLoggedIn  = function(req, res, next) {
-    console.log(req.user)
+    if(req.user) {
+        return next()
+    } else {
+        res.send(401, 'Unauthorized')
+    }
 }

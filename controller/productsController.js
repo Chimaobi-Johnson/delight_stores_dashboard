@@ -5,7 +5,6 @@ exports.getAllProducts = (req, res) => {
   const currentPage = req.query.page || 1; // if page is not set default to page 1
   const perPage = 15;
   let totalItems;
-  console.log(req.user)
   Product.find()
     .sort({ createdAt: 1 })
     .countDocuments()
