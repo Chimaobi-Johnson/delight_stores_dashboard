@@ -75,6 +75,9 @@ function Admin() {
       axios.get('/api/current_user')
       .then(data => {
         console.log(data.data.user)
+        if(Object.entries(data.data.user).length === 0) {
+          window.location.pathname = '/';
+        }
         dispatch(storeLoggedInUser(data.data.user))
       })
       .catch(err => {

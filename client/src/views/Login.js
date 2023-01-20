@@ -80,7 +80,7 @@ function Login() {
                   </Form.Text>
                 </Form.Group>
                 <Button variant="primary" onClick={() => loginHandler()}>
-                  Submit
+                  Login
                 </Button>
                 <Form.Text className="text-muted">
                     Dont have an account? <NavLink to='/auth/register'>Click to register</NavLink>

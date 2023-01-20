@@ -139,7 +139,7 @@ function Register() {
                   </Form.Text>
                 </Form.Group>
                 <Button variant="primary" onClick={() => submitFormHandler()}>
-                  Submit
+                  Register
                 </Button>
                 <Form.Text className="text-muted">
                   Already have an account?{" "}
