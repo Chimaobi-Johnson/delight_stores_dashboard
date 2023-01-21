@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 // react-bootstrap components
 import {
@@ -34,6 +34,25 @@ function AddProduct() {
   const [size, setSize] = useState("");
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
+  const [categories, setCategories] = useState(null)
+
+  useEffect(() => {
+    const getCategories = () => {
+        axios.get('/api/categories')
+        .then(categories => {
+          console.log(categories)
+            setCategories(categories.data.categories)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        
+    }
+
+    getCategories()
+  }, [])
+
+console.log(categories)
 
   const addTag = (e) => {
     e.preventDefault();
@@ -265,8 +284,13 @@ function AddProduct() {
                             type="select" 
                             value={productInput.category}
                             onChange={(e) => changeInputHandler('category', e)}>
-                            <option value="">...</option>
-                            <option value="other">Others</option>
+                              {categories ? categories.map(item => {
+                                return (
+                                    <>
+                                      <option key={Math.random() * 120} value={item._id}>{item.name}</option>
+                                    </>
+                                )
+                              }) : 'No categories found'}
                         </Input>
                       </Form.Group>
                     </Col>
