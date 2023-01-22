@@ -22,7 +22,7 @@ function AddProduct() {
     price: null,
     subheading: "",
     description: "",
-    category: "",
+    category: null,
     imagesUrl: [],
     imagesId: [],
     deliveryStatus: "",
@@ -40,7 +40,6 @@ function AddProduct() {
     const getCategories = () => {
         axios.get('/api/categories')
         .then(categories => {
-          console.log(categories)
             setCategories(categories.data.categories)
         })
         .catch(err => {
@@ -51,8 +50,6 @@ function AddProduct() {
 
     getCategories()
   }, [])
-
-console.log(categories)
 
   const addTag = (e) => {
     e.preventDefault();
@@ -149,7 +146,7 @@ console.log(categories)
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
     formData.append('description', productInput.description)
-    // formData.append('category', productInput.category)
+    formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
     formData.append('sizes', productInput.sizes)
     formData.append('tags', productInput.tags)

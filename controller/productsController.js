@@ -1,3 +1,4 @@
+const Category = require("../models/Category");
 const Product = require("../models/Product");
 const cloudinary = require("../utils/cloudinary");
 
@@ -37,7 +38,6 @@ exports.storeProduct = async (req, res) => {
       const result = await cloudinary.uploader.upload(path, {
         folder: "dlight_stores/products",
       });
-      console.log(result.public_id);
       imagesUrl.push(result.secure_url);
       imagesId.push(result.public_id);
     }
@@ -60,14 +60,20 @@ exports.storeProduct = async (req, res) => {
   }
 };
 
-exports.editProduct = (req, res) => {
+exports.getProduct = (req, res) => {
+  let productData
   Product.findById(req.query.id)
     .then((data) => {
       if (!data) {
         res.status(404).json({ message: "Product not found" });
       } else {
-        res.status(200).json({ product: data });
+        productData = data;
+        return Category.findById(data.category)
+        // res.status(200).json({ product: data });
       }
+    })
+    .then(cat => {
+      res.status(200).json({ product: productData, category: cat })
     })
     .catch((err) => {
       console.log(err);

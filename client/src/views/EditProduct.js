@@ -33,7 +33,7 @@ function EditProduct(props) {
                         price: res.data.product.price,
                         subheading: res.data.product.subheading,
                         description: res.data.product.description,
-                        category: res.data.product.category,
+                        category: res.data.category ? res.data.category.name : null,
                         imagesId:  res.data.product.imagesId,
                         imagesUrl: res.data.product.imagesUrl,
                         deliveryStatus: res.data.product.deliveryStatus,
@@ -48,6 +48,21 @@ function EditProduct(props) {
             console.log(err)
         })
     }, [])
+
+    useEffect(() => {
+        const getCategories = () => {
+            axios.get('/api/categories')
+            .then(categories => {
+                setCategories(categories.data.categories)
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            
+        }
+    
+        getCategories()
+      }, [])
 
   const [productInput, setProductInput] = useState({
     id: null,
@@ -67,6 +82,7 @@ function EditProduct(props) {
   const [size, setSize] = useState("");
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
+  const [categories, setCategories] = useState(null)
 
   const addTag = (e) => {
     e.preventDefault();
@@ -235,7 +251,7 @@ function EditProduct(props) {
     formData.append('price', productInput.price)
     formData.append('subheading', productInput.subheading)
     formData.append('description', productInput.description)
-    // formData.append('category', productInput.category)
+    formData.append('category', productInput.category)
     formData.append('deliveryStatus', productInput.deliveryStatus)
     formData.append('sizes', productInput.sizes)
     formData.append('tags', productInput.tags)
@@ -328,7 +344,7 @@ function EditProduct(props) {
           <Col md="8">
             <Card>
               <Card.Header>
-                <Card.Title as="h4">Add New Product</Card.Title>
+                <Card.Title as="h4">Edit Product</Card.Title>
               </Card.Header>
               <Card.Body>
                 <Form>
@@ -376,8 +392,13 @@ function EditProduct(props) {
                             type="select" 
                             value={productInput.category}
                             onChange={(e) => changeInputHandler('category', e)}>
-                            <option value="">...</option>
-                            <option value="other">Others</option>
+                            {categories ? categories.map(item => {
+                                return (
+                                    <>
+                                      <option key={Math.random() * 120} value={item._id}>{item.name}</option>
+                                    </>
+                                )
+                            }) : 'No categories found'}
                         </Input>
                       </Form.Group>
                     </Col>
