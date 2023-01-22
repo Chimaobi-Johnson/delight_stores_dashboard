@@ -1,6 +1,6 @@
 import React from "react";
 // react plugin for creating notifications over the dashboard
-import NotificationAlert from "react-notification-alert";
+// import NotificationAlert from "react-notification-alert";
 // react-bootstrap components
 import {
   Alert,
@@ -17,7 +17,7 @@ import {
 
 function Notifications() {
   const [showModal, setShowModal] = React.useState(false);
-  const notificationAlertRef = React.useRef(null);
+  // const notificationAlertRef = React.useRef(null);
   const notify = (place) => {
     var color = Math.floor(Math.random() * 5 + 1);
     var type;
@@ -55,12 +55,12 @@ function Notifications() {
       icon: "nc-icon nc-bell-55",
       autoDismiss: 7,
     };
-    notificationAlertRef.current.notificationAlert(options);
+    // notificationAlertRef.current.notificationAlert(options);
   };
   return (
     <>
       <div className="rna-container">
-        <NotificationAlert ref={notificationAlertRef} />
+        {/* <NotificationAlert ref={notificationAlertRef} /> */}
       </div>
       <Container fluid>
         <Card>
