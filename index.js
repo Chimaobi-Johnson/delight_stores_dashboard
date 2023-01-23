@@ -56,24 +56,23 @@ app.use(productRoutes);
 app.use(categoryRoutes);
 
 
-app.use('/', (req, res) => {
-  res.send("Server connected")
-})
-
-mongoose.connect(keys.mongoURI).then(connect => {
-    console.log('Database Connected!')
-  }).catch(err => console.log(err));
+// app.use('/', (req, res) => {
+//   res.send("Server connected")
+// })
 
 if(process.env.NODE_ENV === 'production') {
-  // serve up production files
+  // to make sure that express will serve up production assets like main.js files
   app.use(express.static('client/build'));
 
-  //serve up index.html file
-  const path = require('path');
+  // to make sure espress will serve index.html when it doesnt recognize the route
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
   })
 }
-  
+
+mongoose.connect(keys.mongoURI).then(connect => {
+    console.log('Database Connected!')
+}).catch(err => console.log(err));
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT);
