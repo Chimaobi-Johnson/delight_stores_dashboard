@@ -19,3 +19,14 @@ exports.getAllUsers = (req, res) => {
     })
 }
 
+exports.deleteUser = (req, res) => {
+
+    User.findByIdAndDelete(req.query.id).then(user => {
+        res.status(200).json({ user: user })
+    }).catch(err => {
+        console.log(err)
+    })
+
+}
+
+
