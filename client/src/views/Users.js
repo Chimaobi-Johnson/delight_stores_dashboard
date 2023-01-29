@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Alert } from 'reactstrap';
 
 // react-bootstrap components
 import {
@@ -11,7 +12,9 @@ import {
   Container,
   Row,
   Col,
+  Modal
 } from "react-bootstrap";
+import { NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 function Users() {
@@ -37,11 +40,87 @@ function Users() {
         getUsers()
     }, [])
 
+    const [modalData, setModalData] = useState({
+      id: null,
+      show: false,
+      title: '',
+      body: '',
+      options: false
+    })
+
+    const handleDelete = (id) => {
+      setModalData(prevState => {
+        return {
+          ...prevState,
+          id: id,
+          show: true,
+          title: 'Delete User',
+          body: 'Are you sure you want to delete user?',
+          options: true
+        }
+      })
+    }
+
+    const handleModalInit = () => {
+      setModalData(prevState => {
+          return {
+              ...prevState,
+              show: !modalData.show
+          }
+      })
+    }
+
+    const deleteUserHandler = () => {
+      axios.post(`/api/user/delete/?id=${modalData.id}`)
+      .then(res => {
+        if(res.status === 200) {
+          setModalData(prevState => {
+            return {
+              ...prevState,
+              id: null,
+              show: true,
+              title: 'Success',
+              body: 'User deleted successfully',
+              options: false
+            }
+          })
+        }
+      })
+      .catch(err => {
+        setModalData(prevState => {
+          return {
+            ...prevState,
+            id: null,
+            show: true,
+            title: 'Fail',
+            body: 'Error. Check connection or try again later',
+            options: false
+          }
+        })
+        console.log(err)
+      })
+    }
+
   return (
     <>
       <Container fluid>
+       <Modal show={modalData.show} onHide={handleModalInit}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalData.title}</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>{modalData.body}</Modal.Body>
+                  {modalData.options ? (
+                      <Modal.Footer>
+                          <Button variant="secondary" onClick={deleteUserHandler}>
+                              Yes
+                          </Button>
+                          <Button variant="primary" onClick={handleModalInit}>
+                              No
+                          </Button>
+                      </Modal.Footer>
+                  ) : null}
+            </Modal>
         <Row>
-
           <Col md="12">
             <Card className="strpied-tabled-with-hover">
               <Card.Header>
@@ -71,7 +150,7 @@ function Users() {
                                     <td>{user.lastName}</td>
                                     <td>{user.email}</td>
                                     <td>{user.role}</td>
-                                    <td>Edit/Delete</td>
+                                    <td><NavLink to='#' onClick={(id) => handleDelete(user._id)} style={{ color: 'red' }}>Delete</NavLink></td>
                                 </tr>
                         )
                     }) : 'No users found' : ''}
