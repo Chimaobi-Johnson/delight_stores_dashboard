@@ -84,6 +84,7 @@ function Users() {
               options: false
             }
           })
+          window.location.reload();
         }
       })
       .catch(err => {

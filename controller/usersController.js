@@ -19,18 +19,18 @@ exports.getAllUsers = (req, res) => {
     })
 }
 
-exports.getUser = (req, res) => {
-    User.findById(req.query.id)
-    .then(user => {
-        if(!user) {
-            res.status(401).json({ user: 'user not found' })
-        }
-        res.status(200).json({ user: user })
-    })
-    .catch(err => {
-        console.log(err)
-    })
-}
+// exports.getUser = (req, res) => {
+//     User.findById(req.query.id)
+//     .then(user => {
+//         if(!user) {
+//             res.status(401).json({ user: 'user not found' })
+//         }
+//         res.status(200).json({ user: user })
+//     })
+//     .catch(err => {
+//         console.log(err)
+//     })
+// }
 
 exports.deleteUser = (req, res) => {
 
