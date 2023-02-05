@@ -14,8 +14,7 @@ const productSchema = new Schema(
     },
     subheading: { type: String },
     description: {
-      type: String,
-      required: true,
+      type: String
     },
     imagesUrl: [ String ],
     imagesId: [ String ],

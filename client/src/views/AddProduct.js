@@ -41,6 +41,12 @@ function AddProduct() {
         axios.get('/api/categories')
         .then(categories => {
             setCategories(categories.data.categories)
+              setProductInput((prevState) => {
+                return {
+                  ...prevState,
+                  category: categories.data.categories[0]._id,
+                };
+              });
         })
         .catch(err => {
             console.log(err)
@@ -139,8 +145,10 @@ function AddProduct() {
     })
   }
 
+
   const submitFormHandler = e => {
     e.preventDefault();
+    console.log(productInput)
     const formData = new FormData();
     formData.append('name', productInput.name)
     formData.append('price', productInput.price)
@@ -174,10 +182,9 @@ function AddProduct() {
           return {
             ...prevState,
             name: "",
-            price: null,
+            price: 0,
             subheading: "",
             description: "",
-            category: "",
             imagesUrl: [],
             imagesId: [],
             deliveryStatus: "",
