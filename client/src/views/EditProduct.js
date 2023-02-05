@@ -22,7 +22,7 @@ function EditProduct(props) {
 
     useEffect(() => {
         const productId = props.location.pathname.split('/').pop()  // take the last item which is the ID
-        axios.get(`/api/product/edit/?id=${productId}`).then(res => {
+        axios.get(`/api/product/?id=${productId}`).then(res => {
             if(res.status === 200) {
                 console.log(res.data)
                 setProductInput(prevState => {

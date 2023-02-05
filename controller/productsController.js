@@ -218,3 +218,14 @@ exports.deleteSingleImage = (req, res) => {
     }
   });
 };
+
+
+exports.getProductIds = (req, res) => {
+  Product.find({}, {_id: 1})
+  .then(ids => {
+    res.status(200).json({ ids: ids })
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
