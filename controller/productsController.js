@@ -229,3 +229,18 @@ exports.getProductIds = (req, res) => {
     console.log(err);
   });
 }
+
+
+exports.getRelatedProducts = (req, res) => {
+  console.log(req.body.category.name)
+  Product.aggregate([
+    { $match: { category : req.body.category._id } },
+    // { $project: { name: 1, price: 1, imagesUrl: 1 }}
+  ]).limit(4)
+  .then(products => {
+    console.log(products)
+    res.status(200).json({ products: products })
+  }).catch(err => {
+    console.log(err)
+  })
+}
