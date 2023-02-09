@@ -1,12 +1,28 @@
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const cloudinary = require("../utils/cloudinary");
+const mongoose = require('mongoose');
 
 exports.getAllProducts = (req, res) => {
+  const ObjectId = mongoose.Types.ObjectId;
   const currentPage = req.query.page || 1; // if page is not set default to page 1
   const perPage = 15;
   let totalItems;
-  Product.find()
+
+  if(req.query.id) {
+    Product.aggregate([
+      { $match: { category : ObjectId(req.query.id) } },
+      { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
+      { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1 }}
+    ])
+    .then((products) => {
+      res.status(200).json({ products: products });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  } else {
+    Product.find()
     .sort({ createdAt: 1 })
     .countDocuments()
     .then((count) => {
@@ -21,6 +37,8 @@ exports.getAllProducts = (req, res) => {
     .catch((err) => {
       console.log(err);
     });
+  }
+
 };
 
 exports.storeProduct = async (req, res) => {
@@ -231,12 +249,13 @@ exports.getProductIds = (req, res) => {
 }
 
 
-exports.getRelatedProducts = (req, res) => {
-  console.log(req.body.category.name)
+exports.filterProductsByCatgory = (req, res) => {
+  console.log(req.query.id)
   Product.aggregate([
-    { $match: { category : req.body.category._id } },
+    { $match: { category : req.query.id } },
     // { $project: { name: 1, price: 1, imagesUrl: 1 }}
-  ]).limit(4)
+  ])
+  // Product.find({ category: req.body.category._id })
   .then(products => {
     console.log(products)
     res.status(200).json({ products: products })
