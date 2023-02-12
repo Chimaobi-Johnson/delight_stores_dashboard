@@ -14,7 +14,7 @@ router.post('/api/login', multer.none(), authController.loginUser, (req, res) =>
 router.post('/api/register', multer.none(), authController.registerUser)
 
 router.get('/api/current_user', (req, res) => {
-	res.send({user: req.user});
+	res.status(200).json({user: req.user});
 })
 
 router.get('/api/logout', (req, res) => {

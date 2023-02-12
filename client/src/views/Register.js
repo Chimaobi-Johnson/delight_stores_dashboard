@@ -42,7 +42,6 @@ function Register() {
 
   const validateData = (inputObj) => {
      for(const[key, value] of Object.entries(inputObj)) {
-        // console.log(value)
         if(value === '') {
             const errArr = [...errorMessages]
             errArr.push('All fields are mandatory');
@@ -78,7 +77,6 @@ function Register() {
  
   }
 
-  console.log(errorMessages)
 
   return (
     <>
