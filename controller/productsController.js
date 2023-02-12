@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 exports.getAllProducts = (req, res) => {
   const ObjectId = mongoose.Types.ObjectId;
   const currentPage = req.query.page || 1; // if page is not set default to page 1
-  const perPage = 15;
+  const perPage = 25;
   let totalItems;
 
   if(req.query.id) {
@@ -23,11 +23,12 @@ exports.getAllProducts = (req, res) => {
     });
   } else {
     Product.find()
-    .sort({ createdAt: 1 })
+    .sort({ createdAt: -1 })
     .countDocuments()
     .then((count) => {
       totalItems = count;
       return Product.find()
+        .sort({ createdAt: -1 })
         .skip((currentPage - 1) * perPage)
         .limit(perPage);
     })
