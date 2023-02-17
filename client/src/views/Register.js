@@ -21,7 +21,7 @@ import { Input } from "reactstrap";
 function Register() {
 
 
-  const { control, handleSubmit } = useForm({
+  const { control, formState: { errors }, handleSubmit } = useForm({
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -31,29 +31,8 @@ function Register() {
     },
   });
 
-  const editTextHandler = (type, e) => {
-    setInputData((prevState) => {
-      return {
-        ...prevState,
-        [type]: e.target.value,
-      };
-    });
-  };
 
-  const [errorMessages, setErrorMessages] = useState([]);
-
-  const [errorObj, setErrorObj] = useState({});
-
-  const validateData = (inputObj) => {
-    for (const [key, value] of Object.entries(inputObj)) {
-      if (value === "") {
-        const errArr = [...errorMessages];
-        errArr.push("All fields are mandatory");
-        setErrorMessages(errArr);
-      }
-    }
-  };
-
+  console.log(errors)
   const submitFormHandler = async (data) => {
     console.log(data)
     if (data.password !== data.confirmPassword) {
@@ -136,9 +115,9 @@ function Register() {
                       <Form.Control {...field} type="password" placeholder="Enter Password" />
                     )}
                   />
-                  {/* <Form.Text className="text-muted">
-                    Password must not be less than 8 characters
-                  </Form.Text> */}
+                  <Form.Text className="text-muted">
+                      Password must not be less than 8 characters
+                  </Form.Text>
                 </Form.Group>
                 <Form.Group
                   className="mb-4"
