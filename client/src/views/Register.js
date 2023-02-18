@@ -32,7 +32,6 @@ function Register() {
   });
 
 
-  console.log(errors)
   const submitFormHandler = async (data) => {
     console.log(data)
     if (data.password !== data.confirmPassword) {
