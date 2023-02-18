@@ -31,7 +31,11 @@ function AddProduct() {
   });
 
   const [tag, setTag] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState({
+    name: null,
+    price: null,
+    availability: null
+  });
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
   const [categories, setCategories] = useState(null);
@@ -71,9 +75,10 @@ function AddProduct() {
     setTag("");
   };
 
-  const addSize = (e) => {
-    e.preventDefault();
-    if (size === "") return;
+  const addSizeToArray = (e) => {
+    if(size.name === '') {
+      return
+    }
     const newSize = [...productInput.sizes];
     newSize.push(size);
     setProductInput((prevState) => {
@@ -82,7 +87,18 @@ function AddProduct() {
         sizes: newSize,
       };
     });
-    setSize("");
+    setSize(prevState => {
+      return {
+        name: null,
+        price: null,
+        availability: null
+      }
+    });
+    setModalData(prevState => {
+      return {
+        show: false
+      }
+    })
   };
 
   const removeTag = (index) => {
@@ -111,8 +127,14 @@ function AddProduct() {
     setTag(e.target.value);
   };
 
-  const changeSizeHandler = (e) => {
-    setSize(e.target.value);
+  const changeSizeHandler = (input, e) => {
+    console.log(e.target.value)
+    setSize(prevState => {
+      return {
+        ...prevState,
+        [input]: e.target.value
+      }
+    })
   };
 
   const getImageFile = (e) => {
@@ -210,31 +232,36 @@ function AddProduct() {
               <label>Size Name (e.g SM, MD, LG)</label>
               <Form.Control
                 type="text"
-                value=''
+                value={size.name}
+                onChange={(e) => changeSizeHandler('name', e)}
               ></Form.Control>
             </Form.Group>
            <Form.Group>
               <label>Price</label>
               <Form.Control
                 type="number"
-                value=''
+                value={size.price}
+                onChange={(e) => changeSizeHandler('price', e)}
               ></Form.Control>
             </Form.Group>
           <Form.Group controlId="formControlsSelectMultiple">
             <label>Availability</label>
             <Input
               type="select"
-              value=''
+              value={size.availability}
+              onChange={(e) => changeSizeHandler('availability', e)}
             >
               <option value=''>
+              </option>
+              <option value='in-stock'>
                 In stock
               </option>
-              <option value=''>
+              <option value='not-in-stock'>
                 Not in stock
               </option>
             </Input>
           </Form.Group>
-          <Button style={{ marginTop: '2rem' }} size="md">Add Size</Button>
+          <Button onClick={addSizeToArray} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
         </div>
       );
     };
