@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import truncate from "truncate";
 
 // react-bootstrap components
 import {
@@ -144,7 +145,7 @@ function Products() {
                       <th className="border-0">ID</th>
                       <th className="border-0">Name</th>
                       <th className="border-0">Description</th>
-                      <th className="border-0">price</th>
+                      <th className="border-0">price (N)</th>
                       <th className="border-0">Actions</th>
                     </tr>
                   </thead>
@@ -153,9 +154,9 @@ function Products() {
                         return (
                                 <tr key={index}>
                                     <td>{index + 1}</td>
-                                    <td>{product.name}</td>
-                                    <td>{product.description}</td>
-                                    <td>{product.price}</td>
+                                    <td>{truncate(product.name, 30)}</td>
+                                    <td>{truncate(product.description, 30)}</td>
+                                    <td style={{ fontWeight: '500', color: 'darkorange' }}>{product.price}</td>
                                     <td><NavLink to={'/admin/product/edit/' + product._id}>Edit </NavLink>|
                                     <NavLink to='#' style={{ color: 'green' }} onClick={(prod) => initProduct(product)}> View </NavLink>|
                                     <NavLink to='#' style={{ color: 'red' }} onClick={(id) => handleDelete(product._id)}> Delete </NavLink></td>
