@@ -15,6 +15,7 @@ import {
 } from "react-bootstrap";
 import { Input } from "reactstrap";
 import axios from "axios";
+import AddSize from "components/Blocks/AddSize/AddSize";
 
 function AddProduct() {
   const [productInput, setProductInput] = useState({
@@ -31,11 +32,7 @@ function AddProduct() {
   });
 
   const [tag, setTag] = useState("");
-  const [size, setSize] = useState({
-    name: '',
-    price: null,
-    availability: ''
-  });
+
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
   const [categories, setCategories] = useState(null);
@@ -75,7 +72,7 @@ function AddProduct() {
     setTag("");
   };
 
-  const addSizeToArray = (e) => {
+  const addSizeToArray = (size) => {
     if(size.name === null) {
       return
     }
@@ -130,15 +127,7 @@ function AddProduct() {
     setTag(e.target.value);
   };
 
-  const changeSizeHandler = (input, e) => {
-    console.log(e.target.value)
-    setSize((prevState) => {
-      return {
-        ...prevState,
-        [input]: e.target.value
-      }
-    })
-  };
+
 
   const getImageFile = (e) => {
     const fileLength = e.target.files.length;
@@ -240,47 +229,6 @@ function AddProduct() {
     });
   };
 
-  const AddSize = () => {
-    return (
-      <div>
-         <Form.Group>
-            <label>Size Name (e.g SM, MD, LG)</label>
-            <Form.Control
-              type="text"
-              value={size.name}
-              onChange={(e) => changeSizeHandler('name', e)}
-            ></Form.Control>
-          </Form.Group>
-         <Form.Group>
-            <label>Price</label>
-            <Form.Control
-              type="number"
-              value={size.price}
-              onChange={(e) => changeSizeHandler('price', e)}
-            ></Form.Control>
-          </Form.Group>
-        <Form.Group controlId="formControlsSelectMultiple">
-          <label>Availability</label>
-          <Input
-            type="select"
-            value={size.availability}
-            onChange={(e) => changeSizeHandler('availability', e)}
-          >
-            <option value=''>
-            </option>
-            <option value='in-stock'>
-              In stock
-            </option>
-            <option value='not-in-stock'>
-              Not in stock
-            </option>
-          </Input>
-        </Form.Group>
-        <Button onClick={addSizeToArray} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
-      </div>
-    );
-  };
-
   const [modalData, setModalData] = useState({
     show: false,
     title: "",
@@ -306,7 +254,7 @@ function AddProduct() {
           <Modal.Header closeButton>
             <Modal.Title>{modalData.title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{modalData.body === 'add size' ? <AddSize /> : modalData.body}</Modal.Body>
+          <Modal.Body>{modalData.body === 'add size' ? <AddSize addSizeToArray={addSizeToArray} /> : modalData.body}</Modal.Body>
           {modalData.options ? (
             <Modal.Footer>
               <Button variant="primary" onClick={handleClose}>
