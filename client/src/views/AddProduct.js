@@ -32,9 +32,9 @@ function AddProduct() {
 
   const [tag, setTag] = useState("");
   const [size, setSize] = useState({
-    name: null,
+    name: '',
     price: null,
-    availability: null
+    availability: ''
   });
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
@@ -76,9 +76,10 @@ function AddProduct() {
   };
 
   const addSizeToArray = (e) => {
-    if(size.name === '') {
+    if(size.name === null) {
       return
     }
+    console.log(size)
     const newSize = [...productInput.sizes];
     newSize.push(size);
     setProductInput((prevState) => {
@@ -101,6 +102,8 @@ function AddProduct() {
     })
   };
 
+  console.log(productInput)
+
   const removeTag = (index) => {
     const newTag = [...productInput.tags];
     newTag.splice(index, 1);
@@ -112,16 +115,16 @@ function AddProduct() {
     });
   };
 
-  const removeSize = (index) => {
-    const newSize = [...productInput.sizes];
-    newSize.splice(index, 1);
-    setProductInput((prevState) => {
-      return {
-        ...prevState,
-        sizes: newSize,
-      };
-    });
-  };
+  // const removeSize = (index) => {
+  //   const newSize = [...productInput.sizes];
+  //   newSize.splice(index, 1);
+  //   setProductInput((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       sizes: newSize,
+  //     };
+  //   });
+  // };
 
   const changeTagHandler = (e) => {
     setTag(e.target.value);
@@ -129,7 +132,7 @@ function AddProduct() {
 
   const changeSizeHandler = (input, e) => {
     console.log(e.target.value)
-    setSize(prevState => {
+    setSize((prevState) => {
       return {
         ...prevState,
         [input]: e.target.value
@@ -225,55 +228,57 @@ function AddProduct() {
   };
 
   const initSizeModal = () => {
-    const AddSize = () => {
-      return (
-        <div>
-           <Form.Group>
-              <label>Size Name (e.g SM, MD, LG)</label>
-              <Form.Control
-                type="text"
-                value={size.name}
-                onChange={(e) => changeSizeHandler('name', e)}
-              ></Form.Control>
-            </Form.Group>
-           <Form.Group>
-              <label>Price</label>
-              <Form.Control
-                type="number"
-                value={size.price}
-                onChange={(e) => changeSizeHandler('price', e)}
-              ></Form.Control>
-            </Form.Group>
-          <Form.Group controlId="formControlsSelectMultiple">
-            <label>Availability</label>
-            <Input
-              type="select"
-              value={size.availability}
-              onChange={(e) => changeSizeHandler('availability', e)}
-            >
-              <option value=''>
-              </option>
-              <option value='in-stock'>
-                In stock
-              </option>
-              <option value='not-in-stock'>
-                Not in stock
-              </option>
-            </Input>
-          </Form.Group>
-          <Button onClick={addSizeToArray} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
-        </div>
-      );
-    };
+    
     setModalData((prevState) => {
       return {
         ...prevState,
         show: true,
         title: "Add size",
-        body: <AddSize />,
+        body: 'add size',
         options: false,
       };
     });
+  };
+
+  const AddSize = () => {
+    return (
+      <div>
+         <Form.Group>
+            <label>Size Name (e.g SM, MD, LG)</label>
+            <Form.Control
+              type="text"
+              value={size.name}
+              onChange={(e) => changeSizeHandler('name', e)}
+            ></Form.Control>
+          </Form.Group>
+         <Form.Group>
+            <label>Price</label>
+            <Form.Control
+              type="number"
+              value={size.price}
+              onChange={(e) => changeSizeHandler('price', e)}
+            ></Form.Control>
+          </Form.Group>
+        <Form.Group controlId="formControlsSelectMultiple">
+          <label>Availability</label>
+          <Input
+            type="select"
+            value={size.availability}
+            onChange={(e) => changeSizeHandler('availability', e)}
+          >
+            <option value=''>
+            </option>
+            <option value='in-stock'>
+              In stock
+            </option>
+            <option value='not-in-stock'>
+              Not in stock
+            </option>
+          </Input>
+        </Form.Group>
+        <Button onClick={addSizeToArray} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
+      </div>
+    );
   };
 
   const [modalData, setModalData] = useState({
@@ -301,7 +306,7 @@ function AddProduct() {
           <Modal.Header closeButton>
             <Modal.Title>{modalData.title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{modalData.body}</Modal.Body>
+          <Modal.Body>{modalData.body === 'add size' ? <AddSize /> : modalData.body}</Modal.Body>
           {modalData.options ? (
             <Modal.Footer>
               <Button variant="primary" onClick={handleClose}>
@@ -423,25 +428,7 @@ function AddProduct() {
                   </Row>
                   <Row>
                     <Col md="6">
-                      {productInput.sizes !== 0
-                        ? productInput.sizes.map((size, index) => {
-                            return (
-                              <Button
-                                style={{
-                                  color: "black",
-                                  border: "1px solid #363636",
-                                  marginRight: "9px",
-                                  padding: "2px 7px",
-                                }}
-                                variant="primary"
-                                key={index}
-                                onClick={(index) => removeSize(index)}
-                              >
-                                {size}
-                              </Button>
-                            );
-                          })
-                        : ""}
+                      sizes display
                     </Col>
                   </Row>
 
