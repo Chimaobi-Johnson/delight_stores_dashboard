@@ -31,7 +31,7 @@ const AddSize = props => {
 
     return (
       <div>
-         <Form.Group>
+         {/* <Form.Group>
             <label>Size Name (e.g SM, MD, LG)</label>
             <Form.Control
               type="text"
@@ -64,7 +64,7 @@ const AddSize = props => {
             </option>
           </Input>
         </Form.Group>
-        <Button onClick={(size) => addSizeToArray(size)} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
+        <Button onClick={(size) => addSizeToArray(size)} style={{ marginTop: '2rem' }} size="md">Add Size</Button> */}
       </div>
     );
   };
