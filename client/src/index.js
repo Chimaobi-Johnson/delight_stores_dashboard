@@ -34,11 +34,14 @@ import { Provider } from 'react-redux';
 
 import thunk from 'redux-thunk';
 import User from './store/reducers/userReducer';
+import App from './store/reducers/appReducer';
+
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 const rootReducer = combineReducers({
-  user: User
+  user: User,
+  app: App
 });
 
 

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/api/users', isLoggedIn, usersController.getAllUsers)
 router.post('/api/user/delete', isLoggedIn, usersController.deleteUser)
-router.get('/api/users/edit', isLoggedIn, usersController.getUser)
+// router.get('/api/users/edit', isLoggedIn, usersController.getUser)
 
 
 

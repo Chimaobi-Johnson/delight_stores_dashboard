@@ -73,30 +73,31 @@ function AddProduct() {
   };
 
   const addSizeToArray = (size) => {
-    if(size.name === null) {
-      return
-    }
     console.log(size)
-    const newSize = [...productInput.sizes];
-    newSize.push(size);
-    setProductInput((prevState) => {
-      return {
-        ...prevState,
-        sizes: newSize,
-      };
-    });
-    setSize(prevState => {
-      return {
-        name: null,
-        price: null,
-        availability: null
-      }
-    });
-    setModalData(prevState => {
-      return {
-        show: false
-      }
-    })
+    // if(size.name === null) {
+    //   return
+    // }
+    // console.log(size)
+    // const newSize = [...productInput.sizes];
+    // newSize.push(size);
+    // setProductInput((prevState) => {
+    //   return {
+    //     ...prevState,
+    //     sizes: newSize,
+    //   };
+    // });
+    // setSize(prevState => {
+    //   return {
+    //     name: null,
+    //     price: null,
+    //     availability: null
+    //   }
+    // });
+    // setModalData(prevState => {
+    //   return {
+    //     show: false
+    //   }
+    // })
   };
 
   console.log(productInput)

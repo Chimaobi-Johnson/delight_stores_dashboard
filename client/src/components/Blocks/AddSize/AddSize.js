@@ -4,12 +4,14 @@ import {
     Button,
     Form,
   } from "react-bootstrap";
+import { useDispatch } from "react-redux";
   import { Input } from "reactstrap";
+import { addCurrentSize } from "store/actions/app";
 
 
 const AddSize = props => {
 
-    const { addSizeToArray } = props
+    const dispatch = useDispatch();
 
     const [size, setSize] = useState({
         name: '',
@@ -25,7 +27,7 @@ const AddSize = props => {
             [input]: e.target.value
           }
         })
-      };
+    };
     
     console.log(size)
 
@@ -64,7 +66,7 @@ const AddSize = props => {
             </option>
           </Input>
         </Form.Group>
-        <Button onClick={(size) => addSizeToArray(size)} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
+        <Button onClick={() => dispatch(addCurrentSize(size))} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
       </div>
     );
   };
