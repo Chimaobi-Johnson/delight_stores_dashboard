@@ -4,14 +4,10 @@ import {
     Button,
     Form,
   } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-  import { Input } from "reactstrap";
-import { addCurrentSize } from "store/actions/app";
+import { Input } from "reactstrap";
 
 
 const AddSize = props => {
-
-    const dispatch = useDispatch();
 
     const [size, setSize] = useState({
         name: '',
@@ -28,12 +24,6 @@ const AddSize = props => {
           }
         })
     };
-    
-    // const addSizeToArray = () => {
-    //    dispatch(addCurrentSize(size))
-    //    props.handleClose({data: 'sdsd'})
-
-    // }
 
 
     return (

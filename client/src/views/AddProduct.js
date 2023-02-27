@@ -91,8 +91,6 @@ function AddProduct() {
     });
   };
 
-  console.log(productInput);
-
   const removeTag = (index) => {
     const newTag = [...productInput.tags];
     newTag.splice(index, 1);
@@ -296,7 +294,7 @@ function AddProduct() {
                   <Row>
                     <Col className="pr-1" md="12">
                       <Form.Group>
-                        <label>Price</label>
+                        <label>Starting Price</label>
                         <Form.Control
                           type="number"
                           value={productInput.price}
