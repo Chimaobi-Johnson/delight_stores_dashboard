@@ -73,34 +73,25 @@ function AddProduct() {
   };
 
   const addSizeToArray = (size) => {
-    console.log(size)
-    // if(size.name === null) {
-    //   return
-    // }
-    // console.log(size)
-    // const newSize = [...productInput.sizes];
-    // newSize.push(size);
-    // setProductInput((prevState) => {
-    //   return {
-    //     ...prevState,
-    //     sizes: newSize,
-    //   };
-    // });
-    // setSize(prevState => {
-    //   return {
-    //     name: null,
-    //     price: null,
-    //     availability: null
-    //   }
-    // });
-    // setModalData(prevState => {
-    //   return {
-    //     show: false
-    //   }
-    // })
+    if (size.name === null || size.name === '') {
+      return;
+    }
+    const newSize = [...productInput.sizes];
+    newSize.push(size);
+    setProductInput((prevState) => {
+      return {
+        ...prevState,
+        sizes: newSize,
+      };
+    });
+    setModalData((prevState) => {
+      return {
+        show: false,
+      };
+    });
   };
 
-  console.log(productInput)
+  console.log(productInput);
 
   const removeTag = (index) => {
     const newTag = [...productInput.tags];
@@ -113,22 +104,20 @@ function AddProduct() {
     });
   };
 
-  // const removeSize = (index) => {
-  //   const newSize = [...productInput.sizes];
-  //   newSize.splice(index, 1);
-  //   setProductInput((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       sizes: newSize,
-  //     };
-  //   });
-  // };
+  const removeSize = (index) => {
+    const newSize = [...productInput.sizes];
+    newSize.splice(index, 1);
+    setProductInput((prevState) => {
+      return {
+        ...prevState,
+        sizes: newSize,
+      };
+    });
+  };
 
   const changeTagHandler = (e) => {
     setTag(e.target.value);
   };
-
-
 
   const getImageFile = (e) => {
     const fileLength = e.target.files.length;
@@ -218,13 +207,12 @@ function AddProduct() {
   };
 
   const initSizeModal = () => {
-    
     setModalData((prevState) => {
       return {
         ...prevState,
         show: true,
         title: "Add size",
-        body: 'add size',
+        body: "add size",
         options: false,
       };
     });
@@ -255,7 +243,16 @@ function AddProduct() {
           <Modal.Header closeButton>
             <Modal.Title>{modalData.title}</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{modalData.body === 'add size' ? <AddSize addSizeToArray={addSizeToArray} /> : modalData.body}</Modal.Body>
+          <Modal.Body>
+            {modalData.body === "add size" ? (
+              <AddSize
+                handleClose={handleClose}
+                addSizeToArray={addSizeToArray}
+              />
+            ) : (
+              modalData.body
+            )}
+          </Modal.Body>
           {modalData.options ? (
             <Modal.Footer>
               <Button variant="primary" onClick={handleClose}>
@@ -371,13 +368,56 @@ function AddProduct() {
                       <Form.Group>
                         <label>Add Available Sizes</label>
                       </Form.Group>
-                      <Button className="btn-fill" variant="info" onClick={initSizeModal}>Add size</Button>
-
+                      <Button
+                        className="btn-fill"
+                        variant="info"
+                        onClick={initSizeModal}
+                      >
+                        Add size
+                      </Button>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="6">
-                      sizes display
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          fontSize: ".9rem",
+                          color: "#999494",
+                          margin: "0",
+                        }}
+                      >
+                        {productInput.sizes.length !== 0
+                          ? productInput.sizes.map((size, index) => (
+                              <li
+                                style={{
+                                  border: "1px solid #eaeaea",
+                                  paddingLeft: "5px",
+                                  marginBottom: "1rem",
+                                  cursor: "pointer",
+                                }}
+                                onClick={(i) => removeSize(index)}
+                              >
+                              <span
+                                  style={{
+                                    color: "#0dd10d",
+                                  }}
+                                >
+                                  {size.name}
+                                </span>
+                                 : {size.price} -{" "}
+                                <span
+                                  style={{
+                                    fontSize: ".9rem",
+                                    color: "chocolate",
+                                  }}
+                                >
+                                  {size.availability}
+                                </span>
+                              </li>
+                            ))
+                          : null}
+                      </ul>
                     </Col>
                   </Row>
 
@@ -394,7 +434,11 @@ function AddProduct() {
                       </Form.Group>
                     </Col>
                     <Col md="6">
-                      <Button className="btn-fill" variant="info" onClick={(e) => addTag(e)}>
+                      <Button
+                        className="btn-fill"
+                        variant="info"
+                        onClick={(e) => addTag(e)}
+                      >
                         Add
                       </Button>
                     </Col>

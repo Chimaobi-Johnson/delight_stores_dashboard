@@ -1,22 +1,18 @@
 import { ADD_CURRENT_SIZE } from "store/actions/action-type";
 
 const initialState = {
-  size: {
-    name: "",
-    price: null,
-    availability: "",
-  },
+  sizes: []
 };
 
 const appActions = (state = initialState, action) => {
   switch (action.type) {
     case ADD_CURRENT_SIZE:
+
+    const currentSizeArr = [ ...state.sizes ]
+    currentSizeArr.push(action.payload)
       const newState = {
         ...state,
-        size: {
-          ...state.size,
-          ...action.payload,
-        },
+        sizes: currentSizeArr
       };
       return newState;
     default:

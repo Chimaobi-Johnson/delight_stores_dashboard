@@ -29,7 +29,12 @@ const AddSize = props => {
         })
     };
     
-    console.log(size)
+    // const addSizeToArray = () => {
+    //    dispatch(addCurrentSize(size))
+    //    props.handleClose({data: 'sdsd'})
+
+    // }
+
 
     return (
       <div>
@@ -66,7 +71,7 @@ const AddSize = props => {
             </option>
           </Input>
         </Form.Group>
-        <Button onClick={() => dispatch(addCurrentSize(size))} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
+        <Button onClick={(data) => props.addSizeToArray(size)} style={{ marginTop: '2rem' }} size="md">Add Size</Button>
       </div>
     );
   };
