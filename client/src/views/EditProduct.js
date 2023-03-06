@@ -11,58 +11,60 @@ import {
   Container,
   Row,
   Col,
-  Modal
+  Modal,
 } from "react-bootstrap";
 import { Input } from "reactstrap";
-import axios from 'axios';
-import { Alert } from 'reactstrap';
+import axios from "axios";
+import { Alert } from "reactstrap";
 import { useEffect } from "react";
+import AddSize from "components/Blocks/AddSize/AddSize";
 
 function EditProduct(props) {
-
-    useEffect(() => {
-        const productId = props.location.pathname.split('/').pop()  // take the last item which is the ID
-        axios.get(`/api/product/?id=${productId}`).then(res => {
-            if(res.status === 200) {
-                console.log(res.data)
-                setProductInput(prevState => {
-                    return {
-                        ...prevState,
-                        id: productId,
-                        name: res.data.product.name,
-                        price: res.data.product.price,
-                        subheading: res.data.product.subheading,
-                        description: res.data.product.description,
-                        category: res.data.category ? res.data.category.name : null,
-                        imagesId:  res.data.product.imagesId,
-                        imagesUrl: res.data.product.imagesUrl,
-                        deliveryStatus: res.data.product.deliveryStatus,
-                        tags: res.data.product.tags,
-                        sizes: res.data.product.sizes,
-                    }
-                })
-                setImageUrl(res.data.product.imagesUrl)
-
-            }
-        }).catch(err => {
-            console.log(err)
-        })
-    }, [])
-
-    useEffect(() => {
-        const getCategories = () => {
-            axios.get('/api/categories')
-            .then(categories => {
-                setCategories(categories.data.categories)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-            
+  useEffect(() => {
+    const productId = props.location.pathname.split("/").pop(); // take the last item which is the ID
+    axios
+      .get(`/api/product/?id=${productId}`)
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res.data);
+          setProductInput((prevState) => {
+            return {
+              ...prevState,
+              id: productId,
+              name: res.data.product.name,
+              price: res.data.product.price,
+              subheading: res.data.product.subheading,
+              description: res.data.product.description,
+              category: res.data.category ? res.data.category.name : null,
+              imagesId: res.data.product.imagesId,
+              imagesUrl: res.data.product.imagesUrl,
+              deliveryStatus: res.data.product.deliveryStatus,
+              tags: res.data.product.tags,
+              sizes: res.data.product.sizes,
+            };
+          });
+          setImageUrl(res.data.product.imagesUrl);
         }
-    
-        getCategories()
-      }, [])
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  useEffect(() => {
+    const getCategories = () => {
+      axios
+        .get("/api/categories")
+        .then((categories) => {
+          setCategories(categories.data.categories);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getCategories();
+  }, []);
 
   const [productInput, setProductInput] = useState({
     id: null,
@@ -82,7 +84,7 @@ function EditProduct(props) {
   const [size, setSize] = useState("");
   const [imagesUrl, setImageUrl] = useState([]);
   const [images, setImage] = useState([]);
-  const [categories, setCategories] = useState(null)
+  const [categories, setCategories] = useState(null);
 
   const addTag = (e) => {
     e.preventDefault();
@@ -98,19 +100,6 @@ function EditProduct(props) {
     setTag("");
   };
 
-  const addSize = (e) => {
-    e.preventDefault();
-    if (size === "") return;
-    const newSize = [...productInput.sizes];
-    newSize.push(size);
-    setProductInput((prevState) => {
-      return {
-        ...prevState,
-        sizes: newSize,
-      };
-    });
-    setSize("");
-  };
 
   const removeTag = (index) => {
     const newTag = [...productInput.tags];
@@ -134,6 +123,7 @@ function EditProduct(props) {
     });
   };
 
+
   const changeTagHandler = (e) => {
     setTag(e.target.value);
   };
@@ -142,204 +132,248 @@ function EditProduct(props) {
     setSize(e.target.value);
   };
 
-  const getImageFile = e => {
+  const getImageFile = (e) => {
     const fileLength = e.target.files.length;
     const imageUrlArray = [...imagesUrl];
     const imagesArr = [...images];
-    for(let i = 0; i < fileLength; i++) {
-        imageUrlArray.push(URL.createObjectURL(e.target.files[i]))
-        imagesArr.push(e.target.files[i])
+    for (let i = 0; i < fileLength; i++) {
+      imageUrlArray.push(URL.createObjectURL(e.target.files[i]));
+      imagesArr.push(e.target.files[i]);
     }
-    setImageUrl(imageUrlArray)
-    setImage(imagesArr)
-  }
+    setImageUrl(imageUrlArray);
+    setImage(imagesArr);
+  };
 
   const [currentImageDetails, setCurrentImageDetails] = useState({
     cloudinaryId: null,
     cloudinaryUrl: null,
-    productId: null
-  })
-
+    productId: null,
+  });
 
   const removeImageHandler = (image) => {
-    const location = image.split('/').slice(-3)[0];
-    const subLocation = image.split('/').slice(-2)[0];
-    const id = image.split('/').pop().split('.')[0];
+    const location = image.split("/").slice(-3)[0];
+    const subLocation = image.split("/").slice(-2)[0];
+    const id = image.split("/").pop().split(".")[0];
     const cloudinaryId = `${location}/${subLocation}/${id}`;
 
-    setCurrentImageDetails(prevState => {
-        return {
-            ...prevState,
-            cloudinaryId: cloudinaryId,
-            cloudinaryUrl: image,
-            productId: productInput.id
-        }
-    })
+    setCurrentImageDetails((prevState) => {
+      return {
+        ...prevState,
+        cloudinaryId: cloudinaryId,
+        cloudinaryUrl: image,
+        productId: productInput.id,
+      };
+    });
 
-    setModalData(prevState => {
-        return {
-            ...prevState,
-            show: true,
-            title: 'Delete Image',
-            body: 'Are you sure you want to delete image?',
-            options: true
-        }
-    })
-  }
+    setModalData((prevState) => {
+      return {
+        ...prevState,
+        show: true,
+        title: "Delete Image",
+        body: "Are you sure you want to delete image?",
+        options: true,
+      };
+    });
+  };
 
   const deleteImageHandler = () => {
-    setModalData(prevState => {
-        return {
-            ...prevState,
-            show: false
-        }
-    })
-    axios.post('/api/product/image/delete', currentImageDetails)
-    .then(res => {
-        if(res.status === 200) {
-            const newImagesUrl = [ ...imagesUrl]
-            const currentIndex = newImagesUrl.indexOf(currentImageDetails.cloudinaryUrl);
-            newImagesUrl.splice(currentIndex, 1)
-            setImageUrl(newImagesUrl)
-            setCurrentImageDetails(prevState => {
-                return {
-                    ...prevState,
-                    cloudinaryId: null,
-                    cloudinaryUrl: null,
-                    productId: null
-                }
-            })
-            setModalData(prevState => {
-                return {
-                    ...prevState,
-                    show: true,
-                    title: 'Delete Image',
-                    body: 'Image deleted successfully',
-                    options: false
-                }
-            })
-        }
-    }).catch(err => {
-        console.log(err)
-        setModalData(prevState => {
+    setModalData((prevState) => {
+      return {
+        ...prevState,
+        show: false,
+      };
+    });
+    axios
+      .post("/api/product/image/delete", currentImageDetails)
+      .then((res) => {
+        if (res.status === 200) {
+          const newImagesUrl = [...imagesUrl];
+          const currentIndex = newImagesUrl.indexOf(
+            currentImageDetails.cloudinaryUrl
+          );
+          newImagesUrl.splice(currentIndex, 1);
+          setImageUrl(newImagesUrl);
+          setCurrentImageDetails((prevState) => {
             return {
-                ...prevState,
-                show: true,
-                title: 'Delete failed',
-                body: 'Error. Check connection or try again later',
-                options: false
-            }
-        })
-    })
-  }
-
+              ...prevState,
+              cloudinaryId: null,
+              cloudinaryUrl: null,
+              productId: null,
+            };
+          });
+          setModalData((prevState) => {
+            return {
+              ...prevState,
+              show: true,
+              title: "Delete Image",
+              body: "Image deleted successfully",
+              options: false,
+            };
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setModalData((prevState) => {
+          return {
+            ...prevState,
+            show: true,
+            title: "Delete failed",
+            body: "Error. Check connection or try again later",
+            options: false,
+          };
+        });
+      });
+  };
 
   const changeInputHandler = (input, e) => {
-    setProductInput(prevState => {
-        return {
-            ...prevState,
-            [input]: e.target.value
-        }
-    })
-  }
+    setProductInput((prevState) => {
+      return {
+        ...prevState,
+        [input]: e.target.value,
+      };
+    });
+  };
 
-  const submitFormHandler = e => {
+  const submitFormHandler = (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('productId', productInput.id)
-    formData.append('name', productInput.name)
-    formData.append('price', productInput.price)
-    formData.append('subheading', productInput.subheading)
-    formData.append('description', productInput.description)
-    formData.append('category', productInput.category)
-    formData.append('deliveryStatus', productInput.deliveryStatus)
-    formData.append('sizes', productInput.sizes)
-    formData.append('tags', productInput.tags)
-    
-    for (let i = 0; i < images.length; i++) {
-      formData.append('images', images[i])
-   }
-  
-    axios.post('/api/product/update', formData)
-    .then(res => {
-        if(res.status === 200) {
-            setModalData(prevState => {
-                return {
-                    ...prevState,
-                    show: true,
-                    title: 'Update Product',
-                    body: 'Product updated successfully',
-                    options: false
-                }
-            })
-        }
-    })
-    .catch(err => {
-        console.log(err)
-        setModalData(prevState => {
-            return {
-                ...prevState,
-                show: true,
-                title: 'Update failed',
-                body: 'Check connection or try again later',
-                options: false
-            }
-        })
-    })
+    formData.append("productId", productInput.id);
+    formData.append("name", productInput.name);
+    formData.append("price", productInput.price);
+    formData.append("subheading", productInput.subheading);
+    formData.append("description", productInput.description);
+    formData.append("category", productInput.category);
+    formData.append("deliveryStatus", productInput.deliveryStatus);
+    formData.append("sizes", productInput.sizes);
+    formData.append("tags", productInput.tags);
 
-  }
+    for (let i = 0; i < images.length; i++) {
+      formData.append("images", images[i]);
+    }
+
+    axios
+      .post("/api/product/update", formData)
+      .then((res) => {
+        if (res.status === 200) {
+          setModalData((prevState) => {
+            return {
+              ...prevState,
+              show: true,
+              title: "Update Product",
+              body: "Product updated successfully",
+              options: false,
+            };
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setModalData((prevState) => {
+          return {
+            ...prevState,
+            show: true,
+            title: "Update failed",
+            body: "Check connection or try again later",
+            options: false,
+          };
+        });
+      });
+  };
 
   const [responseData, setResponseData] = useState({
     loading: false,
     initAlert: false,
-    alertType: 'Info',
-    alertMessage: ''
-  })
+    alertType: "Info",
+    alertMessage: "",
+  });
 
   const closeNotification = () => {
-    setResponseData(prevState => {
+    setResponseData((prevState) => {
       return {
         ...prevState,
-        initAlert: false
-      }
-    })
-  }
+        initAlert: false,
+      };
+    });
+  };
+
+  const initSizeModal = () => {
+    setModalData((prevState) => {
+      return {
+        ...prevState,
+        show: true,
+        title: "Add size",
+        body: "add size",
+        options: false,
+      };
+    });
+  };
+
+  const addSizeToArray = (size) => {
+    if (size.name === null || size.name === '') {
+      return;
+    }
+    const newSize = [...productInput.sizes];
+    newSize.push(size);
+    setProductInput((prevState) => {
+      return {
+        ...prevState,
+        sizes: newSize,
+      };
+    });
+    setModalData((prevState) => {
+      return {
+        show: false,
+      };
+    });
+  };
 
   const [modalData, setModalData] = useState({
     show: false,
-    title: '',
-    body: '',
-    options: false
-  })
+    title: "",
+    body: "",
+    options: false,
+  });
 
   const handleClose = () => {
-    setModalData(prevState => {
-        return {
-            ...prevState,
-            show: false
-        }
-    })
-    }
+    setModalData((prevState) => {
+      return {
+        ...prevState,
+        show: false,
+      };
+    });
+  };
+
+  console.log(productInput.sizes)
 
   return (
     <>
       <Container fluid>
-      <Modal show={modalData.show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{modalData.title}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{modalData.body}</Modal.Body>
-            {modalData.options ? (
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={deleteImageHandler}>
-                        Yes
-                    </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        No
-                    </Button>
-                </Modal.Footer>
-            ) : null}
-      </Modal>
+        <Modal show={modalData.show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{modalData.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {modalData.body === "add size" ? (
+              <AddSize
+                handleClose={handleClose}
+                addSizeToArray={addSizeToArray}
+              />
+            ) : (
+              modalData.body
+            )}
+          </Modal.Body>
+          {modalData.options ? (
+            <Modal.Footer>
+              <Button variant="secondary" onClick={deleteImageHandler}>
+                Yes
+              </Button>
+              <Button variant="primary" onClick={handleClose}>
+                No
+              </Button>
+            </Modal.Footer>
+          ) : null}
+        </Modal>
         <Row>
           <Col md="8">
             <Card>
@@ -356,7 +390,7 @@ function EditProduct(props) {
                           placeholder="Enter name of product"
                           type="text"
                           value={productInput.name}
-                          onChange={(e) => changeInputHandler('name', e)}
+                          onChange={(e) => changeInputHandler("name", e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -367,7 +401,7 @@ function EditProduct(props) {
                           placeholder="Product sub heading"
                           type="text"
                           value={productInput.subheading}
-                          onChange={(e) => changeInputHandler('subheading', e)}
+                          onChange={(e) => changeInputHandler("subheading", e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -379,7 +413,7 @@ function EditProduct(props) {
                         <Form.Control
                           type="number"
                           value={productInput.price}
-                          onChange={(e) => changeInputHandler('price', e)}
+                          onChange={(e) => changeInputHandler("price", e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -388,30 +422,41 @@ function EditProduct(props) {
                     <Col md="6">
                       <Form.Group controlId="formControlsSelectMultiple">
                         <label>Select Category</label>
-                        <Input 
-                            type="select" 
-                            value={productInput.category}
-                            onChange={(e) => changeInputHandler('category', e)}>
-                            {categories ? categories.map(item => {
+                        <Input
+                          type="select"
+                          value={productInput.category}
+                          onChange={(e) => changeInputHandler("category", e)}
+                        >
+                          {categories
+                            ? categories.map((item) => {
                                 return (
-                                    <>
-                                      <option key={Math.random() * 120} value={item._id}>{item.name}</option>
-                                    </>
-                                )
-                            }) : 'No categories found'}
+                                  <>
+                                    <option
+                                      key={Math.random() * 120}
+                                      value={item._id}
+                                    >
+                                      {item.name}
+                                    </option>
+                                  </>
+                                );
+                              })
+                            : "No categories found"}
                         </Input>
                       </Form.Group>
                     </Col>
                     <Col md="6">
                       <Form.Group controlId="formControlsSelectMultiple2">
                         <label>Delivery Status</label>
-                        <Input 
-                            type="select"    
-                            value={productInput.deliveryStatus}
-                            onChange={(e) => changeInputHandler('deliveryStatus', e)}>
-                            <option value="">...</option>
-                            <option value="ready">Ready for delivery</option>
-                            <option value="pickup">Pickup only</option>
+                        <Input
+                          type="select"
+                          value={productInput.deliveryStatus}
+                          onChange={(e) =>
+                            changeInputHandler("deliveryStatus", e)
+                          }
+                        >
+                          <option value="">...</option>
+                          <option value="ready">Ready for delivery</option>
+                          <option value="pickup">Pickup only</option>
                         </Input>
                       </Form.Group>
                     </Col>
@@ -426,7 +471,7 @@ function EditProduct(props) {
                           rows="4"
                           as="textarea"
                           value={productInput.description}
-                          onChange={(e) => changeInputHandler('description', e)}
+                          onChange={(e) => changeInputHandler("description", e)}
                         ></Form.Control>
                       </Form.Group>
                     </Col>
@@ -435,44 +480,60 @@ function EditProduct(props) {
                     <Col md="6">
                       <Form.Group>
                         <label>Add Available Sizes (SM, MD, LG ...)</label>
-                        <Form.Control
-                          placeholder="Add Available Sizes (SM, MD, LG ...)"
-                          type="text"
-                          onChange={(e) => changeSizeHandler(e)}
-                          value={size}
-                        ></Form.Control>
                       </Form.Group>
-                    </Col>
-                    <Col md="6">
-                      <Button variant="primary" onClick={(e) => addSize(e)}>
-                        Add
+                      <Button
+                        className="btn-fill"
+                        variant="info"
+                        onClick={initSizeModal}
+                      >
+                        Add size
                       </Button>
                     </Col>
                   </Row>
                   <Row>
                     <Col md="6">
-                      {productInput.sizes !== 0
-                        ? productInput.sizes.map((size, index) => {
-                            return (
-                              <Button
+                      <ul
+                        style={{
+                          listStyle: "none",
+                          fontSize: ".9rem",
+                          color: "#999494",
+                          margin: "0",
+                        }}
+                      >
+                        {productInput.sizes.length !== 0
+                          ? productInput.sizes.map((size, index) => (
+                              <li
                                 style={{
-                                  color: "black",
-                                  border: "1px solid #363636",
-                                  marginRight: "9px"    ,
-                                  padding: "2px 7px",
+                                  border: "1px solid #eaeaea",
+                                  paddingLeft: "5px",
+                                  marginBottom: "1rem",
+                                  cursor: "pointer",
                                 }}
-                                variant="primary"
-                                key={index}
-                                onClick={(index) => removeSize(index)}
+                                onClick={(i) => removeSize(index)}
                               >
-                                {size}
-                              </Button>
-                            );
-                          })
-                        : ""}
+                                <span
+                                  style={{
+                                    color: "#0dd10d",
+                                  }}
+                                >
+                                  {size.name}
+                                </span>
+                                : {size.price} -{" "}
+                                <span
+                                  style={{
+                                    fontSize: ".9rem",
+                                    color: "chocolate",
+                                  }}
+                                >
+                                  {size.availability}
+                                </span>
+                              </li>
+                            ))
+                          : null}
+                      </ul>
                     </Col>
                   </Row>
-
+                  
                   <Row style={{ alignItems: "flex-end" }}>
                     <Col md="6">
                       <Form.Group>
@@ -520,26 +581,30 @@ function EditProduct(props) {
                           name="images"
                           multiple
                         ></Form.Control>
-                            <Form.Text className="text-muted">
-                                Click on image to remove
-                            </Form.Text>
+                        <Form.Text className="text-muted">
+                          Click on image to remove
+                        </Form.Text>
                       </Form.Group>
                     </Col>
                   </Row>
                   <Row>
-                        <Col md="12">
-                            <div style={imagesContainer}>
-                                {imagesUrl.length !== 0 ? imagesUrl.map((image, index) => {
-                                    return (
-                                        <div key={index + Math.random()} onClick={(param) => removeImageHandler(image)}>
-                                           <img style={productImage} src={image} />
-                                           
-                                        </div>
-                                    )
-                                }): ''}
-                            </div>
-                        </Col>
-                    </Row>
+                    <Col md="12">
+                      <div style={imagesContainer}>
+                        {imagesUrl.length !== 0
+                          ? imagesUrl.map((image, index) => {
+                              return (
+                                <div
+                                  key={index + Math.random()}
+                                  onClick={(param) => removeImageHandler(image)}
+                                >
+                                  <img style={productImage} src={image} />
+                                </div>
+                              );
+                            })
+                          : ""}
+                      </div>
+                    </Col>
+                  </Row>
                   <Button
                     className="btn-fill pull-right"
                     variant="info"
@@ -550,11 +615,11 @@ function EditProduct(props) {
                   <div className="clearfix"></div>
                 </Form>
                 <Alert
-                    color={responseData.alertType}
-                    isOpen={responseData.initAlert}
-                    toggle={closeNotification}
+                  color={responseData.alertType}
+                  isOpen={responseData.initAlert}
+                  toggle={closeNotification}
                 >
-                    <span>{responseData.alertMessage}</span>
+                  <span>{responseData.alertMessage}</span>
                 </Alert>
               </Card.Body>
             </Card>
@@ -621,18 +686,18 @@ function EditProduct(props) {
 }
 
 const imagesContainer = {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    flexWrap: 'wrap',
-    padding: '1rem 2rem',
-    width: '100%'
-}
+  display: "flex",
+  justifyContent: "flex-start",
+  flexWrap: "wrap",
+  padding: "1rem 2rem",
+  width: "100%",
+};
 
 const productImage = {
-    width: '200px',
-    height: '170px',
-    marginRight: '2rem',
-    marginBottom: '2rem',
-}
+  width: "200px",
+  height: "170px",
+  marginRight: "2rem",
+  marginBottom: "2rem",
+};
 
 export default EditProduct;

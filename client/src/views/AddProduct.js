@@ -89,6 +89,8 @@ function AddProduct() {
         show: false,
       };
     });
+    console.log(productInput)
+
   };
 
   const removeTag = (index) => {

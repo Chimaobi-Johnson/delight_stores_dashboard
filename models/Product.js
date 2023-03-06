@@ -33,7 +33,9 @@ const productSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Category"    
     },
-    sizes: [ String ],
+    sizes: [ {
+      type: Object
+    } ],
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
