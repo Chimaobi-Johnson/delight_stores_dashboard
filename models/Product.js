@@ -34,7 +34,9 @@ const productSchema = new Schema(
       ref: "Category"    
     },
     sizes: [ {
-      type: Object
+      name: { type: String, default: 1 },
+      price: { type: Number, default: 0 },
+      availability: { type: String, default: ''}
     } ],
     postedBy: {
       type: Schema.Types.ObjectId,
