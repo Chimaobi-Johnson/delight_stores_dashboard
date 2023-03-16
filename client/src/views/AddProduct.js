@@ -159,7 +159,7 @@ function AddProduct() {
     formData.append("description", productInput.description);
     formData.append("category", productInput.category);
     formData.append("deliveryStatus", productInput.deliveryStatus);
-    formData.append("sizes", productInput.sizes);
+    formData.append("sizes", JSON.stringify(productInput.sizes));
     formData.append("tags", productInput.tags);
 
     for (let i = 0; i < images.length; i++) {
