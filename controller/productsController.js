@@ -112,10 +112,14 @@ exports.updateProduct = async (req, res) => {
     tags,
   } = req.body;
 
+  const sizeObj = JSON.parse(sizes)
+
+
   if (req.files.length !== 0) {
     const newImages = req.files;
     const imagesId = [];
     const imagesUrl = [];
+
 
     for (const image of newImages) {
       const { path } = image;
@@ -149,7 +153,7 @@ exports.updateProduct = async (req, res) => {
         productData.subheading = subheading;
         productData.description = description;
         productData.deliveryStatus = deliveryStatus;
-        productData.sizes = sizes;
+        productData.sizes = sizeObj;
         productData.tags = tags;
         productData.imagesId = newImagesID;
         productData.imagesUrl = newImagesURL;
@@ -177,7 +181,7 @@ exports.updateProduct = async (req, res) => {
           data.subheading = subheading;
           data.description = description;
           data.deliveryStatus = deliveryStatus;
-          data.sizes = sizes;
+          data.sizes = sizeObj;
           data.tags = tags;
           return data.save();
         }
