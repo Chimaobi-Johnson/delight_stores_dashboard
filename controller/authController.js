@@ -23,3 +23,5 @@ exports.registerUser = (req, res, next) => {
 }
 
 exports.loginUser = passport.authenticate('local', { failureRedirect: '/auth/login' });
+
+exports.loginClientUser = passport.authenticate('local', { failureRedirect: '/auth/login' });

@@ -32,7 +32,7 @@ function Login() {
         }
         axios.post('/api/login', customData).then(data => {
             if(data.status === 200) {
-           localStorage.setItem('dlight_userId', data.data.user._id);
+            localStorage.setItem('dlight_userId', data.data.user._id);
 
           // set one hour expiration time
           const remainingMilliseconds = 60 * 60 * 1000;
