@@ -20,6 +20,7 @@ router.get('/api/current_user', (req, res) => {
 })
 
 router.get('/api/logout', (req, res) => {
+    console.log('api hit')
     req.logout();
     res.redirect('/auth/login');
   })

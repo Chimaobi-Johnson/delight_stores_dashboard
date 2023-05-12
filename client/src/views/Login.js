@@ -16,8 +16,35 @@ import {
   Row,
   Col,
 } from "react-bootstrap";
+import { useDispatch } from 'react-redux';
+import { storeLoggedInUser } from "store/actions/user";
+
 
 function Login() {
+
+  const dispatch = useDispatch();
+
+  React.useEffect( () => {
+
+    const getUser = () => {
+      axios.get('/api/current_user')
+      .then(data => {
+        console.log(data)
+        if(!data.data.user) {
+          return
+        } else {
+          dispatch(storeLoggedInUser(data.data.user))
+          window.location.pathname = '/admin';
+        }
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+
+    getUser()
+
+  }, [])
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
