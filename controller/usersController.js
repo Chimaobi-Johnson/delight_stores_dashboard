@@ -19,6 +19,25 @@ exports.getAllUsers = (req, res) => {
     })
 }
 
+exports.updateCart = (req, res) => {
+    console.log(req.body)
+    User.findOne(req.user._id)
+    .then(user => {
+       user.cart.items = req.body
+       return user.save()
+    })
+    .then(data => {
+        res.status(200).json({ data: req.user })
+    })
+    .catch(err => {
+        console.log(err)
+    })
+
+   
+}
+
+
+
 // exports.getUser = (req, res) => {
 //     User.findById(req.query.id)
 //     .then(user => {

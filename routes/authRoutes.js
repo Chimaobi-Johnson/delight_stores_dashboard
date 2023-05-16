@@ -11,8 +11,6 @@ router.get('/user', (req, res) => {
 
 router.post('/api/login', multer.none(), authController.loginUser, (req, res) => res.status(200).json({ message: 'Login Successful', user: req.user }))
 
-// router.post('/api/client-login', multer.none(), authController.loginClientUser, (req, res) => res.status(200).json({ message: 'Login Successful', user: req.user }))
-
 router.post('/api/register', multer.none(), authController.registerUser)
 
 router.get('/api/current_user', (req, res) => {
@@ -20,7 +18,6 @@ router.get('/api/current_user', (req, res) => {
 })
 
 router.get('/api/logout', (req, res) => {
-    console.log('api hit')
     req.logout();
     res.redirect('/auth/login');
   })
