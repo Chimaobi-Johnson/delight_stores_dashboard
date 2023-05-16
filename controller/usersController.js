@@ -20,10 +20,10 @@ exports.getAllUsers = (req, res) => {
 }
 
 exports.updateCart = (req, res) => {
-    console.log(req.body)
+    const newCart = JSON.parse(req.body.cartItems)
     User.findOne(req.user._id)
     .then(user => {
-       user.cart.items = req.body
+       user.cart.items = newCart
        return user.save()
     })
     .then(data => {
