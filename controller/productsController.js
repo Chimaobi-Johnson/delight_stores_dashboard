@@ -16,7 +16,7 @@ exports.getAllProducts = (req, res) => {
       { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1 }}
     ])
     .then((products) => {
-      res.status(200).json({ products: products });
+      res.status(200).send({ products: products });
     })
     .catch((err) => {
       console.log(err);
@@ -33,7 +33,7 @@ exports.getAllProducts = (req, res) => {
         .limit(perPage);
     })
     .then((products) => {
-      res.status(200).json({ products: products });
+      res.status(200).send({ products: products });
     })
     .catch((err) => {
       console.log(err);
@@ -71,7 +71,7 @@ exports.storeProduct = async (req, res) => {
     product
       .save()
       .then((savedProduct) => {
-        res.status(201).json({ product: savedProduct });
+        res.status(201).send({ product: savedProduct });
       })
       .catch((err) => {
         // DELETE IMAGES WHEN SAVING FAILS
@@ -85,7 +85,7 @@ exports.getProduct = (req, res) => {
   Product.findById(req.query.id)
     .then((data) => {
       if (!data) {
-        res.status(404).json({ message: "Product not found" });
+        res.status(404).send({ message: "Product not found" });
       } else {
         productData = data;
         return Category.findById(data.category)
@@ -93,7 +93,7 @@ exports.getProduct = (req, res) => {
       }
     })
     .then(cat => {
-      res.status(200).json({ product: productData, category: cat })
+      res.status(200).send({ product: productData, category: cat })
     })
     .catch((err) => {
       console.log(err);
@@ -160,7 +160,7 @@ exports.updateProduct = async (req, res) => {
         return productData.save();
       })
       .then((updatedProduct) => {
-        res.status(200).json({ product: updatedProduct });
+        res.status(200).send({ product: updatedProduct });
       })
       .catch((err) => {
         console.log(err);
@@ -187,7 +187,7 @@ exports.updateProduct = async (req, res) => {
         }
       })
       .then((updatedProduct) => {
-        res.status(200).json({ product: updatedProduct });
+        res.status(200).send({ product: updatedProduct });
       })
       .catch((err) => {
         console.log(err);
@@ -247,7 +247,7 @@ exports.deleteSingleImage = (req, res) => {
 exports.getProductIds = (req, res) => {
   Product.find({}, {_id: 1})
   .then(ids => {
-    res.status(200).json({ ids: ids })
+    res.status(200).send({ ids: ids })
   })
   .catch((err) => {
     console.log(err);
@@ -264,7 +264,7 @@ exports.filterProductsByCatgory = (req, res) => {
   // Product.find({ category: req.body.category._id })
   .then(products => {
     console.log(products)
-    res.status(200).json({ products: products })
+    res.status(200).send({ products: products })
   }).catch(err => {
     console.log(err)
   })
