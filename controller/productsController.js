@@ -50,7 +50,7 @@ exports.storeProduct = async (req, res) => {
     const images = req.files;
     const imagesUrl = [];
     const imagesId = [];
-    const sizeObj = JSON.parse(req.body.sizes)
+    const sizeObj = req.body.sizes
 
     for (const image of images) {
       const { path } = image;
@@ -112,7 +112,7 @@ exports.updateProduct = async (req, res) => {
     tags,
   } = req.body;
 
-  const sizeObj = JSON.parse(sizes)
+  const sizeObj = sizes
 
 
   if (req.files.length !== 0) {
