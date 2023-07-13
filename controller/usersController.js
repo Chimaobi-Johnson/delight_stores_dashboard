@@ -21,8 +21,9 @@ exports.getAllUsers = (req, res) => {
 
 exports.updateCart = (req, res) => {
     const newCart = req.body;
-    User.findOne(req.user._id)
+    User.findById(req.user._id)
     .then(user => {
+        console.log(user)
        user.cart.items = newCart
        return user.save()
     })
