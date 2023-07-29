@@ -56,11 +56,6 @@ app.use(userRoutes);
 app.use(productRoutes);
 app.use(categoryRoutes);
 
-
-app.use('/', (req, res) => {
-  res.send("Server connected")
-})
-
 if(process.env.NODE_ENV === 'production') {
   // to make sure that express will serve up production assets like main.js files
   app.use(express.static('client/build'));
