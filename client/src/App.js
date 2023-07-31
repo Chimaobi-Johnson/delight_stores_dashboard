@@ -4,6 +4,11 @@ import 'simplebar-react/dist/simplebar.min.css';
 // image
 import 'react-lazy-load-image-component/src/effects/blur.css';
 
+// lightbox
+import 'yet-another-react-lightbox/styles.css';
+import 'yet-another-react-lightbox/plugins/captions.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+
 // ----------------------------------------------------------------------
 
 // routes

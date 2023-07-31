@@ -12,8 +12,8 @@ import { LoadingScreen } from 'src/components/loading-screen';
 const IndexPage = lazy(() => import('src/pages/dashboard/one'));
 const PageTwo = lazy(() => import('src/pages/dashboard/two'));
 const PageThree = lazy(() => import('src/pages/dashboard/three'));
-const PageFour = lazy(() => import('src/pages/dashboard/four'));
-const PageFive = lazy(() => import('src/pages/dashboard/five'));
+const AllUsers = lazy(() => import('src/pages/dashboard/user/list'));
+const CreateUser = lazy(() => import('src/pages/dashboard/user/new'));
 const PageSix = lazy(() => import('src/pages/dashboard/six'));
 
 // ----------------------------------------------------------------------
@@ -35,11 +35,11 @@ export const dashboardRoutes = [
       { path: 'two', element: <PageTwo /> },
       { path: 'three', element: <PageThree /> },
       {
-        path: 'group',
+        path: 'users',
         children: [
-          { element: <PageFour />, index: true },
-          { path: 'five', element: <PageFive /> },
-          { path: 'six', element: <PageSix /> },
+          { element: <AllUsers />, index: true },
+          { path: 'create', element: <CreateUser /> },
+          // { path: 'six', element: <PageSix /> },
         ],
       },
     ],
