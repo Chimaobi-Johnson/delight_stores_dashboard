@@ -23,6 +23,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +33,7 @@ export default function JwtRegisterView() {
   const router = useRouter();
 
   const [errorMsg, setErrorMsg] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const searchParams = useSearchParams();
 
@@ -39,11 +41,13 @@ export default function JwtRegisterView() {
 
   const password = useBoolean();
 
+  const confirmPassword = useBoolean();
+
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().required('First name required'),
     lastName: Yup.string().required('Last name required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string().required('Password is required').min(8),
   });
 
   const defaultValues = {
@@ -51,6 +55,7 @@ export default function JwtRegisterView() {
     lastName: '',
     email: '',
     password: '',
+    confirmPassword: ''
   };
 
   const methods = useForm({
@@ -61,24 +66,46 @@ export default function JwtRegisterView() {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await register?.(data.email, data.password, data.firstName, data.lastName);
-
-      router.push(returnTo || PATH_AFTER_LOGIN);
-    } catch (error) {
-      console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
-    }
-  });
+  const onSubmit = async (data) => {
+    console.log(router)
+      if(data.password !== data.confirmPassword) {
+        setErrorMsg('Both passwords do not match!')
+      } else {
+        setIsSubmitting(true)
+        const formData = new FormData();
+        formData.append("firstName", data.firstName);
+        formData.append("lastName", data.lastName);
+        formData.append("email", data.email);
+        formData.append("password", data.password);
+  
+        try {
+          const result = await axios.post("/api/register", formData)
+          if (result.status === 200 || result.status === 201) {
+            setIsSubmitting(false)
+            router.push(`${paths.auth.jwt.login}?status=success`);
+          }
+        } catch (error) {
+          setIsSubmitting(false)
+          // reset();
+          if(error.response.status === 500) {
+            if(error.response.data.keyPattern.email === 1) {
+              setErrorMsg(`A user with email ${error.response.data.keyValue.email} already exists`)
+            } else {
+              setErrorMsg(error.response.statusText)
+            }
+          } else {
+              setErrorMsg(typeof result === 'string' ? error : error.message);
+          }
+        }
+      }
+     
+  };
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-      <Typography variant="h4">Get started absolutely free</Typography>
+      <Typography variant="h4">Welcome Lovely Fella!!</Typography>
 
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2"> Already have an account? </Typography>
@@ -139,6 +166,22 @@ export default function JwtRegisterView() {
           }}
         />
 
+        
+        <RHFTextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={confirmPassword.value ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={confirmPassword.onToggle} edge="end">
+                  <Iconify icon={confirmPassword.value ? 'solar:eye-bold' : 'solar:eye-closed-bold'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
         <LoadingButton
           fullWidth
           color="inherit"
@@ -146,6 +189,7 @@ export default function JwtRegisterView() {
           type="submit"
           variant="contained"
           loading={isSubmitting}
+          onClick={handleSubmit(onSubmit)}
         >
           Create account
         </LoadingButton>

@@ -18,7 +18,7 @@ exports.registerUser = (req, res, next) => {
         res.status(200).json({ message: 'User created successfully', user: result })
     })
     .catch((err) => {
-        console.log(err)
+        res.status(500).json(err)
     });
 }
 

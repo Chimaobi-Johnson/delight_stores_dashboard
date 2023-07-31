@@ -10,3 +10,4 @@ client/.gitignore
 .env
 dev.js
 client_old
+client_vite

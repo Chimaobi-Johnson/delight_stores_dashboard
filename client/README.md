@@ -5,9 +5,9 @@
 ## USING YARN (Recommend)
 
 - yarn install
-- yarn dev
+- yarn start
 
 ## USING NPM
 
 - npm i OR npm i --legacy-peer-deps
-- npm run dev
+- npm start

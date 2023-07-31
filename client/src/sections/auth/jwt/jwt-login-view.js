@@ -37,6 +37,8 @@ export default function JwtLoginView() {
 
   const returnTo = searchParams.get('returnTo');
 
+  const userStatus = searchParams.get('status');
+
   const password = useBoolean();
 
   const LoginSchema = Yup.object().shape({
@@ -45,8 +47,8 @@ export default function JwtLoginView() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -72,9 +74,13 @@ export default function JwtLoginView() {
     }
   });
 
+  const renderAlert = (
+    userStatus === 'success' ? <Alert severity='info' sx={{ mb: 3 }}>User created successfully. Please login</Alert> : null
+  )
+
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
-      <Typography variant="h4">Sign in to Minimal</Typography>
+      <Typography variant="h4">Sign in to Delight Dashboard</Typography>
 
       <Stack direction="row" spacing={0.5}>
         <Typography variant="body2">New user?</Typography>
@@ -128,9 +134,7 @@ export default function JwtLoginView() {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
-      <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
-      </Alert>
+      {renderAlert}
 
       {renderForm}
     </FormProvider>
