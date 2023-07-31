@@ -19,7 +19,7 @@ router.get('/api/current_user', (req, res) => {
 
 router.get('/api/logout', (req, res) => {
     req.logout();
-    res.redirect('/auth/login');
+    res.status(200).json({ auth: 'success' })
   })
 
 module.exports = router;

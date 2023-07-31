@@ -5,7 +5,10 @@ const initialState = {};
 const userActions = (state = initialState, action) => {
     switch (action.type) {
       case STORED_LOGGEDIN_USER:
-        return action.payload.data
+        if(action.payload.data) {
+          return action.payload.data
+        }
+        return state
       default:
         return state;
     }

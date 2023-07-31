@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types';
-import { useEffect, useCallback, useState } from 'react';
+import axios from 'axios';
+import { useEffect } from 'react';
 // routes
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 //
-import { useAuthContext } from '../hooks';
+// import { useAuthContext } from '../hooks';
+import { storeLoggedInUser } from 'src/store/actions/user';
+import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -16,35 +19,25 @@ const loginPaths = {
 
 export default function AuthGuard({ children }) {
   const router = useRouter();
-
-  const { authenticated, method } = useAuthContext();
-
-  const [checked, setChecked] = useState(false);
-
-  const check = useCallback(() => {
-    if (!authenticated) {
-      const searchParams = new URLSearchParams({
-        returnTo: window.location.pathname,
-      }).toString();
-
-      const loginPath = loginPaths[method];
-
-      const href = `${loginPath}?${searchParams}`;
-
-      router.replace(href);
-    } else {
-      setChecked(true);
-    }
-  }, [authenticated, method, router]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    // check();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    const getUser = () => {
+      axios.get('/api/current_user')
+      .then(data => {
+        if(!data.data.user) {
+          console.log('user not found')
+          router.push(`${loginPaths.jwt}?status=login`);
+        }
+        dispatch(storeLoggedInUser(data.data.user))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
 
-  // if (!checked) {
-  //   return null;
-  // }
+    getUser()
+  }, [dispatch, router]);
 
   return <>{children}</>;
 }

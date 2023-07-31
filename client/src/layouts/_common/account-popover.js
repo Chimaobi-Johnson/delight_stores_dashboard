@@ -17,6 +17,8 @@ import { useAuthContext } from 'src/auth/hooks';
 // components
 import { varHover } from 'src/components/animate';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -38,9 +40,13 @@ const OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+
+  const userObj = useSelector(data => data.user)
+  
   const router = useRouter();
 
   const { user } = useMockedUser();
+  const { photoURL } = user;
 
   const { logout } = useAuthContext();
 
@@ -48,9 +54,12 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      popover.onClose();
-      router.replace('/');
+      const result = await axios.get('/api/logout');
+      if(result.status === 200) {
+          popover.onClose();
+          router.replace('/');
+      }
+    
     } catch (error) {
       console.error(error);
     }
@@ -80,8 +89,8 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
-          alt={user?.displayName}
+          src={photoURL}
+          alt={userObj.firstName}
           sx={{
             width: 36,
             height: 36,
@@ -93,11 +102,11 @@ export default function AccountPopover() {
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {`${userObj.firstName} ${userObj.lastName}`}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {userObj.email}
           </Typography>
         </Box>
 

@@ -98,12 +98,23 @@ export default function  JwtLoginView() {
     }
   };
 
-  const renderAlert =
-    userStatus === 'success' ? (
+  const renderAlert = () => {
+   if(userStatus === 'success') {
+      return (
       <Alert severity="info" sx={{ mb: 3 }}>
         User created successfully. Please login
+      </Alert>) 
+   }
+   if(userStatus === 'login') {
+      return (
+      <Alert severity="info" sx={{ mb: 3 }}>
+        You have been logged out
       </Alert>
-    ) : null;
+    )
+  }
+  return (<></>) 
+}
+  
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
@@ -162,7 +173,7 @@ export default function  JwtLoginView() {
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {renderHead}
 
-      {renderAlert}
+      {renderAlert()}
 
       {renderForm}
     </FormProvider>
