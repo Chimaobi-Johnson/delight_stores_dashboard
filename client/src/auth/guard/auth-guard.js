@@ -38,13 +38,13 @@ export default function AuthGuard({ children }) {
   }, [authenticated, method, router]);
 
   useEffect(() => {
-    check();
+    // check();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!checked) {
-    return null;
-  }
+  // if (!checked) {
+  //   return null;
+  // }
 
   return <>{children}</>;
 }

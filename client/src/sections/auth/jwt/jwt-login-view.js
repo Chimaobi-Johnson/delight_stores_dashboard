@@ -20,15 +20,15 @@ import { PATH_AFTER_LOGIN } from 'src/config-global';
 import { useBoolean } from 'src/hooks/use-boolean';
 // auth
 import { useAuthContext } from 'src/auth/hooks';
+import axios from 'axios';
 // components
 import Iconify from 'src/components/iconify';
 import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { useDispatch } from 'react-redux';
-import { storeLoggedInUser } from "store/actions/user";
 
 // ----------------------------------------------------------------------
 
-export default function JwtLoginView() {
+export default function  JwtLoginView() {
   const { login } = useAuthContext();
 
   const router = useRouter();
@@ -37,36 +37,15 @@ export default function JwtLoginView() {
 
   const searchParams = useSearchParams();
 
-  const returnTo = searchParams.get('returnTo');
+  // const returnTo = searchParams.get('returnTo');
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const userStatus = searchParams.get('status');
 
   const password = useBoolean();
 
   const dispatch = useDispatch();
-
-  React.useEffect( () => {
-
-    const getUser = () => {
-      axios.get('/api/current_user')
-      .then(data => {
-        console.log(data)
-        if(!data.data.user) {
-          return
-        } else {
-          dispatch(storeLoggedInUser(data.data.user))
-          window.location.pathname = '/admin';
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    }
-
-    getUser()
-
-  }, [])
-
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -86,24 +65,45 @@ export default function JwtLoginView() {
   const {
     reset,
     handleSubmit,
-    formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async (data) => {
+    console.log(data)
+    setIsSubmitting(true)
+    const customData = new FormData();
+    customData.append('email', data.email);
+    customData.append('password', data.password);
     try {
-      await login?.(data.email, data.password);
+      const result = await axios.post('/api/login', customData);
+      console.log(result)
+      if (result.status === 200) {
+        setIsSubmitting(false)
+        localStorage.setItem('dlight_userId', result.data.user._id);
 
-      router.push(returnTo || PATH_AFTER_LOGIN);
+        // set one hour expiration time
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+        localStorage.setItem('dlight_expiryDate', expiryDate.toISOString());
+        router.push(`${PATH_AFTER_LOGIN}?status=newlogin`);
+      }
     } catch (error) {
+      setIsSubmitting(false)
       console.error(error);
-      reset();
-      setErrorMsg(typeof error === 'string' ? error : error.message);
+      if(error.response.status === 404) {
+        setErrorMsg('Email or password is not correct')
+      } else {
+         setErrorMsg(typeof error === 'string' ? error : error.message);
+      }
+      // reset();
     }
-  });
+  };
 
-  const renderAlert = (
-    userStatus === 'success' ? <Alert severity='info' sx={{ mb: 3 }}>User created successfully. Please login</Alert> : null
-  )
+  const renderAlert =
+    userStatus === 'success' ? (
+      <Alert severity="info" sx={{ mb: 3 }}>
+        User created successfully. Please login
+      </Alert>
+    ) : null;
 
   const renderHead = (
     <Stack spacing={2} sx={{ mb: 5 }}>
@@ -151,6 +151,7 @@ export default function JwtLoginView() {
         type="submit"
         variant="contained"
         loading={isSubmitting}
+        onClick={handleSubmit(onSubmit)}
       >
         Login
       </LoadingButton>

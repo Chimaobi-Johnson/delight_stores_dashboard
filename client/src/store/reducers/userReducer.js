@@ -1,4 +1,4 @@
-import { STORED_LOGGEDIN_USER } from "store/actions/action-type";
+import { STORED_LOGGEDIN_USER } from "../actions/action-type";
 
 const initialState = {};
   

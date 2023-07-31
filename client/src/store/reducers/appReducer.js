@@ -1,4 +1,4 @@
-import { ADD_CURRENT_SIZE } from "store/actions/action-type";
+import { ADD_CURRENT_SIZE } from "../actions/action-type";
 
 const initialState = {
   sizes: []
@@ -7,7 +7,7 @@ const initialState = {
 const appActions = (state = initialState, action) => {
   switch (action.type) {
     case ADD_CURRENT_SIZE:
-      return newState;
+      return state;
     default:
       return state;
   }
