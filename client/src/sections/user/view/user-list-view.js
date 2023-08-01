@@ -1,5 +1,6 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import axios from 'axios';
+import { useState, useEffect, useCallback } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -44,19 +45,20 @@ import UserTableFiltersResult from '../user-table-filters-result';
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'phoneNumber', label: 'Phone Number', width: 180 },
-  { id: 'company', label: 'Company', width: 220 },
-  { id: 'role', label: 'Role', width: 180 },
-  { id: 'status', label: 'Status', width: 100 },
+  { id: 'name', label: 'Full Name' },
+  { id: 'email', label: 'Email', width: 180 },
+  { id: 'role', label: 'Role', width: 220 },
+  { id: 'createdAt', label: 'Created At', width: 180 },
+  { id: 'updatedAt', label: 'Updated At', width: 180 },
   { id: '', width: 88 },
 ];
 
 const defaultFilters = {
-  name: '',
+  firstName: '',
+  lastName: '',
   role: [],
   status: 'all',
 };
@@ -72,15 +74,46 @@ export default function UserListView() {
 
   const confirm = useBoolean();
 
+  console.log(_userList)
+
   const [tableData, setTableData] = useState(_userList);
 
   const [filters, setFilters] = useState(defaultFilters);
+
+  const [users, setUsers] = useState(null)
+
+  const [loadingData, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true)
+    const getUsers = () => {
+        axios.get('/api/users')
+        .then(data => {
+            setLoading(false)
+            setUsers(data.data.users)
+            setTableData(data.data.users)
+        })
+        .catch(err => {
+            setLoading(false)
+            console.log(err)
+        })
+        
+    }
+
+    getUsers()
+}, [])
+
+console.log(tableData)
+
+console.log(users)
 
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
+  console.log(dataFiltered)
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -103,6 +136,8 @@ export default function UserListView() {
     },
     [table]
   );
+
+  console.log(filters)
 
   const handleDeleteRow = useCallback(
     (id) => {
@@ -156,7 +191,7 @@ export default function UserListView() {
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.users.new}
+              href={paths.dashboard.users.create}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
@@ -177,7 +212,7 @@ export default function UserListView() {
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {STATUS_OPTIONS.map((tab) => (
+            {/* {STATUS_OPTIONS.map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -208,14 +243,14 @@ export default function UserListView() {
                   </Label>
                 }
               />
-            ))}
+            ))} */}
           </Tabs>
 
           <UserTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
-            roleOptions={_roles}
+            roleOptions={['suscriber', 'admin', 'editor']}
           />
 
           {canReset && (
@@ -238,7 +273,7 @@ export default function UserListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row._id)
                 )
               }
               action={
@@ -262,7 +297,7 @@ export default function UserListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -273,16 +308,30 @@ export default function UserListView() {
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => (
-                      <UserTableRow
-                        key={row.id}
+                    .map((row) => {
+                      console.log(row)
+                      return (
+                        <UserTableRow
+                        key={row._id}
                         row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        selected={table.selected.includes(row._id)}
+                        onSelectRow={() => table.onSelectRow(row._id)}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        onEditRow={() => handleEditRow(row._id)}
                       />
-                    ))}
+                      )
+                    } 
+                    // (
+                    //   <UserTableRow
+                    //     key={row._id}
+                    //     row={row}
+                    //     selected={table.selected.includes(row._id)}
+                    //     onSelectRow={() => table.onSelectRow(row._id)}
+                    //     onDeleteRow={() => handleDeleteRow(row._id)}
+                    //     onEditRow={() => handleEditRow(row._id)}
+                    //   />
+                    // )
+                    )}
 
                   <TableEmptyRows
                     height={denseHeight}
@@ -337,10 +386,18 @@ export default function UserListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+
+  console.log(inputData)
+
+  console.log(comparator)
+
+
+  console.log(filters)
+  const { firstName, lastName, status, role } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
+console.log(stabilizedThis)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -349,15 +406,24 @@ function applyFilter({ inputData, comparator, filters }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
+  console.log(firstName)
+  if (firstName) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (user) => user.firstName.toLowerCase().indexOf(firstName.toLowerCase()) !== -1
+    );
+  }
+
+  if (lastName) {
+    inputData = inputData.filter(
+      (user) => user.lastName.toLowerCase().indexOf(lastName.toLowerCase()) !== -1
     );
   }
 
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.status === status);
   }
+
+  console.log(role)
 
   if (role.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
