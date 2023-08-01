@@ -20,11 +20,11 @@ export default function UserCreateView() {
         links={[
           {
             name: 'Dashboard',
-            href: paths.dashboard.root,
+            href: paths.dashboard.users.root,
           },
           {
             name: 'User',
-            href: paths.dashboard.user.root,
+            href: paths.dashboard.users.root,
           },
           { name: 'New user' },
         ]}

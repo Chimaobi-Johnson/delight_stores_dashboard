@@ -149,14 +149,14 @@ export default function UserListView() {
         <CustomBreadcrumbs
           heading="List"
           links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
+            { name: 'Dashboard', href: paths.dashboard.users.root },
+            { name: 'User', href: paths.dashboard.users.root },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.user.new}
+              href={paths.dashboard.users.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >
