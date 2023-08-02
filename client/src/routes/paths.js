@@ -24,7 +24,11 @@ export const paths = {
     three: `${ROOTS.DASHBOARD}/three`,
     users: {
       root: `${ROOTS.DASHBOARD}/users`,
-      create: `${ROOTS.DASHBOARD}/users/create`,
+      new: `${ROOTS.DASHBOARD}/users/new`,
+    },
+    products: {
+      root: `${ROOTS.DASHBOARD}/products`,
+      add: `${ROOTS.DASHBOARD}/products/add`,
     },
   },
 };

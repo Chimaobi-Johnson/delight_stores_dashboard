@@ -1,7 +1,6 @@
 const User = require("../models/User");
 
 exports.getAllUsers = (req, res) => {
-    console.log('yes')
     const currentPage = req.query.page || 1;  // if page is not set default to page 1
     const perPage = 15;
     let totalItems;

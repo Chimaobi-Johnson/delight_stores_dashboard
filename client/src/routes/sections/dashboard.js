@@ -12,8 +12,14 @@ import { LoadingScreen } from 'src/components/loading-screen';
 const IndexPage = lazy(() => import('src/pages/dashboard/one'));
 const PageTwo = lazy(() => import('src/pages/dashboard/two'));
 const PageThree = lazy(() => import('src/pages/dashboard/three'));
+
+// USERS
 const AllUsers = lazy(() => import('src/pages/dashboard/user/list'));
 const CreateUser = lazy(() => import('src/pages/dashboard/user/new'));
+
+// PRODUCTS
+const AllProducts = lazy(() => import('src/pages/dashboard/product/list'));
+const AddProduct = lazy(() => import('src/pages/dashboard/product/new'));
 // const PageSix = lazy(() => import('src/pages/dashboard/six'));
 
 // ----------------------------------------------------------------------
@@ -38,7 +44,15 @@ export const dashboardRoutes = [
         path: 'users',
         children: [
           { element: <AllUsers />, index: true },
-          { path: 'create', element: <CreateUser /> },
+          { path: 'new', element: <CreateUser /> },
+          // { path: 'six', element: <PageSix /> },
+        ],
+      },
+      {
+        path: 'products',
+        children: [
+          { element: <AllProducts />, index: true },
+          { path: 'add', element: <AddProduct /> },
           // { path: 'six', element: <PageSix /> },
         ],
       },

@@ -162,14 +162,14 @@ export default function ProductListView() {
             { name: 'Dashboard', href: paths.dashboard.root },
             {
               name: 'Product',
-              href: paths.dashboard.product.root,
+              href: paths.dashboard.products.root,
             },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              href={paths.dashboard.product.new}
+              href={paths.dashboard.products.add}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
             >

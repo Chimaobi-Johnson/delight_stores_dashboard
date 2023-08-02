@@ -71,8 +71,17 @@ export function useNavData() {
             icon: ICONS.user,
             children: [
               { title: 'List', path: paths.dashboard.users.root },
-              { title: 'Create', path: paths.dashboard.users.create },
+              { title: 'New', path: paths.dashboard.users.new },
               // { title: '', path: paths.dashboard.group.six },
+            ],
+          },
+          {
+            title: 'products',
+            path: paths.dashboard.products.root,
+            icon: ICONS.product,
+            children: [
+              { title: 'List', path: paths.dashboard.products.root },
+              { title: 'Add', path: paths.dashboard.products.add },
             ],
           },
         ],
