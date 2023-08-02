@@ -18,7 +18,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 // _mock
-import { _userList, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _userList, USER_STATUS_OPTIONS } from 'src/_mock';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
 // components
@@ -51,7 +51,6 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Full Name' },
   { id: 'email', label: 'Email', width: 180 },
   { id: 'role', label: 'Role', width: 220 },
-  { id: 'createdAt', label: 'Created At', width: 180 },
   { id: 'updatedAt', label: 'Updated At', width: 180 },
   { id: '', width: 88 },
 ];
@@ -74,9 +73,7 @@ export default function UserListView() {
 
   const confirm = useBoolean();
 
-  console.log(_userList)
-
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -103,17 +100,11 @@ export default function UserListView() {
     getUsers()
 }, [])
 
-console.log(tableData)
-
-console.log(users)
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
-  console.log(dataFiltered)
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -136,8 +127,6 @@ console.log(users)
     },
     [table]
   );
-
-  console.log(filters)
 
   const handleDeleteRow = useCallback(
     (id) => {
@@ -250,7 +239,7 @@ console.log(users)
             filters={filters}
             onFilters={handleFilters}
             //
-            roleOptions={['suscriber', 'admin', 'editor']}
+            roleOptions={['Suscriber', 'Admin', 'Super-Admin']}
           />
 
           {canReset && (
@@ -266,6 +255,7 @@ console.log(users)
           )}
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+            
             <TableSelectedAction
               dense={table.dense}
               numSelected={table.selected.length}
@@ -308,9 +298,7 @@ console.log(users)
                       table.page * table.rowsPerPage,
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
-                    .map((row) => {
-                      console.log(row)
-                      return (
+                    .map((row) => (
                         <UserTableRow
                         key={row._id}
                         row={row}
@@ -320,17 +308,6 @@ console.log(users)
                         onEditRow={() => handleEditRow(row._id)}
                       />
                       )
-                    } 
-                    // (
-                    //   <UserTableRow
-                    //     key={row._id}
-                    //     row={row}
-                    //     selected={table.selected.includes(row._id)}
-                    //     onSelectRow={() => table.onSelectRow(row._id)}
-                    //     onDeleteRow={() => handleDeleteRow(row._id)}
-                    //     onEditRow={() => handleEditRow(row._id)}
-                    //   />
-                    // )
                     )}
 
                   <TableEmptyRows
@@ -387,17 +364,10 @@ console.log(users)
 
 function applyFilter({ inputData, comparator, filters }) {
 
-  console.log(inputData)
-
-  console.log(comparator)
-
-
-  console.log(filters)
   const { firstName, lastName, status, role } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
-console.log(stabilizedThis)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -406,7 +376,6 @@ console.log(stabilizedThis)
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  console.log(firstName)
   if (firstName) {
     inputData = inputData.filter(
       (user) => user.firstName.toLowerCase().indexOf(firstName.toLowerCase()) !== -1
@@ -422,8 +391,6 @@ console.log(stabilizedThis)
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.status === status);
   }
-
-  console.log(role)
 
   if (role.length) {
     inputData = inputData.filter((user) => role.includes(user.role));

@@ -22,7 +22,7 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { firstName, lastName, email, avatarUrl, role } = row;
+  const { firstName, lastName, email, avatarUrl, role, updatedAt } = row;
 
   const fullName = `${firstName} ${lastName}`;
 
@@ -58,6 +58,12 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{company}</TableCell> */}
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{role}</TableCell>
+
+        {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>{createdAt}</TableCell> */}
+
+
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{updatedAt}</TableCell>
+
 
         {/* <TableCell>
           <Label
