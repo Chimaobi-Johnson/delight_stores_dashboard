@@ -1,4 +1,5 @@
 import isEqual from 'lodash/isEqual';
+import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 // @mui
 import Card from '@mui/material/Card';
@@ -81,7 +82,24 @@ export default function ProductListView() {
   const confirm = useBoolean();
 
   useEffect(() => {
+    const getproducts = () => {
+        axios.get('/api/products')
+        .then(data => {
+            console.log(data.data.products)
+            // setTableData(data.data.products)
+        })
+        .catch(err => {
+            console.log(err)
+        })
+        
+    }
+
+    getproducts()
+}, [])
+
+  useEffect(() => {
     if (products.length) {
+      console.log(products)
       setTableData(products);
     }
   }, [products]);
@@ -232,7 +250,7 @@ export default function ProductListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -251,7 +269,7 @@ export default function ProductListView() {
                         )
                         .map((row) => (
                           <ProductTableRow
-                            key={row.id}
+                            key={row._id}
                             row={row}
                             selected={table.selected.includes(row.id)}
                             onSelectRow={() => table.onSelectRow(row.id)}

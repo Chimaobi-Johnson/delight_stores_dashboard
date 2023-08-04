@@ -12,10 +12,19 @@ const productSchema = new Schema(
       type: Number,
       required: true,
     },
+    priceSale: {
+      type: Number
+    },
+    sku: Number,
+    saleLabel: {
+      enabled: Boolean,
+      content: String
+    },
     subheading: { type: String },
     description: {
       type: String
     },
+    coverUrl: [ String ],
     imagesUrl: [ String ],
     imagesId: [ String ],
     status: { 
@@ -26,8 +35,11 @@ const productSchema = new Schema(
       type: String, 
       default: "ready" 
     },
+    stock: Number,
+    totalSold: Number,
     purchases: { type: Number },
     purchasedBy: [ String ],
+    colors: [ String ],
     tags: [ String ],
     category: {
       type: Schema.Types.ObjectId,
@@ -36,6 +48,8 @@ const productSchema = new Schema(
     sizes: [ {
       type: Object
     } ],
+    code: String,
+
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
