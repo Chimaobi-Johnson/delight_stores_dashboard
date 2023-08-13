@@ -97,12 +97,12 @@ export default function ProductListView() {
     getproducts()
 }, [])
 
-  useEffect(() => {
-    if (products.length) {
-      console.log(products)
-      setTableData(products);
-    }
-  }, [products]);
+  // useEffect(() => {
+  //   if (products.length) {
+  //     console.log(products)
+  //     setTableData(products);
+  //   }
+  // }, [products]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

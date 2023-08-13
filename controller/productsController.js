@@ -27,7 +27,10 @@ exports.getAllProducts = (req, res) => {
     .countDocuments()
     .then((count) => {
       totalItems = count;
-      return Product.find()
+      return Product.aggregate([
+        { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
+        { $project: { imagesId: 0 }}
+      ])
         .sort({ createdAt: -1 })
         .skip((currentPage - 1) * perPage)
         .limit(perPage);

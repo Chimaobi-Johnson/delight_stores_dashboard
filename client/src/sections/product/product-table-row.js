@@ -37,9 +37,11 @@ export default function ProductTableRow({
     price,
     status,
     coverUrl,
+    imagesUrl,
     category,
     available,
     stock,
+    categoryDetails,
     createdAt,
     inventoryType,
   } = row;
@@ -58,7 +60,7 @@ export default function ProductTableRow({
         <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
           <Avatar
             alt={name}
-            src={coverUrl}
+            src={coverUrl || imagesUrl[0]}
             variant="rounded"
             sx={{ width: 64, height: 64, mr: 2 }}
           />
@@ -78,7 +80,7 @@ export default function ProductTableRow({
             }
             secondary={
               <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
-                {category}
+                {categoryDetails[0].name}
               </Box>
             }
           />

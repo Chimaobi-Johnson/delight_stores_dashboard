@@ -24,7 +24,10 @@ const productSchema = new Schema(
     description: {
       type: String
     },
-    coverUrl: [ String ],
+    coverUrl: { 
+      type: String, 
+      default: null 
+    },
     imagesUrl: [ String ],
     imagesId: [ String ],
     status: { 
