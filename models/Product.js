@@ -35,7 +35,18 @@ const productSchema = new Schema(
       type: String, 
       default: "ready" 
     },
-    stock: Number,
+    inventoryType: { 
+      type: String, 
+      default: "in-stock" 
+    },
+    stock: { 
+      type: Number, 
+      default: 0 
+    },
+    available: { 
+      type: Number, 
+      default: 30 
+    },
     totalSold: Number,
     purchases: { type: Number },
     purchasedBy: [ String ],

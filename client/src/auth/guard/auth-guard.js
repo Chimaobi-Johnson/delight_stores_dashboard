@@ -8,7 +8,6 @@ import { useRouter } from 'src/routes/hooks';
 // import { useAuthContext } from '../hooks';
 import { storeLoggedInUser } from 'src/store/actions/user';
 import { useDispatch } from 'react-redux';
-
 // ----------------------------------------------------------------------
 
 const loginPaths = {

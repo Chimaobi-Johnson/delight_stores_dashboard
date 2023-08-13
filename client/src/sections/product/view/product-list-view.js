@@ -86,7 +86,7 @@ export default function ProductListView() {
         axios.get('/api/products')
         .then(data => {
             console.log(data.data.products)
-            // setTableData(data.data.products)
+            setTableData(data.data.products)
         })
         .catch(err => {
             console.log(err)

@@ -35,12 +35,12 @@ export default function ProductTableRow({
   const {
     name,
     price,
-    publish,
+    status,
     coverUrl,
     category,
-    quantity,
-    createdAt,
     available,
+    stock,
+    createdAt,
     inventoryType,
   } = row;
 
@@ -99,7 +99,7 @@ export default function ProductTableRow({
 
         <TableCell sx={{ typography: 'caption', color: 'text.secondary' }}>
           <LinearProgress
-            value={(available * 100) / quantity}
+            value={(available * 100) / stock}
             variant="determinate"
             color={
               (inventoryType === 'out of stock' && 'error') ||
@@ -114,8 +114,8 @@ export default function ProductTableRow({
         <TableCell>{fCurrency(price)}</TableCell>
 
         <TableCell>
-          <Label variant="soft" color={(publish === 'published' && 'info') || 'default'}>
-            {publish}
+          <Label variant="soft" color={(status === 'published' && 'info') || 'default'}>
+            {status}
           </Label>
         </TableCell>
 
