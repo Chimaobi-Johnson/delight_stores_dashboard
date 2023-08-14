@@ -48,7 +48,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Product' },
   { id: 'createdAt', label: 'Create at', width: 160 },
   { id: 'inventoryType', label: 'Stock', width: 160 },
-  { id: 'price', label: 'Price', width: 140 },
+  { id: 'price', label: 'Price (N)', width: 140 },
   { id: 'publish', label: 'Publish', width: 110 },
   { id: '', width: 88 },
 ];
@@ -96,13 +96,6 @@ export default function ProductListView() {
 
     getproducts()
 }, [])
-
-  // useEffect(() => {
-  //   if (products.length) {
-  //     console.log(products)
-  //     setTableData(products);
-  //   }
-  // }, [products]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -155,14 +148,14 @@ export default function ProductListView() {
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.product.edit(id));
+      router.push(paths.dashboard.products.edit(id));
     },
     [router]
   );
 
   const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.product.details(id));
+      router.push(paths.dashboard.products.details(id));
     },
     [router]
   );
@@ -271,11 +264,11 @@ export default function ProductListView() {
                           <ProductTableRow
                             key={row._id}
                             row={row}
-                            selected={table.selected.includes(row.id)}
-                            onSelectRow={() => table.onSelectRow(row.id)}
-                            onDeleteRow={() => handleDeleteRow(row.id)}
-                            onEditRow={() => handleEditRow(row.id)}
-                            onViewRow={() => handleViewRow(row.id)}
+                            selected={table.selected.includes(row._id)}
+                            onSelectRow={() => table.onSelectRow(row._id)}
+                            onDeleteRow={() => handleDeleteRow(row._id)}
+                            onEditRow={() => handleEditRow(row._id)}
+                            onViewRow={() => handleViewRow(row._id)}
                           />
                         ))}
                     </>

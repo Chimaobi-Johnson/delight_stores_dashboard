@@ -29,6 +29,9 @@ export const paths = {
     products: {
       root: `${ROOTS.DASHBOARD}/products`,
       add: `${ROOTS.DASHBOARD}/products/add`,
+      details: (id) => `${ROOTS.DASHBOARD}/products/${id}`,
+      // details: (id) => `${ROOTS.DASHBOARD}/product/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/products/${id}/edit`,
     },
   },
 };

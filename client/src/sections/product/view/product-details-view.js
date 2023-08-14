@@ -83,7 +83,7 @@ export default function ProductDetailsView({ id }) {
       action={
         <Button
           component={RouterLink}
-          href={paths.dashboard.product.root}
+          href={paths.dashboard.products.root}
           startIcon={<Iconify icon="eva:arrow-ios-back-fill" width={16} />}
           sx={{ mt: 3 }}
         >
@@ -97,9 +97,9 @@ export default function ProductDetailsView({ id }) {
   const renderProduct = product && (
     <>
       <ProductDetailsToolbar
-        backLink={paths.dashboard.product.root}
-        editLink={paths.dashboard.product.edit(`${product?.id}`)}
-        liveLink={paths.product.details(`${product?.id}`)}
+        backLink={paths.dashboard.products.root}
+        editLink={paths.dashboard.products.edit(`${product?.id}`)}
+        liveLink={paths.products.details(`${product?.id}`)}
         publish={publish || ''}
         onChangePublish={handleChangePublish}
         publishOptions={PRODUCT_PUBLISH_OPTIONS}

@@ -82,6 +82,7 @@ export function useNavData() {
             children: [
               { title: 'List', path: paths.dashboard.products.root },
               { title: 'Add', path: paths.dashboard.products.add },
+              // { title: 'Details', path: paths.dashboard.products.details },
             ],
           },
         ],

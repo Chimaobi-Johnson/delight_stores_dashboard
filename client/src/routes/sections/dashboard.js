@@ -20,7 +20,8 @@ const CreateUser = lazy(() => import('src/pages/dashboard/user/new'));
 // PRODUCTS
 const AllProducts = lazy(() => import('src/pages/dashboard/product/list'));
 const AddProduct = lazy(() => import('src/pages/dashboard/product/new'));
-// const PageSix = lazy(() => import('src/pages/dashboard/six'));
+const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/details'));
+const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +46,6 @@ export const dashboardRoutes = [
         children: [
           { element: <AllUsers />, index: true },
           { path: 'new', element: <CreateUser /> },
-          // { path: 'six', element: <PageSix /> },
         ],
       },
       {
@@ -53,7 +53,8 @@ export const dashboardRoutes = [
         children: [
           { element: <AllProducts />, index: true },
           { path: 'add', element: <AddProduct /> },
-          // { path: 'six', element: <PageSix /> },
+          { path: ':id', element: <ProductDetailsPage /> },
+          { path: ':id/edit', element: <ProductEditPage /> },
         ],
       },
     ],
