@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import { useEffect, useCallback, useState } from 'react';
 // @mui
 import { alpha } from '@mui/material/styles';
@@ -61,7 +62,23 @@ export default function ProductDetailsView({ id }) {
   const [publish, setPublish] = useState('');
 
   useEffect(() => {
+    const getProduct = async () => {
+      try {
+        const result = await axios.get(`/api/product/${id}`)
+        if(result) {
+          console.log(result)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    getProduct()
+  }, [id])
+
+  useEffect(() => {
     if (product) {
+      console.log(product)
       setPublish(product?.publish);
     }
   }, [product]);

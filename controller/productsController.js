@@ -84,6 +84,7 @@ exports.storeProduct = async (req, res) => {
 };
 
 exports.getProduct = (req, res) => {
+  console.log('hello')
   let productData
   Product.findById(req.query.id)
     .then((data) => {
