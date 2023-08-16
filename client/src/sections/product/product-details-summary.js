@@ -7,7 +7,7 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
+// import Div_ider from '@mui/material/Div_ider';
 import MenuItem from '@mui/material/MenuItem';
 import Typography from '@mui/material/Typography';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
@@ -20,7 +20,10 @@ import { fShortenNumber, fCurrency } from 'src/utils/format-number';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ColorPicker } from 'src/components/color-utils';
-import FormProvider, { RHFSelect } from 'src/components/hook-form';
+// FormProv_ider
+import FormProvider from 'src/components/hook-form/form-provider';
+import { RHFSelect } from 'src/components/hook-form';
+
 //
 import IncrementerButton from './common/incrementer-button';
 
@@ -37,30 +40,31 @@ export default function ProductDetailsSummary({
   const router = useRouter();
 
   const {
-    id,
+    _id,
     name,
     sizes,
     price,
     coverUrl,
     colors,
-    newLabel,
+    // newLabel,
     available,
     priceSale,
     saleLabel,
-    totalRatings,
-    totalReviews,
+    // totalRatings,
+    // totalReviews,
     inventoryType,
-    subDescription,
+    description,
+    // subDescription,
   } = product;
 
-  const existProduct = !!items?.length && items.map((item) => item.id).includes(id);
+  const existProduct = !!items?.length && items.map((item) => item._id).includes(_id);
 
   const isMaxQuantity =
     !!items?.length &&
-    items.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+    items.filter((item) => item._id === _id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
-    id,
+    _id,
     name,
     coverUrl,
     available,
@@ -142,7 +146,7 @@ export default function ProductDetailsSummary({
           alignItems: 'center',
         }}
       >
-        <Iconify icon="mingcute:add-line" width={16} sx={{ mr: 1 }} />
+        <Iconify icon="mingcute:add-line" w_idth={16} sx={{ mr: 1 }} />
         Compare
       </Link>
 
@@ -154,7 +158,7 @@ export default function ProductDetailsSummary({
           alignItems: 'center',
         }}
       >
-        <Iconify icon="solar:heart-bold" width={16} sx={{ mr: 1 }} />
+        <Iconify icon="solar:heart-bold" w_idth={16} sx={{ mr: 1 }} />
         Favorite
       </Link>
 
@@ -166,7 +170,7 @@ export default function ProductDetailsSummary({
           alignItems: 'center',
         }}
       >
-        <Iconify icon="solar:share-bold" width={16} sx={{ mr: 1 }} />
+        <Iconify icon="solar:share-bold" w_idth={16} sx={{ mr: 1 }} />
         Share
       </Link>
     </Stack>
@@ -208,7 +212,7 @@ export default function ProductDetailsSummary({
           </Link>
         }
         sx={{
-          maxWidth: 88,
+          maxW_idth: 88,
           [`& .${formHelperTextClasses.root}`]: {
             mx: 0,
             mt: 1,
@@ -251,19 +255,19 @@ export default function ProductDetailsSummary({
   const renderActions = (
     <Stack direction="row" spacing={2}>
       <Button
-        fullWidth
+        fullW_idth
         disabled={isMaxQuantity || disabledActions}
         size="large"
         color="warning"
         variant="contained"
-        startIcon={<Iconify icon="solar:cart-plus-bold" width={24} />}
+        startIcon={<Iconify icon="solar:cart-plus-bold" w_idth={24} />}
         onClick={handleAddCart}
         sx={{ whiteSpace: 'nowrap' }}
       >
         Add to Cart
       </Button>
 
-      <Button fullWidth size="large" type="submit" variant="contained" disabled={disabledActions}>
+      <Button fullW_idth size="large" type="submit" variant="contained" disabled={disabledActions}>
         Buy Now
       </Button>
     </Stack>
@@ -271,30 +275,30 @@ export default function ProductDetailsSummary({
 
   const renderSubDescription = (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {subDescription}
+      {description}
     </Typography>
   );
 
-  const renderRating = (
-    <Stack
-      direction="row"
-      alignItems="center"
-      sx={{
-        color: 'text.disabled',
-        typography: 'body2',
-      }}
-    >
-      <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
-      {`(${fShortenNumber(totalReviews)} reviews)`}
-    </Stack>
-  );
+  // const renderRating = (
+  //   <Stack
+  //     direction="row"
+  //     alignItems="center"
+  //     sx={{
+  //       color: 'text.disabled',
+  //       typography: 'body2',
+  //     }}
+  //   >
+  //     <Rating size="small" value={totalRatings} precision={0.1} readOnly sx={{ mr: 1 }} />
+  //     {`(${fShortenNumber(totalReviews)} reviews)`}
+  //   </Stack>
+  // );
 
-  const renderLabels = (newLabel.enabled || saleLabel.enabled) && (
-    <Stack direction="row" alignItems="center" spacing={1}>
-      {newLabel.enabled && <Label color="info">{newLabel.content}</Label>}
-      {saleLabel.enabled && <Label color="error">{saleLabel.content}</Label>}
-    </Stack>
-  );
+  // const renderLabels = (newLabel.enabled || saleLabel.enabled) && (
+  //   <Stack direction="row" alignItems="center" spacing={1}>
+  //     {newLabel.enabled && <Label color="info">{newLabel.content}</Label>}
+  //     {saleLabel.enabled && <Label color="error">{saleLabel.content}</Label>}
+  //   </Stack>
+  // );
 
   const renderInventoryType = (
     <Box
@@ -315,20 +319,20 @@ export default function ProductDetailsSummary({
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Stack spacing={3} sx={{ pt: 3 }} {...other}>
         <Stack spacing={2} alignItems="flex-start">
-          {renderLabels}
+          {/* {renderLabels} */}
 
           {renderInventoryType}
 
           <Typography variant="h5">{name}</Typography>
 
-          {renderRating}
+          {/* {renderRating} */}
 
           {renderPrice}
 
           {renderSubDescription}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/* <Div_ider sx={{ borderStyle: 'dashed' }} /> */}
 
         {renderColorOptions}
 
@@ -336,7 +340,7 @@ export default function ProductDetailsSummary({
 
         {renderQuantity}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/* <Div_ider sx={{ borderStyle: 'dashed' }} /> */}
 
         {renderActions}
 

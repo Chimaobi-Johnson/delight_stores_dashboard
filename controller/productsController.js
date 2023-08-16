@@ -84,17 +84,15 @@ exports.storeProduct = async (req, res) => {
 };
 
 exports.getProduct = (req, res) => {
-  console.log('hello')
   let productData
   Product.findById(req.query.id)
     .then((data) => {
       if (!data) {
         res.status(404).send({ message: "Product not found" });
-      } else {
-        productData = data;
-        return Category.findById(data.category)
-        // res.status(200).json({ product: data });
-      }
+      } 
+      productData = data;
+      return Category.findById(data.category)
+      // res.status(200).json({ product: data });
     })
     .then(cat => {
       res.status(200).send({ product: productData, category: cat })

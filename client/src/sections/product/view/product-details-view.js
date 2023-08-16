@@ -53,7 +53,7 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 export default function ProductDetailsView({ id }) {
-  const { product, productLoading, productError } = useGetProduct(id);
+  const { productLoading, productError } = useGetProduct(id);
 
   const settings = useSettingsContext();
 
@@ -61,11 +61,17 @@ export default function ProductDetailsView({ id }) {
 
   const [publish, setPublish] = useState('');
 
+  const [ product , setProduct ] = useState(null);
+  const [ category , setCategory ] = useState(null);
+
+
   useEffect(() => {
     const getProduct = async () => {
       try {
-        const result = await axios.get(`/api/product/${id}`)
+        const result = await axios.get(`/api/product/?id=${id}`)
         if(result) {
+          setProduct(result.data.product)
+          setCategory(result.data.category)
           console.log(result)
         }
       } catch (error) {
@@ -76,12 +82,12 @@ export default function ProductDetailsView({ id }) {
     getProduct()
   }, [id])
 
-  useEffect(() => {
-    if (product) {
-      console.log(product)
-      setPublish(product?.publish);
-    }
-  }, [product]);
+  // useEffect(() => {
+  //   if (product) {
+  //     console.log(product)
+  //     setPublish(product?.publish);
+  //   }
+  // }, [product]);
 
   const handleChangePublish = useCallback((newValue) => {
     setPublish(newValue);
@@ -115,8 +121,8 @@ export default function ProductDetailsView({ id }) {
     <>
       <ProductDetailsToolbar
         backLink={paths.dashboard.products.root}
-        editLink={paths.dashboard.products.edit(`${product?.id}`)}
-        liveLink={paths.products.details(`${product?.id}`)}
+        editLink={paths.dashboard.products.edit(`${product?._id}`)}
+        liveLink={paths.dashboard.products.details(`${product?._id}`)}
         publish={publish || ''}
         onChangePublish={handleChangePublish}
         publishOptions={PRODUCT_PUBLISH_OPTIONS}
@@ -165,7 +171,7 @@ export default function ProductDetailsView({ id }) {
             boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
           }}
         >
-          {[
+          {/* {[
             {
               value: 'description',
               label: 'Description',
@@ -176,7 +182,7 @@ export default function ProductDetailsView({ id }) {
             },
           ].map((tab) => (
             <Tab key={tab.value} value={tab.value} label={tab.label} />
-          ))}
+          ))} */}
         </Tabs>
 
         {currentTab === 'description' && (
