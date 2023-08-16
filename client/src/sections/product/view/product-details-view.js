@@ -53,7 +53,7 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 export default function ProductDetailsView({ id }) {
-  const { productLoading, productError } = useGetProduct(id);
+  // const { productLoading, productError } = useGetProduct(id);
 
   const settings = useSettingsContext();
 
@@ -61,20 +61,26 @@ export default function ProductDetailsView({ id }) {
 
   const [publish, setPublish] = useState('');
 
-  const [ product , setProduct ] = useState(null);
+  const [ product , setProduct] = useState(null);
   const [ category , setCategory ] = useState(null);
+  const [ productLoading, setProductLoading ] = useState(false);
+  const [ productError, setproductError ] = useState(null)
 
 
   useEffect(() => {
     const getProduct = async () => {
+      setProductLoading(true)
       try {
         const result = await axios.get(`/api/product/?id=${id}`)
         if(result) {
+          setProductLoading(false)
           setProduct(result.data.product)
           setCategory(result.data.category)
           console.log(result)
         }
       } catch (error) {
+        setProductLoading(false)
+        setproductError(true)
         console.log(error)
       }
     }
