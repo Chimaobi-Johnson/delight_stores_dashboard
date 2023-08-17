@@ -46,10 +46,12 @@ export default function ProductDetailsSummary({
     price,
     coverUrl,
     colors,
+    quantity,
     // newLabel,
     available,
     priceSale,
     saleLabel,
+    subheading,
     // totalRatings,
     // totalReviews,
     inventoryType,
@@ -275,7 +277,7 @@ export default function ProductDetailsSummary({
 
   const renderSubDescription = (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-      {description}
+      {subheading}
     </Typography>
   );
 
