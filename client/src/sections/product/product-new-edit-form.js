@@ -197,7 +197,7 @@ export default function ProductNewEditForm({ currentProduct }) {
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Images</Typography>
-              <RHFUpload
+              <RHFUpload 
                 multiple
                 thumbnail
                 name="images"

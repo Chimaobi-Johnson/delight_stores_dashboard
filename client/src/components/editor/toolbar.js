@@ -46,42 +46,42 @@ export default function Toolbar({ id, isSimple, ...other }) {
           </select>
         </div>
 
-        <div className="ql-formats">
+        {/* <div className="ql-formats">
           <button type="button" className="ql-bold" />
           <button type="button" className="ql-italic" />
           <button type="button" className="ql-underline" />
           <button type="button" className="ql-strike" />
-        </div>
-
+        </div> */}
+{/* 
         {!isSimple && (
           <div className="ql-formats">
             <select className="ql-color" />
             <select className="ql-background" />
           </div>
-        )}
+        )} */}
 
-        <div className="ql-formats">
+        {/* <div className="ql-formats">
           <button type="button" className="ql-list" value="ordered" />
           <button type="button" className="ql-list" value="bullet" />
           {!isSimple && <button type="button" className="ql-indent" value="-1" />}
           {!isSimple && <button type="button" className="ql-indent" value="+1" />}
-        </div>
-
+        </div> */}
+{/* 
         {!isSimple && (
           <div className="ql-formats">
             <button type="button" className="ql-script" value="super" />
             <button type="button" className="ql-script" value="sub" />
           </div>
-        )}
+        )} */}
 
-        {!isSimple && (
+        {/* {!isSimple && (
           <div className="ql-formats">
             <button type="button" className="ql-code-block" />
             <button type="button" className="ql-blockquote" />
           </div>
-        )}
+        )} */}
 
-        <div className="ql-formats">
+        {/* <div className="ql-formats">
           <button type="button" className="ql-direction" value="rtl" />
           <select className="ql-align" />
         </div>
@@ -95,7 +95,7 @@ export default function Toolbar({ id, isSimple, ...other }) {
         <div className="ql-formats">
           {!isSimple && <button type="button" className="ql-formula" />}
           <button type="button" className="ql-clean" />
-        </div>
+        </div> */}
       </div>
     </StyledEditorToolbar>
   );
