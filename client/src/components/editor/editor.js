@@ -47,12 +47,23 @@ export default function Editor({
       >
         <Toolbar id={id} isSimple={simple} />
 
-        <ReactQuill
+        <textarea
+          style={{ backgroundColor: 'inherit', 
+          border: 'inherit', 
+          width: '100%', 
+          height: '100%', 
+          color: 'inherit', 
+          fontSize: 'inherit', 
+          fontFamily: 'inherit' }}
+          rows={15}
+        />
+
+        {/* <ReactQuill
           modules={modules}
           formats={formats}
           placeholder="Write something awesome..."
           {...other}
-        />
+        /> */}
       </StyledEditor>
 
       {helperText && helperText}

@@ -126,15 +126,16 @@ export default function ProductNewEditForm({ currentProduct }) {
   }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(currentProduct ? 'Update success!' : 'Create success!');
-      router.push(paths.dashboard.product.root);
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
+    console.log(data)
+    // try {
+    //   await new Promise((resolve) => setTimeout(resolve, 500));
+    //   reset();
+    //   enqueueSnackbar(currentProduct ? 'Update success!' : 'Create success!');
+    //   router.push(paths.dashboard.product.root);
+    //   console.info('DATA', data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   });
 
   const handleDrop = useCallback(

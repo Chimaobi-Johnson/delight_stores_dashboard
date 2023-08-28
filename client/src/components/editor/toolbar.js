@@ -35,7 +35,7 @@ export default function Toolbar({ id, isSimple, ...other }) {
   return (
     <StyledEditorToolbar {...other}>
       <div id={id}>
-        <div className="ql-formats">
+        {/* <div className="ql-formats">
           <select className="ql-header" defaultValue="">
             {HEADINGS.map((heading, index) => (
               <option key={heading} value={index + 1}>
@@ -44,7 +44,7 @@ export default function Toolbar({ id, isSimple, ...other }) {
             ))}
             <option value="">Normal</option>
           </select>
-        </div>
+        </div> */}
 
         {/* <div className="ql-formats">
           <button type="button" className="ql-bold" />
