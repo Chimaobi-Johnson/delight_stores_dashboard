@@ -126,7 +126,9 @@ export default function ProductNewEditForm({ currentProduct }) {
   }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
+    
     console.log(data)
+    console.log('submitted')
     // try {
     //   await new Promise((resolve) => setTimeout(resolve, 500));
     //   reset();
@@ -426,7 +428,7 @@ export default function ProductNewEditForm({ currentProduct }) {
           sx={{ flexGrow: 1, pl: 3 }}
         />
 
-        <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+        <LoadingButton type="submit" onClick={onSubmit} variant="contained" size="large" loading={isSubmitting}>
           {!currentProduct ? 'Create Product' : 'Save Changes'}
         </LoadingButton>
       </Grid>

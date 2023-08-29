@@ -55,6 +55,7 @@ export default function Editor({
           color: 'inherit', 
           fontSize: 'inherit', 
           fontFamily: 'inherit' }}
+          {...other}
           rows={15}
         />
 
