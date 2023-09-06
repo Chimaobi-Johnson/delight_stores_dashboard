@@ -48,12 +48,17 @@ exports.getAllProducts = (req, res) => {
 exports.storeProduct = async (req, res) => {
   if (!req.files || req.files.length === 0) {
     console.log("No images use default");
+    console.log(req.body)
+
     return;
   } else {
     const images = req.files;
     const imagesUrl = [];
     const imagesId = [];
-    const sizeObj = req.body.sizes
+    // const sizeObj = req.body.sizes
+
+    console.log(images)
+    console.log(req.body)
 
     for (const image of images) {
       const { path } = image;
@@ -66,8 +71,10 @@ exports.storeProduct = async (req, res) => {
     }
     const product = new Product({
       ...req.body,
-      tags: req.body.tags,
-      sizes: sizeObj,
+      tags: JSON.parse(req.body.tags),
+      sizes: JSON.parse(req.body.sizes),
+      newLabel: JSON.parse(req.body.newLabel),
+      saleLabel: JSON.parse(req.body.saleLabel),
       imagesUrl: imagesUrl,
       imagesId: imagesId,
     });

@@ -41,6 +41,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFMultiCheckbox,
 } from 'src/components/hook-form';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -128,7 +129,36 @@ export default function ProductNewEditForm({ currentProduct }) {
   const onSubmit = handleSubmit(async (data) => {
     
     console.log(data)
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("subDescription", data.subDescription);
+    formData.append("description", data.description);
+    formData.append("code", data.code);
+    formData.append("category", data.category);
+    formData.append("colors", data.colors);
+    formData.append("quantity", data.quantity);
+    formData.append("priceSale", data.priceSale);
+    formData.append("sku", data.sku);
+    formData.append("deliveryStatus", data.deliveryStatus);
+    formData.append("newLabel", JSON.stringify(data.newLabel));
+    formData.append("saleLabel", JSON.stringify(data.saleLabel));
+    formData.append("tags", JSON.stringify(data.tags));
+
+    for (let i = 0; i < data.images.length; i+=1) {
+     formData.append("images", data.images[i]);
+   }
     console.log('submitted')
+    try {
+       const result = await axios.post('/api/product/add', formData);
+
+       if(result) {
+        console.log(result)
+       }
+
+    } catch (error) {
+      console.log(error)
+    }
     // try {
     //   await new Promise((resolve) => setTimeout(resolve, 500));
     //   reset();
