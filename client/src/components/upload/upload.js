@@ -107,7 +107,7 @@ export default function Upload({
           </Button>
         )}
 
-        {onUpload && (
+        {/* {onUpload && (
           <Button
             size="small"
             variant="contained"
@@ -116,7 +116,7 @@ export default function Upload({
           >
             Upload
           </Button>
-        )}
+        )} */}
       </Stack>
     </>
   );

@@ -413,30 +413,19 @@ export const _companyNames = [
 // ----------------------------------------------------------------------
 
 export const _tags = [
-  'Technology',
-  'Marketing',
-  'Design',
-  'Photography',
-  'Art',
-  'Fashion',
-  'Food',
-  'Travel',
-  'Fitness',
-  'Nature',
-  'Business',
-  'Music',
-  'Health',
-  'Books',
-  'Sports',
-  'Film',
-  'Education',
-  'Motivation',
-  'Gaming',
-  'Pets',
   'Cooking',
-  'Finance',
-  'Selfcare',
-  'Writing',
+  'Kitchen',
+  'Bathroom',
+  'Shower',
+  'Utensils',
+  'Housewares',
+  'Kids',
+  'Women',
+  'Men',
+  'Gifts',
+  'Gift items',
+  'Souvenirs',
+  'others'
 ];
 
 // ----------------------------------------------------------------------

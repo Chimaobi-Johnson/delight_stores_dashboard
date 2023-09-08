@@ -48,8 +48,6 @@ exports.getAllProducts = (req, res) => {
 exports.storeProduct = async (req, res) => {
   if (!req.files || req.files.length === 0) {
     console.log("No images use default");
-    console.log(req.body)
-
     return;
   } else {
     const images = req.files;

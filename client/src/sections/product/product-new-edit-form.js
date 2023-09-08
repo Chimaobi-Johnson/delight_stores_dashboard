@@ -16,6 +16,8 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import Alert from '@mui/material/Alert';
+
 // routes
 import { paths } from 'src/routes/paths';
 // hooks
@@ -26,7 +28,6 @@ import {
   PRODUCT_SIZE_OPTIONS,
   PRODUCT_GENDER_OPTIONS,
   PRODUCT_COLOR_NAME_OPTIONS,
-  PRODUCT_CATEGORY_GROUP_OPTIONS,
 } from 'src/_mock';
 // components
 import { useSnackbar } from 'src/components/snackbar';
@@ -42,6 +43,8 @@ import FormProvider, {
   RHFMultiCheckbox,
 } from 'src/components/hook-form';
 import axios from 'axios';
+import { Button } from '@mui/base';
+import { set } from 'lodash';
 
 // ----------------------------------------------------------------------
 
@@ -112,13 +115,8 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const values = watch();
 
-  useEffect(() => {
-    if (currentProduct) {
-      reset(defaultValues);
-    }
-  }, [currentProduct, defaultValues, reset]);
-
   const [categories, setCategories] = useState(null);
+  const [resData, setResData] = useState(null);
 
   useEffect(() => {
     const getCategories = () => {
@@ -135,17 +133,18 @@ export default function ProductNewEditForm({ currentProduct }) {
     getCategories();
   }, []);
 
-  useEffect(() => {
-    if (includeTaxes) {
-      setValue('taxes', 0);
-    } else {
-      setValue('taxes', currentProduct?.taxes || 0);
-    }
-  }, [currentProduct?.taxes, includeTaxes, setValue]);
+  // useEffect(() => {
+  //   if (includeTaxes) {
+  //     setValue('taxes', 0);
+  //   } else {
+  //     setValue('taxes', currentProduct?.taxes || 0);
+  //   }
+  // }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    
-    console.log(data)
+
+    setResData(null)
+
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("price", data.price);
@@ -166,26 +165,25 @@ export default function ProductNewEditForm({ currentProduct }) {
     for (let i = 0; i < data.images.length; i+=1) {
      formData.append("images", data.images[i]);
    }
-    console.log('submitted')
     try {
        const result = await axios.post('/api/product/add', formData);
-
-       if(result) {
+       if(result.status === 201) {
+        reset();
+        window.scrollTo(0, 0);
+        setResData({
+          type: 'info',
+          title: `Product - ${result.data.product.name} created successfully`
+        })
         console.log(result)
        }
 
     } catch (error) {
+      setResData({
+        type: 'error',
+        title: 'Server error. check connection or try again later'
+      })
       console.log(error)
     }
-    // try {
-    //   await new Promise((resolve) => setTimeout(resolve, 500));
-    //   reset();
-    //   enqueueSnackbar(currentProduct ? 'Update success!' : 'Create success!');
-    //   router.push(paths.dashboard.product.root);
-    //   console.info('DATA', data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
   });
 
   const handleDrop = useCallback(
@@ -215,9 +213,9 @@ export default function ProductNewEditForm({ currentProduct }) {
     setValue('images', []);
   }, [setValue]);
 
-  const handleChangeIncludeTaxes = useCallback((event) => {
-    setIncludeTaxes(event.target.checked);
-  }, []);
+  // const handleChangeIncludeTaxes = useCallback((event) => {
+  //   setIncludeTaxes(event.target.checked);
+  // }, []);
 
   const renderDetails = (
     <>
@@ -233,6 +231,11 @@ export default function ProductNewEditForm({ currentProduct }) {
       )}
 
       <Grid xs={12} md={8}>
+        {resData ? (
+          <Alert severity={resData.type} sx={{ mb: 3 }}>
+           {resData.title}
+        </Alert>
+        ) : null}
         <Card>
           {!mdUp && <CardHeader title="Details" />}
 
@@ -247,7 +250,7 @@ export default function ProductNewEditForm({ currentProduct }) {
             </Stack>
 
             <Stack spacing={1.5}>
-              <Typography variant="subtitle2">Images</Typography>
+              <Typography variant="subtitle2">Images (Max 6)</Typography>
               <RHFUpload 
                 multiple
                 thumbnail
@@ -411,7 +414,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: 'text.disabled' }}>
-                      $
+                      N
                     </Box>
                   </InputAdornment>
                 ),
@@ -428,18 +431,18 @@ export default function ProductNewEditForm({ currentProduct }) {
                 startAdornment: (
                   <InputAdornment position="start">
                     <Box component="span" sx={{ color: 'text.disabled' }}>
-                      $
+                      N
                     </Box>
                   </InputAdornment>
                 ),
               }}
             />
 
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Switch checked={includeTaxes} onChange={handleChangeIncludeTaxes} />}
               label="Price includes taxes"
-            />
-
+            /> */}
+{/* 
             {!includeTaxes && (
               <RHFTextField
                 name="taxes"
@@ -457,7 +460,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                   ),
                 }}
               />
-            )}
+            )} */}
           </Stack>
         </Card>
       </Grid>

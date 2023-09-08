@@ -28,22 +28,20 @@ export const PRODUCT_COLOR_NAME_OPTIONS = [
   { value: 'green', label: 'Green' },
   { value: 'yellow', label: 'Yellow' },
   { value: 'violet', label: 'Violet' },
+  { value: 'Brown', label: 'Brown' },
+  { value: 'Grey', label: 'Grey' },
   { value: 'black', label: 'Black' },
   { value: 'white', label: 'White' },
+  { value: 'multi-colored', label: 'Multi-colored' },
 ];
 
 export const PRODUCT_SIZE_OPTIONS = [
-  { value: '7', label: '7' },
-  { value: '8', label: '8' },
-  { value: '8.5', label: '8.5' },
-  { value: '9', label: '9' },
-  { value: '9.5', label: '9.5' },
-  { value: '10', label: '10' },
-  { value: '10.5', label: '10.5' },
-  { value: '11', label: '11' },
-  { value: '11.5', label: '11.5' },
-  { value: '12', label: '12' },
-  { value: '13', label: '13' },
+  { value: 'XS', label: 'XS' },
+  { value: 'SM', label: 'SM' },
+  { value: 'MD', label: 'MD' },
+  { value: 'LG', label: 'LG' },
+  { value: 'XL', label: 'XL' },
+  { value: 'XXL', label: 'XXL' },
 ];
 
 export const PRODUCT_STOCK_OPTIONS = [
