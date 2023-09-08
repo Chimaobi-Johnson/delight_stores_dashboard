@@ -118,6 +118,23 @@ export default function ProductNewEditForm({ currentProduct }) {
     }
   }, [currentProduct, defaultValues, reset]);
 
+  const [categories, setCategories] = useState(null);
+
+  useEffect(() => {
+    const getCategories = () => {
+      axios
+        .get("/api/categories")
+        .then((data) => {
+          setCategories(data.data.categories);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
+    getCategories();
+  }, []);
+
   useEffect(() => {
     if (includeTaxes) {
       setValue('taxes', 0);
@@ -144,6 +161,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append("newLabel", JSON.stringify(data.newLabel));
     formData.append("saleLabel", JSON.stringify(data.saleLabel));
     formData.append("tags", JSON.stringify(data.tags));
+    formData.append("sizes", JSON.stringify(data.sizes));
 
     for (let i = 0; i < data.images.length; i+=1) {
      formData.append("images", data.images[i]);
@@ -287,15 +305,13 @@ export default function ProductNewEditForm({ currentProduct }) {
               />
 
               <RHFSelect native name="category" label="Category" InputLabelProps={{ shrink: true }}>
-                {PRODUCT_CATEGORY_GROUP_OPTIONS.map((category) => (
-                  <optgroup key={category.group} label={category.group}>
-                    {category.classify.map((classify) => (
-                      <option key={classify} value={classify}>
-                        {classify}
+                {categories ? categories.map((category) => 
+                      (
+                      <option key={Math.random() * 120} value={category._id}>
+                        {category.name}
                       </option>
-                    ))}
-                  </optgroup>
-                ))}
+                      )
+                ) : 'No categories found. Please refresh page'}
               </RHFSelect>
 
               <RHFMultiSelect

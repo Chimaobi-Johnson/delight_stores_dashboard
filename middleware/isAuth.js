@@ -3,6 +3,6 @@ module.exports.isLoggedIn  = function(req, res, next) {
     if(req.user) {
         return next()
     } else {
-        res.send(401, 'Unauthorized')
+        res.status(401).send('Unauthorized')
     }
 }
