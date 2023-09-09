@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useCallback, useMemo, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -51,6 +52,8 @@ import { set } from 'lodash';
 export default function ProductNewEditForm({ currentProduct }) {
   const router = useRouter();
 
+  console.log(currentProduct)
+
   const mdUp = useResponsive('up', 'md');
 
   const { enqueueSnackbar } = useSnackbar();
@@ -80,8 +83,8 @@ export default function ProductNewEditForm({ currentProduct }) {
     () => ({
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
-      subDescription: currentProduct?.subDescription || '',
-      images: currentProduct?.images || [],
+      subheading: currentProduct?.subheading || '',
+      images: currentProduct?.imagesUrl || [],
       //
       code: currentProduct?.code || '',
       sku: currentProduct?.sku || '',
@@ -115,6 +118,12 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const values = watch();
 
+  useEffect(() => {
+    if (currentProduct) {
+      reset(defaultValues);
+    }
+  }, [currentProduct, defaultValues, reset]);
+
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
 
@@ -142,13 +151,14 @@ export default function ProductNewEditForm({ currentProduct }) {
   // }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
+    const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add'
 
     setResData(null)
 
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("price", data.price);
-    formData.append("subDescription", data.subDescription);
+    formData.append("subheading", data.subheading);
     formData.append("description", data.description);
     formData.append("code", data.code);
     formData.append("category", data.category);
@@ -166,18 +176,23 @@ export default function ProductNewEditForm({ currentProduct }) {
      formData.append("images", data.images[i]);
    }
     try {
-       const result = await axios.post('/api/product/add', formData);
+       const result = await axios.post(`/api/product/${crudType}`, formData);
        if(result.status === 201) {
         reset();
         window.scrollTo(0, 0);
         setResData({
           type: 'info',
-          title: `Product - ${result.data.product.name} created successfully`
+          title: `Product - ${result.data.product.name} ${currentProduct ? 'updated' : 'created'} successfully`
         })
+        if(currentProduct) {
+          enqueueSnackbar('Update success!');
+          router.push(paths.dashboard.product.root);
+        }
         console.log(result)
        }
 
     } catch (error) {
+      window.scrollTo(0, 0);
       setResData({
         type: 'error',
         title: 'Server error. check connection or try again later'
@@ -242,7 +257,7 @@ export default function ProductNewEditForm({ currentProduct }) {
           <Stack spacing={3} sx={{ p: 3 }}>
             <RHFTextField name="name" label="Product Name" />
 
-            <RHFTextField name="subDescription" label="Sub Description" multiline rows={4} />
+            <RHFTextField name="subheading" label="Sub Description" multiline rows={4} />
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Content</Typography>

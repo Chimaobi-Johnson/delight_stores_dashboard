@@ -109,7 +109,6 @@ exports.getProduct = (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   const {
-    productId,
     name,
     price,
     subheading,
@@ -119,11 +118,13 @@ exports.updateProduct = async (req, res) => {
     tags,
   } = req.body;
 
+
   const sizeObj = sizes
 
 
   if (req.files.length !== 0) {
     const newImages = req.files;
+
     const imagesId = [];
     const imagesUrl = [];
 
@@ -138,7 +139,7 @@ exports.updateProduct = async (req, res) => {
         imagesId.push(result.public_id);
       }
     }
-    Product.findById(productId)
+    Product.findById(req.query.id)
       .then((data) => {
         if (!data) {
           res
@@ -174,7 +175,7 @@ exports.updateProduct = async (req, res) => {
       });
   } else {
     console.log("updated without image change");
-    Product.findById(productId)
+    Product.findById(req.query.id)
       .then((data) => {
         if (!data) {
           res
@@ -225,10 +226,10 @@ exports.deleteProduct = (req, res) => {
 };
 
 exports.deleteSingleImage = (req, res) => {
-  const { cloudinaryId, cloudinaryUrl, productId } = req.body;
+  const { cloudinaryId, cloudinaryUrl } = req.body;
   cloudinary.uploader.destroy(cloudinaryId, (error, result) => {
     if (result) {
-      Product.findById(productId)
+      Product.findById(req.query.id)
         .then((product) => {
           const newImagesId = [...product.imagesId];
           const newImagesUrl = [...product.imagesUrl];
