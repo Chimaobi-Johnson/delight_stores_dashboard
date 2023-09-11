@@ -53,7 +53,6 @@ exports.storeProduct = async (req, res) => {
     const images = req.files;
     const imagesUrl = [];
     const imagesId = [];
-    // const sizeObj = req.body.sizes
 
     console.log(req.body)
 
@@ -109,21 +108,10 @@ exports.getProduct = (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-  const {
-    name,
-    price,
-    subheading,
-    description,
-    deliveryStatus,
-    sizes,
-    tags,
-  } = req.body;
-
-
-  const sizeObj = sizes
-
 
   if (req.files.length !== 0) {
+    console.log("updating with image change");
+
     const newImages = req.files;
 
     const imagesId = [];
@@ -157,13 +145,21 @@ exports.updateProduct = async (req, res) => {
         const newImagesID = [...productData.imagesId, ...imagesId];
         const newImagesURL = [...productData.imagesUrl, ...imagesUrl];
 
-        productData.name = name;
-        productData.price = price;
-        productData.subheading = subheading;
-        productData.description = description;
-        productData.deliveryStatus = deliveryStatus;
-        productData.sizes = sizeObj;
-        productData.tags = tags;
+        productData.name = req.body.name;
+        productData.price = req.body.price;
+        productData.subheading = req.body.subheading;
+        productData.description = req.body.description;
+        productData.deliveryStatus = req.body.deliveryStatus;
+        productData.sizes = JSON.parse(req.body.sizes);
+        productData.tags = JSON.parse(req.body.tags);
+        productData.gender = JSON.parse(req.body.gender);
+        productData.colors = JSON.parse(req.body.colors);
+        productData.newLabel = JSON.parse(req.body.newLabel);
+        productData.saleLabel = JSON.parse(req.body.saleLabel);
+        productData.quantity = req.body.quantity;
+        productData.sku = req.body.sku;
+        productData.code = req.body.code;
+        productData.category = req.body.category;
         productData.imagesId = newImagesID;
         productData.imagesUrl = newImagesURL;
         return productData.save();
@@ -185,13 +181,21 @@ exports.updateProduct = async (req, res) => {
               message: "Product may have been deleted, create new product",
             });
         } else {
-          data.name = name;
-          data.price = price;
-          data.subheading = subheading;
-          data.description = description;
-          data.deliveryStatus = deliveryStatus;
-          data.sizes = sizeObj;
-          data.tags = tags;
+          data.name = req.body.name;
+          data.price = req.body.price;
+          data.subheading = req.body.subheading;
+          data.description = req.body.description;
+          data.deliveryStatus = req.body.deliveryStatus;
+          data.sizes = JSON.parse(req.body.sizes);
+          data.tags = JSON.parse(req.body.tags);
+          data.gender = JSON.parse(req.body.gender);
+          data.colors = JSON.parse(req.body.colors);
+          data.newLabel = JSON.parse(req.body.newLabel);
+          data.saleLabel = JSON.parse(req.body.saleLabel);
+          data.quantity = req.body.quantity;
+          data.sku = req.body.sku;
+          data.code = req.body.code;
+          data.category = req.body.category;
           return data.save();
         }
       })

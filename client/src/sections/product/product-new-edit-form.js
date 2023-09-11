@@ -97,6 +97,7 @@ export default function ProductNewEditForm({ currentProduct }) {
       category: currentProduct?.category || '',
       colors: currentProduct?.colors || [],
       sizes: currentProduct?.sizes || [],
+      deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
     }),
@@ -186,8 +187,8 @@ export default function ProductNewEditForm({ currentProduct }) {
           title: `Product - ${result.data.product.name} ${currentProduct ? 'updated' : 'created'} successfully`
         })
         if(currentProduct) {
-          enqueueSnackbar('Update success!');
-          router.push(paths.dashboard.product.root);
+          // enqueueSnackbar('Update success!');
+          router.push(`${paths.dashboard.products.root}?status=success`);
         }
         console.log(result)
        }
@@ -341,6 +342,16 @@ export default function ProductNewEditForm({ currentProduct }) {
               />
 
               <RHFMultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
+              
+              <RHFSelect native name="deliveryStatus" label="Delivery Status" InputLabelProps={{ shrink: true }}>
+                  <option value='ready'>
+                    Ready
+                  </option>
+                  <option value='pick-up'>
+                    Pick up only
+                  </option>
+              </RHFSelect>
+            
             </Box>
 
             <RHFAutocomplete

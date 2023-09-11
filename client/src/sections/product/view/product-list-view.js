@@ -2,6 +2,7 @@ import isEqual from 'lodash/isEqual';
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 // @mui
+import Alert from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import Table from '@mui/material/Table';
 import Button from '@mui/material/Button';
@@ -12,7 +13,7 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 // routes
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
+import { useSearchParams, useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -69,6 +70,8 @@ const defaultFilters = {
 export default function ProductListView() {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -80,6 +83,8 @@ export default function ProductListView() {
   const { products, productsLoading, productsEmpty } = useGetProducts();
 
   const confirm = useBoolean();
+
+  const linkStatus = searchParams.get('status');
 
   useEffect(() => {
     const getproducts = () => {
@@ -164,9 +169,20 @@ export default function ProductListView() {
     setFilters(defaultFilters);
   }, []);
 
+  const renderAlert = () => {
+    if(linkStatus === 'success') {
+       return (
+       <Alert severity="info" sx={{ mb: 3 }}>
+         Product updated successfully
+       </Alert>) 
+    }
+    return (<></>) 
+  }
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+        {renderAlert()}
         <CustomBreadcrumbs
           heading="List"
           links={[
