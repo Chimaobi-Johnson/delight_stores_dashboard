@@ -92,32 +92,32 @@ export default function ProductDetailsSummary({
   }, [product]);
 
   const onSubmit = handleSubmit(async (data) => {
-    try {
-      if (!existProduct) {
-        onAddCart?.({
-          ...data,
-          colors: [values.colors],
-          subTotal: data.price * data.quantity,
-        });
-      }
-      onGotoStep?.(0);
-      router.push(paths.product.checkout);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   if (!existProduct) {
+    //     onAddCart?.({
+    //       ...data,
+    //       colors: [values.colors],
+    //       subTotal: data.price * data.quantity,
+    //     });
+    //   }
+    //   onGotoStep?.(0);
+    //   router.push(paths.product.checkout);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   });
 
-  const handleAddCart = useCallback(() => {
-    try {
-      onAddCart?.({
-        ...values,
-        colors: [values.colors],
-        subTotal: values.price * values.quantity,
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }, [onAddCart, values]);
+  // const handleAddCart = useCallback(() => {
+    // try {
+    //   onAddCart?.({
+    //     ...values,
+    //     colors: [values.colors],
+    //     subTotal: values.price * values.quantity,
+    //   });
+    // } catch (error) {
+    //   console.error(error);
+    // }
+  // }, [onAddCart, values]);
 
   const renderPrice = (
     <Box sx={{ typography: 'h5' }}>
@@ -238,14 +238,14 @@ export default function ProductDetailsSummary({
       </Typography>
 
       <Stack spacing={1}>
-        <IncrementerButton
+        {/* <IncrementerButton
           name="quantity"
           quantity={values.quantity}
           disabledDecrease={values.quantity <= 1}
           disabledIncrease={values.quantity >= available}
           onIncrease={() => setValue('quantity', values.quantity + 1)}
           onDecrease={() => setValue('quantity', values.quantity - 1)}
-        />
+        /> */}
 
         <Typography variant="caption" component="div" sx={{ textAlign: 'right' }}>
           Available: {available}
@@ -254,26 +254,26 @@ export default function ProductDetailsSummary({
     </Stack>
   );
 
-  const renderActions = (
-    <Stack direction="row" spacing={2}>
-      <Button
-        fullW_idth
-        disabled={isMaxQuantity || disabledActions}
-        size="large"
-        color="warning"
-        variant="contained"
-        startIcon={<Iconify icon="solar:cart-plus-bold" w_idth={24} />}
-        onClick={handleAddCart}
-        sx={{ whiteSpace: 'nowrap' }}
-      >
-        Add to Cart
-      </Button>
+  // const renderActions = (
+  //   <Stack direction="row" spacing={2}>
+  //     <Button
+  //       fullW_idth
+  //       disabled={isMaxQuantity || disabledActions}
+  //       size="large"
+  //       color="warning"
+  //       variant="contained"
+  //       startIcon={<Iconify icon="solar:cart-plus-bold" w_idth={24} />}
+  //       onClick={handleAddCart}
+  //       sx={{ whiteSpace: 'nowrap' }}
+  //     >
+  //       Add to Cart
+  //     </Button>
 
-      <Button fullW_idth size="large" type="submit" variant="contained" disabled={disabledActions}>
-        Buy Now
-      </Button>
-    </Stack>
-  );
+  //     <Button fullW_idth size="large" type="submit" variant="contained" disabled={disabledActions}>
+  //       Buy Now
+  //     </Button>
+  //   </Stack>
+  // );
 
   const renderSubDescription = (
     <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -344,7 +344,7 @@ export default function ProductDetailsSummary({
 
         {/* <Div_ider sx={{ borderStyle: 'dashed' }} /> */}
 
-        {renderActions}
+        {/* {renderActions} */}
 
         {renderShare}
       </Stack>

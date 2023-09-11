@@ -22,17 +22,16 @@ export const PRODUCT_COLOR_OPTIONS = [
 ];
 
 export const PRODUCT_COLOR_NAME_OPTIONS = [
-  { value: 'red', label: 'Red' },
-  { value: 'blue', label: 'Blue' },
-  { value: 'cyan', label: 'Cyan' },
-  { value: 'green', label: 'Green' },
-  { value: 'yellow', label: 'Yellow' },
-  { value: 'violet', label: 'Violet' },
-  { value: 'Brown', label: 'Brown' },
-  { value: 'Grey', label: 'Grey' },
-  { value: 'black', label: 'Black' },
-  { value: 'white', label: 'White' },
-  { value: 'multi-colored', label: 'Multi-colored' },
+  { value: '#ff0000', label: 'Red' },
+  { value: '#0000ff', label: 'Blue' },
+  { value: '#00ff00', label: 'Lime' },
+  { value: '#008000', label: 'Green' },
+  { value: '#ffff00', label: 'Yellow' },
+  { value: '#800080', label: 'Purple' },
+  { value: '#a52a2a', label: 'Brown' },
+  { value: '#808080', label: 'Grey' },
+  { value: '#000000', label: 'Black' },
+  { value: '#ffffff', label: 'White' },
 ];
 
 export const PRODUCT_SIZE_OPTIONS = [
