@@ -55,7 +55,6 @@ exports.storeProduct = async (req, res) => {
     const imagesId = [];
     // const sizeObj = req.body.sizes
 
-    console.log(images)
     console.log(req.body)
 
     for (const image of images) {
@@ -69,6 +68,8 @@ exports.storeProduct = async (req, res) => {
     }
     const product = new Product({
       ...req.body,
+      gender: JSON.parse(req.body.gender),
+      colors: JSON.parse(req.body.colors),
       tags: JSON.parse(req.body.tags),
       sizes: JSON.parse(req.body.sizes),
       newLabel: JSON.parse(req.body.newLabel),
@@ -174,7 +175,7 @@ exports.updateProduct = async (req, res) => {
         console.log(err);
       });
   } else {
-    console.log("updated without image change");
+    console.log("updating without image change");
     Product.findById(req.query.id)
       .then((data) => {
         if (!data) {

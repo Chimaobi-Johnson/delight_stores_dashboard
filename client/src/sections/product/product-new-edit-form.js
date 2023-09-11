@@ -162,7 +162,8 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append("description", data.description);
     formData.append("code", data.code);
     formData.append("category", data.category);
-    formData.append("colors", data.colors);
+    formData.append("colors", JSON.stringify(data.colors));
+    formData.append("gender", JSON.stringify(data.gender))
     formData.append("quantity", data.quantity);
     formData.append("priceSale", data.priceSale);
     formData.append("sku", data.sku);
@@ -177,7 +178,7 @@ export default function ProductNewEditForm({ currentProduct }) {
    }
     try {
        const result = await axios.post(`/api/product/${crudType}`, formData);
-       if(result.status === 201) {
+       if(result.status === 201 || result.status === 200) {
         reset();
         window.scrollTo(0, 0);
         setResData({

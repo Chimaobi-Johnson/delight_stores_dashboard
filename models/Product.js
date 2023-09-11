@@ -38,6 +38,10 @@ const productSchema = new Schema(
       type: String, 
       default: "ready" 
     },
+    quantity: { 
+      type: Number, 
+      default: 0 
+    },
     inventoryType: { 
       type: String, 
       default: "in-stock" 
@@ -53,13 +57,18 @@ const productSchema = new Schema(
     totalSold: Number,
     purchases: { type: Number },
     purchasedBy: [ String ],
-    colors: [ String ],
+    colors: [ {
+      type: Object
+    } ],
     tags: [ String ],
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category"    
     },
     sizes: [ {
+      type: Object
+    } ],
+    gender: [ {
       type: Object
     } ],
     code: String,
