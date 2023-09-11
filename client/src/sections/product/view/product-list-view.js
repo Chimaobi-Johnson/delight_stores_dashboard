@@ -130,15 +130,29 @@ export default function ProductListView() {
     [table]
   );
 
-  const handleDeleteRow = useCallback(
-    (id) => {
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      setTableData(deleteRow);
+  // const handleDeleteRow = useCallback(
+  //   (id) => {
+  //     const deleteRow = tableData.filter((row) => row.id !== id);
+  //     setTableData(deleteRow);
 
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, table, tableData]
-  );
+  //     table.onUpdatePageDeleteRow(dataInPage.length);
+  //   },
+  //   [dataInPage.length, table, tableData]
+  // );
+
+
+  const deleteProductHandler = (id) => {
+    axios.post(`/api/product/delete/?id=${id}`).then(res => {
+      if(res.status === 200) {
+        alert('Product deleted successfully')
+        window.location.reload();
+      }
+    }).catch(err => {
+      alert('Error deleting product. Check connection or try again later');
+      confirm.onFalse();
+      console.log(err)
+    })
+  }
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
@@ -284,7 +298,7 @@ export default function ProductListView() {
                             row={row}
                             selected={table.selected.includes(row._id)}
                             onSelectRow={() => table.onSelectRow(row._id)}
-                            onDeleteRow={() => handleDeleteRow(row._id)}
+                            onDeleteRow={() => deleteProductHandler(row._id)}
                             onEditRow={() => handleEditRow(row._id)}
                             onViewRow={() => handleViewRow(row._id)}
                           />
