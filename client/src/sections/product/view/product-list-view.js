@@ -182,7 +182,6 @@ export default function ProductListView() {
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-        {renderAlert()}
         <CustomBreadcrumbs
           heading="List"
           links={[
@@ -206,7 +205,10 @@ export default function ProductListView() {
           sx={{ mb: { xs: 3, md: 5 } }}
         />
 
+        {renderAlert()}
+
         <Card>
+
           <ProductTableToolbar
             filters={filters}
             onFilters={handleFilters}

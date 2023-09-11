@@ -18,6 +18,12 @@ import Typography from '@mui/material/Typography';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Alert from '@mui/material/Alert';
+import Button from '@mui/material/Button';
+
+
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { useBoolean } from 'src/hooks/use-boolean';
 
 // routes
 import { paths } from 'src/routes/paths';
@@ -44,8 +50,9 @@ import FormProvider, {
   RHFMultiCheckbox,
 } from 'src/components/hook-form';
 import axios from 'axios';
-import { Button } from '@mui/base';
+// import { Button } from '@mui/base';
 import { set } from 'lodash';
+import { convertCloudinaryImagetoId } from 'src/utils/customFunctions';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +60,10 @@ export default function ProductNewEditForm({ currentProduct }) {
   const router = useRouter();
 
   console.log(currentProduct)
+
+  const confirm = useBoolean();
+
+  const popover = usePopover();
 
   const mdUp = useResponsive('up', 'md');
 
@@ -153,7 +164,7 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const onSubmit = handleSubmit(async (data) => {
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add'
-
+    console.log(defaultValues)
     setResData(null)
 
     const formData = new FormData();
@@ -173,6 +184,10 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append("saleLabel", JSON.stringify(data.saleLabel));
     formData.append("tags", JSON.stringify(data.tags));
     formData.append("sizes", JSON.stringify(data.sizes));
+
+    if(currentProduct) {
+      formData.append("imagesId", data.imagesId);
+    }
 
     for (let i = 0; i < data.images.length; i+=1) {
      formData.append("images", data.images[i]);
@@ -218,12 +233,50 @@ export default function ProductNewEditForm({ currentProduct }) {
     [setValue, values.images]
   );
 
+  // const handleRemoveFile = () => {
+  //   if(currentProduct) {
+  //     confirm.onTrue();
+  //  }
+  // }
+
+  const [currentImage, setCurrentImage] = useState(null);
+  const [confirmDialog, setConfirmDialog] = useState(false)
+
+  const closeConfirmDialog = () => {
+    setConfirmDialog(false)
+  }
+
+  const deleteImageHandler = () => {
+    const imageId = convertCloudinaryImagetoId(currentImage);
+    axios.post("/api/product/image/delete", {
+      cloudinaryId: imageId,
+      cloudinaryUrl: currentImage,
+      productId: currentProduct._id,
+    }).then(res => {
+      if(res.status === 200) {
+        closeConfirmDialog()
+        alert('Image deleted successfully');
+        const filtered = values.images && values.images?.filter((file) => file !== currentImage);
+        setValue('images', filtered);
+      }
+    }).catch(err => {
+      closeConfirmDialog()
+      console.log(err)
+      alert('Error deleting image. Check connection or try again later')
+    })
+  }
+
   const handleRemoveFile = useCallback(
     (inputFile) => {
+      if(currentProduct) {
+        setConfirmDialog(true)
+        setCurrentImage(inputFile)
+     } else {
       const filtered = values.images && values.images?.filter((file) => file !== inputFile);
       setValue('images', filtered);
+     }
     },
-    [setValue, values.images]
+    [setValue, currentProduct, values.images]
   );
 
   const handleRemoveAllFiles = useCallback(() => {
@@ -513,6 +566,17 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
+      <ConfirmDialog
+        open={confirmDialog}
+        onClose={closeConfirmDialog}
+        title="Delete"
+        content="Are you sure want to delete?"
+        action={
+          <Button variant="contained" color="error" onClick={deleteImageHandler}>
+            Delete
+          </Button>
+        }
+      />
       <Grid container spacing={3}>
         {renderDetails}
 

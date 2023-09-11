@@ -142,6 +142,8 @@ exports.updateProduct = async (req, res) => {
       })
       .then((productData) => {
         const newImages = req.files;
+
+        // add existing and updated images to new image array
         const newImagesID = [...productData.imagesId, ...imagesId];
         const newImagesURL = [...productData.imagesUrl, ...imagesUrl];
 
@@ -231,10 +233,10 @@ exports.deleteProduct = (req, res) => {
 };
 
 exports.deleteSingleImage = (req, res) => {
-  const { cloudinaryId, cloudinaryUrl } = req.body;
+  const { cloudinaryId, cloudinaryUrl, productId } = req.body;
   cloudinary.uploader.destroy(cloudinaryId, (error, result) => {
     if (result) {
-      Product.findById(req.query.id)
+      Product.findById(productId)
         .then((product) => {
           const newImagesId = [...product.imagesId];
           const newImagesUrl = [...product.imagesUrl];
@@ -251,6 +253,7 @@ exports.deleteSingleImage = (req, res) => {
         })
         .catch((err) => {
           console.log(err);
+          res.status(500).json({ message: 'Error deleting image' });
         });
     }
   });
@@ -269,7 +272,6 @@ exports.getProductIds = (req, res) => {
 
 
 exports.filterProductsByCatgory = (req, res) => {
-  console.log(req.query.id)
   Product.aggregate([
     { $match: { category : req.query.id } },
     // { $project: { name: 1, price: 1, imagesUrl: 1 }}
