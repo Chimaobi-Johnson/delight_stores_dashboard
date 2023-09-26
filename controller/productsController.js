@@ -277,9 +277,9 @@ exports.filterProductsByCatgory = (req, res) => {
     // { $project: { name: 1, price: 1, imagesUrl: 1 }}
   ])
   // Product.find({ category: req.body.category._id })
-  .then(products => {
-    console.log(products)
-    res.status(200).send({ products: products })
+  .then(data => {
+    console.log(data)
+    res.status(200).json({ products: data })
   }).catch(err => {
     console.log(err)
   })

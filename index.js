@@ -16,6 +16,8 @@ const app = express();
 require('./models/Product');
 require('./models/User');
 require('./models/Category');
+require('./models/Payment');
+
 
 require('./services/passport');
 
@@ -24,6 +26,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+
 
 
 app.use(cookieSession({
@@ -55,6 +59,7 @@ app.use(authRoutes);
 app.use(userRoutes);
 app.use(productRoutes);
 app.use(categoryRoutes);
+app.use(paymentRoutes);
 
 if(process.env.NODE_ENV === 'production') {
   // to make sure that express will serve up production assets like main.js files
