@@ -19,7 +19,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
-
+import IconButton from '@mui/material/IconButton';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
@@ -53,13 +53,15 @@ import axios from 'axios';
 // import { Button } from '@mui/base';
 import { set } from 'lodash';
 import { convertCloudinaryImagetoId } from 'src/utils/customFunctions';
+import { Checkbox, Input } from '@mui/material';
+import Label from 'src/components/label/label';
 
 // ----------------------------------------------------------------------
 
 export default function ProductNewEditForm({ currentProduct }) {
   const router = useRouter();
 
-  console.log(currentProduct)
+  console.log(currentProduct);
 
   const confirm = useBoolean();
 
@@ -67,9 +69,18 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const mdUp = useResponsive('up', 'md');
 
-  const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar();
 
-  const [includeTaxes, setIncludeTaxes] = useState(false);
+  // const [includeTaxes, setIncludeTaxes] = useState(false);
+
+  const [colorDialog, setColorDialog] = useState(false);
+  const [sizeDialog, setSizeDialog] = useState(false);
+  const [colorInputData, setColorInputData] = useState({
+    colorCode: '',
+    colorName: '',
+    colorPrice: null,
+  });
+  const [colorsArray, setColorsArray] = useState([]);
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -142,7 +153,7 @@ export default function ProductNewEditForm({ currentProduct }) {
   useEffect(() => {
     const getCategories = () => {
       axios
-        .get("/api/categories")
+        .get('/api/categories')
         .then((data) => {
           setCategories(data.data.categories);
         })
@@ -163,58 +174,59 @@ export default function ProductNewEditForm({ currentProduct }) {
   // }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
-    const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add'
-    console.log(defaultValues)
-    setResData(null)
+    const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
+    console.log(defaultValues);
+    setResData(null);
 
     const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("price", data.price);
-    formData.append("subheading", data.subheading);
-    formData.append("description", data.description);
-    formData.append("code", data.code);
-    formData.append("category", data.category);
-    formData.append("colors", JSON.stringify(data.colors));
-    formData.append("gender", JSON.stringify(data.gender))
-    formData.append("quantity", data.quantity);
-    formData.append("priceSale", data.priceSale);
-    formData.append("sku", data.sku);
-    formData.append("deliveryStatus", data.deliveryStatus);
-    formData.append("newLabel", JSON.stringify(data.newLabel));
-    formData.append("saleLabel", JSON.stringify(data.saleLabel));
-    formData.append("tags", JSON.stringify(data.tags));
-    formData.append("sizes", JSON.stringify(data.sizes));
+    formData.append('name', data.name);
+    formData.append('price', data.price);
+    formData.append('subheading', data.subheading);
+    formData.append('description', data.description);
+    formData.append('code', data.code);
+    formData.append('category', data.category);
+    formData.append('colors', JSON.stringify(data.colors));
+    formData.append('gender', JSON.stringify(data.gender));
+    formData.append('quantity', data.quantity);
+    formData.append('priceSale', data.priceSale);
+    formData.append('sku', data.sku);
+    formData.append('deliveryStatus', data.deliveryStatus);
+    formData.append('newLabel', JSON.stringify(data.newLabel));
+    formData.append('saleLabel', JSON.stringify(data.saleLabel));
+    formData.append('tags', JSON.stringify(data.tags));
+    formData.append('sizes', JSON.stringify(data.sizes));
 
-    if(currentProduct) {
-      formData.append("imagesId", data.imagesId);
+    if (currentProduct) {
+      formData.append('imagesId', data.imagesId);
     }
 
-    for (let i = 0; i < data.images.length; i+=1) {
-     formData.append("images", data.images[i]);
-   }
+    for (let i = 0; i < data.images.length; i += 1) {
+      formData.append('images', data.images[i]);
+    }
     try {
-       const result = await axios.post(`/api/product/${crudType}`, formData);
-       if(result.status === 201 || result.status === 200) {
+      const result = await axios.post(`/api/product/${crudType}`, formData);
+      if (result.status === 201 || result.status === 200) {
         reset();
         window.scrollTo(0, 0);
         setResData({
           type: 'info',
-          title: `Product - ${result.data.product.name} ${currentProduct ? 'updated' : 'created'} successfully`
-        })
-        if(currentProduct) {
+          title: `Product - ${result.data.product.name} ${
+            currentProduct ? 'updated' : 'created'
+          } successfully`,
+        });
+        if (currentProduct) {
           // enqueueSnackbar('Update success!');
           router.push(`${paths.dashboard.products.root}?status=success`);
         }
-        console.log(result)
-       }
-
+        console.log(result);
+      }
     } catch (error) {
       window.scrollTo(0, 0);
       setResData({
         type: 'error',
-        title: 'Server error. check connection or try again later'
-      })
-      console.log(error)
+        title: 'Server error. check connection or try again later',
+      });
+      console.log(error);
     }
   });
 
@@ -240,41 +252,44 @@ export default function ProductNewEditForm({ currentProduct }) {
   // }
 
   const [currentImage, setCurrentImage] = useState(null);
-  const [confirmDialog, setConfirmDialog] = useState(false)
+  const [confirmDialog, setConfirmDialog] = useState(false);
 
   const closeConfirmDialog = () => {
-    setConfirmDialog(false)
-  }
+    setConfirmDialog(false);
+  };
 
   const deleteImageHandler = () => {
     const imageId = convertCloudinaryImagetoId(currentImage);
-    axios.post("/api/product/image/delete", {
-      cloudinaryId: imageId,
-      cloudinaryUrl: currentImage,
-      productId: currentProduct._id,
-    }).then(res => {
-      if(res.status === 200) {
-        closeConfirmDialog()
-        alert('Image deleted successfully');
-        const filtered = values.images && values.images?.filter((file) => file !== currentImage);
-        setValue('images', filtered);
-      }
-    }).catch(err => {
-      closeConfirmDialog()
-      console.log(err)
-      alert('Error deleting image. Check connection or try again later')
-    })
-  }
+    axios
+      .post('/api/product/image/delete', {
+        cloudinaryId: imageId,
+        cloudinaryUrl: currentImage,
+        productId: currentProduct._id,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          closeConfirmDialog();
+          alert('Image deleted successfully');
+          const filtered = values.images && values.images?.filter((file) => file !== currentImage);
+          setValue('images', filtered);
+        }
+      })
+      .catch((err) => {
+        closeConfirmDialog();
+        console.log(err);
+        alert('Error deleting image. Check connection or try again later');
+      });
+  };
 
   const handleRemoveFile = useCallback(
     (inputFile) => {
-      if(currentProduct) {
-        setConfirmDialog(true)
-        setCurrentImage(inputFile)
-     } else {
-      const filtered = values.images && values.images?.filter((file) => file !== inputFile);
-      setValue('images', filtered);
-     }
+      if (currentProduct) {
+        setConfirmDialog(true);
+        setCurrentImage(inputFile);
+      } else {
+        const filtered = values.images && values.images?.filter((file) => file !== inputFile);
+        setValue('images', filtered);
+      }
     },
     [setValue, currentProduct, values.images]
   );
@@ -303,8 +318,8 @@ export default function ProductNewEditForm({ currentProduct }) {
       <Grid xs={12} md={8}>
         {resData ? (
           <Alert severity={resData.type} sx={{ mb: 3 }}>
-           {resData.title}
-        </Alert>
+            {resData.title}
+          </Alert>
         ) : null}
         <Card>
           {!mdUp && <CardHeader title="Details" />}
@@ -321,7 +336,7 @@ export default function ProductNewEditForm({ currentProduct }) {
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Images (Max 6)</Typography>
-              <RHFUpload 
+              <RHFUpload
                 multiple
                 thumbnail
                 name="images"
@@ -337,7 +352,7 @@ export default function ProductNewEditForm({ currentProduct }) {
       </Grid>
     </>
   );
-
+  console.log(colorsArray);
   const renderProperties = (
     <>
       {mdUp && (
@@ -378,33 +393,56 @@ export default function ProductNewEditForm({ currentProduct }) {
               />
 
               <RHFSelect native name="category" label="Category" InputLabelProps={{ shrink: true }}>
-                {categories ? categories.map((category) => 
-                      (
+                {categories
+                  ? categories.map((category) => (
                       <option key={Math.random() * 120} value={category._id}>
                         {category.name}
                       </option>
-                      )
-                ) : 'No categories found. Please refresh page'}
+                    ))
+                  : 'No categories found. Please refresh page'}
               </RHFSelect>
 
-              <RHFMultiSelect
+              {/* <RHFMultiSelect
                 checkbox
                 name="colors"
                 label="Colors"
                 options={PRODUCT_COLOR_NAME_OPTIONS}
-              />
+              /> */}
+              <div>
+                <Button onClick={() => setColorDialog(true)} variant="outlined">
+                  Add color
+                </Button>
+                <div>
+                  <ul>
+                    {colorsArray.length !== 0
+                      ? colorsArray.map((el) => (
+                          <li key={Math.random() * 100}
+                            onClick={() => removeColorFromArray(el.colorCode)}
+                          >
+                            {el.colorName}:{' '}
+                            <span style={{ backgroundColor: el.colorCode, width: '20px', height: '20px', borderRadius: '100%' }} />
+                          </li>
+                        ))
+                      : ''}
+                  </ul>
+                </div>
+              </div>
+
+              <Button onClick={() => setSizeDialog(true)} variant="outlined">
+                Add size
+              </Button>
 
               <RHFMultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
-              
-              <RHFSelect native name="deliveryStatus" label="Delivery Status" InputLabelProps={{ shrink: true }}>
-                  <option value='ready'>
-                    Ready
-                  </option>
-                  <option value='pick-up'>
-                    Pick up only
-                  </option>
+
+              <RHFSelect
+                native
+                name="deliveryStatus"
+                label="Delivery Status"
+                InputLabelProps={{ shrink: true }}
+              >
+                <option value="ready">Ready</option>
+                <option value="pick-up">Pick up only</option>
               </RHFSelect>
-            
             </Box>
 
             <RHFAutocomplete
@@ -522,7 +560,7 @@ export default function ProductNewEditForm({ currentProduct }) {
               control={<Switch checked={includeTaxes} onChange={handleChangeIncludeTaxes} />}
               label="Price includes taxes"
             /> */}
-{/* 
+            {/* 
             {!includeTaxes && (
               <RHFTextField
                 name="taxes"
@@ -557,15 +595,92 @@ export default function ProductNewEditForm({ currentProduct }) {
           sx={{ flexGrow: 1, pl: 3 }}
         />
 
-        <LoadingButton type="submit" onClick={onSubmit} variant="contained" size="large" loading={isSubmitting}>
+        <LoadingButton
+          type="submit"
+          onClick={onSubmit}
+          variant="contained"
+          size="large"
+          loading={isSubmitting}
+        >
           {!currentProduct ? 'Create Product' : 'Save Changes'}
         </LoadingButton>
       </Grid>
     </>
   );
 
+  const changeColorHandler = (e, inputData) => {
+    setColorInputData({
+      ...colorInputData,
+      [inputData]: e.target.value,
+    });
+  };
+
+  const addColorToArray = () => {
+    const colorsArr = [...colorsArray];
+    colorsArr.push(colorInputData);
+    setColorsArray(colorsArr);
+    setColorDialog(false);
+  };
+
+  const removeColorFromArray = (colorCode) => {
+    const colorsArr = [...colorsArray];
+    // colorsArr.filter
+    console.log(colorCode)
+  }
+
+  console.log(colorInputData);
+
+  const colorDialogFunc = (
+    <ConfirmDialog
+      open={colorDialog}
+      onClose={() => setColorDialog(false)}
+      title="Add Color"
+      content={
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div>
+            <Label>Color Picker</Label>
+            <Input
+              style={{ width: '20%' }}
+              type="color"
+              onChange={(e) => changeColorHandler(e, 'colorCode')}
+              id="favcolor"
+              value={colorInputData.colorCode}
+            />
+          </div>
+          <div>
+            <Label>Color Name</Label>
+            <Input
+              type="text"
+              id="colorname"
+              onChange={(e) => changeColorHandler(e, 'colorName')}
+              value={colorInputData.colorName}
+            />
+          </div>
+          <div>
+            <Label>Color Price</Label>
+            <Input
+              type="number"
+              id="colorprice"
+              onChange={(e) => changeColorHandler(e, 'colorPrice')}
+              value={colorInputData.colorPrice}
+            />
+          </div>
+        </div>
+      }
+      action={
+        <Button variant="contained" color="success" onClick={addColorToArray}>
+          Add
+        </Button>
+      }
+    />
+  );
+
+  console.log(colorDialog);
+
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
+      {colorDialogFunc}
+
       <ConfirmDialog
         open={confirmDialog}
         onClose={closeConfirmDialog}
