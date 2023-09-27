@@ -11,9 +11,8 @@ const paymentSchema = new Schema({
     type: String,
     required: true
     },
-  email: {
+  userEmail: {
     type: String,
-    unique: true,
   },
   mobile: {
     type: String,
@@ -28,9 +27,16 @@ const paymentSchema = new Schema({
   houseno: {
     type: String,
   },
+  deliveryType: {
+    type: String,
+  },
+  additionalInfo: {
+    type: String,
+  },
   products: [ {
     type: Object
   } ],
+  paymentRef: Object,
   purchasedBy: {
     type: Schema.Types.ObjectId,
     ref: "User",
