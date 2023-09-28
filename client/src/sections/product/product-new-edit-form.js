@@ -417,10 +417,12 @@ export default function ProductNewEditForm({ currentProduct }) {
                     {colorsArray.length !== 0
                       ? colorsArray.map((el) => (
                           <li key={Math.random() * 100}
+                          style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
                             onClick={() => removeColorFromArray(el.colorCode)}
                           >
                             {el.colorName}:{' '}
-                            <span style={{ backgroundColor: el.colorCode, width: '20px', height: '20px', borderRadius: '100%' }} />
+                            <span style={{ backgroundColor: el.colorCode, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
+                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` - ${el.colorPrice}` : ''}</span>
                           </li>
                         ))
                       : ''}
@@ -624,8 +626,8 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const removeColorFromArray = (colorCode) => {
     const colorsArr = [...colorsArray];
-    // colorsArr.filter
-    console.log(colorCode)
+    const newColorsArr = colorsArr.filter(item => item.colorCode !== colorCode)
+    setColorsArray(newColorsArr)
   }
 
   console.log(colorInputData);
