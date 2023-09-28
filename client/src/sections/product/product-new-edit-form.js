@@ -80,7 +80,12 @@ export default function ProductNewEditForm({ currentProduct }) {
     colorName: '',
     colorPrice: null,
   });
+  const [sizeInputData, setSizeInputData] = useState({
+    sizeName: '',
+    sizePrice: null,
+  });
   const [colorsArray, setColorsArray] = useState([]);
+  const [sizesArray, setSizesArray] = useState([]);
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -352,7 +357,6 @@ export default function ProductNewEditForm({ currentProduct }) {
       </Grid>
     </>
   );
-  console.log(colorsArray);
   const renderProperties = (
     <>
       {mdUp && (
@@ -430,9 +434,30 @@ export default function ProductNewEditForm({ currentProduct }) {
                 </div>
               </div>
 
-              <Button onClick={() => setSizeDialog(true)} variant="outlined">
-                Add size
-              </Button>
+              <div>
+                <div>
+                  <Button onClick={() => setSizeDialog(true)} variant="outlined">
+                    Add size
+                  </Button>
+                </div>
+
+                <div>
+                  <ul>
+                    {sizesArray.length !== 0
+                      ? sizesArray.map((el) => (
+                          <li key={Math.random() * 100}
+                          style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
+                            onClick={() => removeSizeFromArray(el.sizeName)}
+                          >
+                            {el.sizeName}:{' '}
+                            <span style={{ fontSize: '.8rem', marginLeft: '10px' }}>{el.sizePrice ? el.sizePrice : ''}</span>
+                          </li>
+                        ))
+                      : ''}
+                  </ul>
+                </div>
+              </div>
+        
 
               <RHFMultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
 
@@ -610,6 +635,9 @@ export default function ProductNewEditForm({ currentProduct }) {
     </>
   );
 
+
+  // ADD COLOR LOGIC
+
   const changeColorHandler = (e, inputData) => {
     setColorInputData({
       ...colorInputData,
@@ -630,7 +658,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     setColorsArray(newColorsArr)
   }
 
-  console.log(colorInputData);
 
   const colorDialogFunc = (
     <ConfirmDialog
@@ -677,12 +704,71 @@ export default function ProductNewEditForm({ currentProduct }) {
     />
   );
 
-  console.log(colorDialog);
+  
+  // ADD SIZE LOGIC
+
+  
+  const addSizeToArray = () => {
+    const sizesArr = [...sizesArray];
+    sizesArr.push(sizeInputData);
+    setSizesArray(sizesArr);
+    setSizeDialog(false);
+  };
+
+  const removeSizeFromArray = (sizeName) => {
+    const sizesArr = [...sizesArray];
+    const newSizesArr = sizesArr.filter(item => item.sizeName !== sizeName)
+    setSizesArray(newSizesArr)
+  }
+
+
+  const changeSizeHandler = (e, inputData) => {
+    setSizeInputData({
+      ...sizeInputData,
+      [inputData]: e.target.value,
+    });
+  };
+
+  const sizeDialogFunc = (
+    <ConfirmDialog
+      open={sizeDialog}
+      onClose={() => setSizeDialog(false)}
+      title="Add Size (e.g MD, LG, 1litre, 2litre)"
+      content={
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div>
+            <Label>Size Label</Label>
+            <Input
+              type="text"
+              id="sizename"
+              onChange={(e) => changeSizeHandler(e, 'sizeName')}
+              value={sizeInputData.sizeName}
+            />
+          </div>
+          <div>
+            <Label>Size Price</Label>
+            <Input
+              type="number"
+              id="sizePrice"
+              onChange={(e) => changeSizeHandler(e, 'sizePrice')}
+              value={sizeInputData.sizePrice}
+            />
+          </div>
+        </div>
+      }
+      action={
+        <Button variant="contained" color="success" onClick={addSizeToArray}>
+          Add
+        </Button>
+      }
+    />
+  );
+
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {colorDialogFunc}
-
+      {sizeDialogFunc}
       <ConfirmDialog
         open={confirmDialog}
         onClose={closeConfirmDialog}
