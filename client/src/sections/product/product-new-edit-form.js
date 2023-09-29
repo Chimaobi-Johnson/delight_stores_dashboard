@@ -191,7 +191,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append('description', data.description);
     formData.append('code', data.code);
     formData.append('category', data.category);
-    formData.append('colors', JSON.stringify(data.colors));
+    formData.append('colors', JSON.stringify(colorsArray));
     formData.append('gender', JSON.stringify(data.gender));
     formData.append('quantity', data.quantity);
     formData.append('priceSale', data.priceSale);
@@ -200,7 +200,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append('newLabel', JSON.stringify(data.newLabel));
     formData.append('saleLabel', JSON.stringify(data.saleLabel));
     formData.append('tags', JSON.stringify(data.tags));
-    formData.append('sizes', JSON.stringify(data.sizes));
+    formData.append('sizes', JSON.stringify(sizesArray));
 
     if (currentProduct) {
       formData.append('imagesId', data.imagesId);
@@ -459,9 +459,6 @@ export default function ProductNewEditForm({ currentProduct }) {
                 </div>
               </div>
         
-
-              <RHFMultiSelect checkbox name="sizes" label="Sizes" options={PRODUCT_SIZE_OPTIONS} />
-
               <RHFSelect
                 native
                 name="deliveryStatus"
