@@ -53,7 +53,7 @@ import axios from 'axios';
 // import { Button } from '@mui/base';
 import { set } from 'lodash';
 import { convertCloudinaryImagetoId } from 'src/utils/customFunctions';
-import { Checkbox, Input } from '@mui/material';
+import { Input, MenuItem, Select } from '@mui/material';
 import Label from 'src/components/label/label';
 
 // ----------------------------------------------------------------------
@@ -78,6 +78,7 @@ export default function ProductNewEditForm({ currentProduct }) {
   const [colorInputData, setColorInputData] = useState({
     colorCode: '',
     colorName: '',
+    colorPriceType: '+',
     colorPrice: null,
   });
   const [sizeInputData, setSizeInputData] = useState({
@@ -426,7 +427,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                           >
                             {el.colorName}:{' '}
                             <span style={{ backgroundColor: el.colorCode, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` - ${el.colorPrice}` : ''}</span>
+                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType} ${' '} ${el.colorPrice}` : ''}</span>
                           </li>
                         ))
                       : ''}
@@ -650,6 +651,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     colorsArr.push(colorInputData);
     setColorsArray(colorsArr);
     setColorDialog(false);
+    setColorInputData([])
   };
 
   const removeColorFromArray = (colorCode) => {
@@ -685,14 +687,25 @@ export default function ProductNewEditForm({ currentProduct }) {
               value={colorInputData.colorName}
             />
           </div>
+
           <div>
-            <Label>Color Price</Label>
+            <Label>Price Addition/Subtraction</Label>
             <Input
               type="number"
               id="colorprice"
               onChange={(e) => changeColorHandler(e, 'colorPrice')}
               value={colorInputData.colorPrice}
             />
+          </div>
+          <div>
+            <Label>Price Type</Label>
+            <Select
+              onChange={(e) => changeColorHandler(e, 'colorPriceType')}
+              value={colorInputData.colorPriceType}
+            >
+              <MenuItem value='+'>+</MenuItem>
+              <MenuItem value='-'>-</MenuItem>
+            </Select>
           </div>
         </div>
       }
@@ -713,6 +726,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     sizesArr.push(sizeInputData);
     setSizesArray(sizesArr);
     setSizeDialog(false);
+    setSizeInputData([]);
   };
 
   const removeSizeFromArray = (sizeName) => {
