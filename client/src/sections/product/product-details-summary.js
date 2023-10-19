@@ -71,8 +71,8 @@ export default function ProductDetailsSummary({
     coverUrl,
     available,
     price,
-    colors: colors[0],
-    size: sizes[4],
+    colors: colors[0].colorCode,
+    size: sizes[0].sizeName,
     quantity: available < 1 ? 0 : 1,
   };
 
@@ -181,10 +181,10 @@ export default function ProductDetailsSummary({
   const renderColorOptions = (
     <Stack direction="row">
       <Typography variant="subtitle2" sx={{ flexGrow: 1 }}>
-        Color
+        Colors
       </Typography>
 
-      <Controller
+      {/* <Controller
         name="colors"
         control={control}
         render={({ field }) => (
@@ -195,7 +195,7 @@ export default function ProductDetailsSummary({
             limit={4}
           />
         )}
-      />
+      />  */}
     </Stack>
   );
 
@@ -223,8 +223,8 @@ export default function ProductDetailsSummary({
         }}
       >
         {sizes.map((size) => (
-          <MenuItem key={size} value={size}>
-            {size}
+          <MenuItem key={Math.random() * 10} value={size.sizeName}>
+            {size.sizeName} - {size.sizePrice}
           </MenuItem>
         ))}
       </RHFSelect>

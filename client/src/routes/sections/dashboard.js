@@ -6,6 +6,7 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 // components
 import { LoadingScreen } from 'src/components/loading-screen';
+import AddDiscount from 'src/pages/dashboard/actions/add-discount';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,12 @@ export const dashboardRoutes = [
           { path: 'add', element: <AddProduct /> },
           { path: ':id', element: <ProductDetailsPage /> },
           { path: ':id/edit', element: <ProductEditPage /> },
+        ],
+      },
+      {
+        path: 'actions',
+        children: [
+          { element: <AddDiscount />, index: true },
         ],
       },
     ],

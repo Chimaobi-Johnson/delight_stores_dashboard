@@ -85,6 +85,14 @@ export function useNavData() {
               // { title: 'Details', path: paths.dashboard.products.details },
             ],
           },
+          {
+            title: 'actions',
+            path: paths.dashboard.actions.root,
+            icon: ICONS.banking,
+            children: [
+              { title: 'Apply Discount', path: paths.dashboard.actions.root },
+            ],
+          },
         ],
       },
     ],

@@ -1,17 +1,16 @@
 import { Helmet } from 'react-helmet-async';
-// sections
-import FiveView from 'src/sections/actions/add-discount-view';
+import AddDiscountView from 'src/sections/actions/add-discount-view';
 
 // ----------------------------------------------------------------------
 
-export default function Page() {
+export default function AddDiscount() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Five</title>
+        <title> Dashboard: Add Discount</title>
       </Helmet>
 
-      <FiveView />
+    <AddDiscountView />
     </>
   );
 }

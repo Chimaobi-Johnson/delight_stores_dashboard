@@ -63,9 +63,9 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   console.log(currentProduct);
 
-  const confirm = useBoolean();
+  // const confirm = useBoolean();
 
-  const popover = usePopover();
+  // const popover = usePopover();
 
   const mdUp = useResponsive('up', 'md');
 
@@ -80,10 +80,12 @@ export default function ProductNewEditForm({ currentProduct }) {
     colorName: '',
     colorPriceType: '+',
     colorPrice: null,
+    colorStock: 0
   });
   const [sizeInputData, setSizeInputData] = useState({
     sizeName: '',
     sizePrice: null,
+    sizeStock: 0
   });
   const [colorsArray, setColorsArray] = useState([]);
   const [sizesArray, setSizesArray] = useState([]);
@@ -427,7 +429,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                           >
                             {el.colorName}:{' '}
                             <span style={{ backgroundColor: el.colorCode, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType} ${' '} ${el.colorPrice}` : ''}</span>
+                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType} ${' '} ${el.colorPrice}` : 'free'}</span>
                           </li>
                         ))
                       : ''}
@@ -704,6 +706,15 @@ export default function ProductNewEditForm({ currentProduct }) {
               <MenuItem value='-'>-</MenuItem>
             </Select>
           </div>
+          <div>
+            <Label>Available Stock</Label>
+            <Input
+              type="number"
+              id="colorstock"
+              onChange={(e) => changeColorHandler(e, 'colorStock')}
+              value={colorInputData.colorStock}
+            />
+          </div>
         </div>
       }
       action={
@@ -763,6 +774,15 @@ export default function ProductNewEditForm({ currentProduct }) {
               id="sizePrice"
               onChange={(e) => changeSizeHandler(e, 'sizePrice')}
               value={sizeInputData.sizePrice}
+            />
+          </div>
+          <div>
+            <Label>Available Stock</Label>
+            <Input
+              type="number"
+              id="sizeStock"
+              onChange={(e) => changeSizeHandler(e, 'sizeStock')}
+              value={sizeInputData.sizeStock}
             />
           </div>
         </div>
