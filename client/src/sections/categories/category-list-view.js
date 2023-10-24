@@ -30,6 +30,7 @@ import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 
 import axios from 'axios';
+import CategoryQuickEditForm from './category-edit-modal';
 
 
 
@@ -123,7 +124,7 @@ export default function CategoryListView() {
       </Table>
     </TableContainer>
     </Container>
-    {/* <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> */}
+    <CategoryQuickEditForm categories={categories} open={quickEdit.value} onClose={quickEdit.onFalse} />
 
         <ConfirmDialog
         open={confirm.value}
