@@ -76,6 +76,16 @@ export function useNavData() {
             ],
           },
           {
+            title: 'categories',
+            path: paths.dashboard.categories.root,
+            icon: ICONS.folder,
+            children: [
+              { title: 'List', path: paths.dashboard.categories.root },
+              { title: 'Add', path: paths.dashboard.categories.add },
+              // { title: 'Details', path: paths.dashboard.products.details },
+            ],
+          },
+          {
             title: 'products',
             path: paths.dashboard.products.root,
             icon: ICONS.product,
@@ -91,6 +101,17 @@ export function useNavData() {
             icon: ICONS.banking,
             children: [
               { title: 'Apply Discount', path: paths.dashboard.actions.root },
+            ],
+          },
+          {
+            title: 'site-content',
+            path: paths.dashboard.site.root,
+            icon: ICONS.invoice,
+            children: [
+              { title: 'Home', path: paths.dashboard.site.root },
+              { title: 'About', path: paths.dashboard.site.about },
+              { title: 'Product Details', path: paths.dashboard.site.product },
+              { title: 'Contact', path: paths.dashboard.site.contact },
             ],
           },
         ],

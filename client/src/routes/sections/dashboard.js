@@ -24,6 +24,19 @@ const AddProduct = lazy(() => import('src/pages/dashboard/product/new'));
 const ProductDetailsPage = lazy(() => import('src/pages/dashboard/product/details'));
 const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 
+// CATEGORIES
+const AllCategories = lazy(() => import('src/pages/dashboard/categories/list'));
+const AddCategory = lazy(() => import('src/pages/dashboard/categories/new'));
+const CategoryDetailsPage = lazy(() => import('src/pages/dashboard/categories/details'));
+const CategoryEditPage = lazy(() => import('src/pages/dashboard/categories/edit'));
+
+// SITE CONTENT
+const HomeContent = lazy(() => import('src/pages/dashboard/sitecontent/home'));
+const AboutContent = lazy(() => import('src/pages/dashboard/sitecontent/about'));
+const ProductContent = lazy(() => import('src/pages/dashboard/sitecontent/productdetails'));
+const ContactDetails = lazy(() => import('src/pages/dashboard/sitecontent/contact'));
+
+
 // ----------------------------------------------------------------------
 
 export const dashboardRoutes = [
@@ -59,9 +72,27 @@ export const dashboardRoutes = [
         ],
       },
       {
+        path: 'categories',
+        children: [
+          { element: <AllCategories />, index: true },
+          { path: 'add', element: <AddCategory /> },
+          { path: ':id', element: <CategoryDetailsPage /> },
+          { path: ':id/edit', element: <CategoryEditPage /> },
+        ],
+      },
+      {
         path: 'actions',
         children: [
           { element: <AddDiscount />, index: true },
+        ],
+      },
+      {
+        path: 'site',
+        children: [
+          { element: <HomeContent />, index: true },
+          { path: 'about', element: <AboutContent /> },
+          { path: 'product-details', element: <ProductContent /> },
+          { path: 'contact-details', element: <ContactDetails /> },
         ],
       },
     ],

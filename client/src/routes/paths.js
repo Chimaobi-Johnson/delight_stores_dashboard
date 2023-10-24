@@ -35,5 +35,17 @@ export const paths = {
       details: (id) => `${ROOTS.DASHBOARD}/products/${id}`,
       edit: (id) => `${ROOTS.DASHBOARD}/products/${id}/edit`,
     },
+    categories: {
+      root: `${ROOTS.DASHBOARD}/categories`,
+      add: `${ROOTS.DASHBOARD}/categories/add`,
+      details: (id) => `${ROOTS.DASHBOARD}/categories/${id}`,
+      edit: (id) => `${ROOTS.DASHBOARD}/categories/${id}/edit`,
+    },
+    site: {
+      root: `${ROOTS.DASHBOARD}/site/home`,
+      about: `${ROOTS.DASHBOARD}/site/about`,
+      product: `${ROOTS.DASHBOARD}/site/product-details`,
+      contact: `${ROOTS.DASHBOARD}/site/contact`,
+    },
   },
 };
