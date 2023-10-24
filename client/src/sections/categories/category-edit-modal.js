@@ -11,6 +11,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { fData } from 'src/utils/format-number';
 import { styled } from '@mui/material/styles';
+import Iconify from 'src/components/iconify';
 
 import { useState, useCallback } from 'react';
 
@@ -33,23 +34,35 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
     name: '',
     description: '',
     imageUrl: null,
+    imagePreviewUrl: null,
   });
 
-  const handleDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
+  const changeInputHandler = (input, e) => {
+    setInputData((prevState) => ({
+      ...prevState,
+      [input]: e.target.value,
+    }));
+  };
 
-    const newFile = Object.assign(file, {
-      preview: URL.createObjectURL(file),
-    });
+  const clearImage = () => {
+    setInputData((prevState) => ({
+      ...prevState,
+      imageUrl: null,
+      imagePreviewUrl: null,
+    }));
+  };
 
-    if (file) {
-      setInputData((prevState) => ({
-        ...prevState,
-        imageUrl: newFile,
-      }));
-      // setValue('imageUrl', newFile, { shouldValidate: true });
-    }
-  }, []);
+  const getImageFile = (e) => {
+    setInputData((prevState) => ({
+      ...prevState,
+      imageUrl: e.target.files[0],
+      imagePreviewUrl: URL.createObjectURL(e.target.files[0]),
+    }));
+  };
+
+  const submitCategory = () => {
+    console.log(inputData)
+  }
 
   return (
     <Dialog
@@ -75,14 +88,49 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
             sm: 'repeat(2, 1fr)',
           }}
         >
-          <TextField id="category_name" label="Category Name" variant="outlined" />
-          <TextField id="category_description" label="Description" variant="outlined" />
+          <TextField
+            id="category_name"
+            value={inputData.name}
+            onChange={(e) => changeInputHandler('name', e)}
+            label="Category Name"
+            variant="outlined"
+          />
+          <TextField
+            id="category_description"
+            value={inputData.description}
+            onChange={(e) => changeInputHandler('description', e)}
+            label="Description"
+            variant="outlined"
+          />
 
           <Box sx={{ mb: 2 }}>
             <Button component="label" variant="contained">
               Upload Image
-              <VisuallyHiddenInput type="file" />
+              <VisuallyHiddenInput type="file" onChange={getImageFile} />
             </Button>
+            <Box>
+              <div>
+                {inputData.imagePreviewUrl ? (
+                  <div style={{ position: 'relative' }}>
+                    <Button
+                      style={{
+                        position: 'absolute',
+                        zIndex: 10,
+                        color: '#d57f7f',
+                        bottom: '-5%',
+                        left: '0',
+                      }}
+                      onClick={clearImage}
+                    >
+                      <Iconify icon="solar:trash-bin-trash-bold" />
+                    </Button>
+                    <img alt="category" style={imageStyles} src={inputData.imagePreviewUrl} />
+                  </div>
+                ) : (
+                  ''
+                )}
+              </div>
+            </Box>
           </Box>
         </Box>
       </DialogContent>
@@ -92,13 +140,21 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
           Cancel
         </Button>
 
-        <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+        <LoadingButton type="submit" variant="contained" onClick={submitCategory} loading={isSubmitting}>
           Update
         </LoadingButton>
       </DialogActions>
     </Dialog>
   );
 }
+
+const imageStyles = {
+  width: '200px',
+  height: '170px',
+  marginRight: '2rem',
+  marginBottom: '2rem',
+  marginTop: '2rem',
+};
 
 CategoryQuickEditForm.propTypes = {
   categories: PropTypes.object,
