@@ -8,6 +8,16 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+
+import { ConfirmDialog } from 'src/components/custom-dialog';
+import CustomPopover, { usePopover } from 'src/components/custom-popover';
+
+// hooks
+import { useBoolean } from 'src/hooks/use-boolean';
+
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -27,6 +37,13 @@ export default function CategoryListView() {
 
   const settings = useSettingsContext();
 
+  const popover = usePopover();
+
+  const quickEdit = useBoolean();
+
+  const confirm = useBoolean();
+
+
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -45,6 +62,7 @@ export default function CategoryListView() {
 
 
   return (
+    <>
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="List"
@@ -74,6 +92,8 @@ export default function CategoryListView() {
             <TableCell>Name</TableCell>
             <TableCell align="right">Description</TableCell>
             <TableCell align="right">Image</TableCell>
+            <TableCell align="right">Action</TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -85,6 +105,17 @@ export default function CategoryListView() {
                   </TableCell>
                   <TableCell align="right">{el.description}</TableCell>
                   <TableCell align="right">{el.imageUrl}</TableCell>
+                  <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+                    <Tooltip title="Quick Edit" placement="top" arrow>
+                        <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+                        <Iconify icon="solar:pen-bold" />
+                        </IconButton>
+                    </Tooltip>
+
+                    <IconButton style={{ color: '#d57f7f'}} onClick={() => confirm.onTrue()}>
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                    </IconButton>
+                    </TableCell>
                 </TableRow>
               ))
             : ''}
@@ -92,6 +123,19 @@ export default function CategoryListView() {
       </Table>
     </TableContainer>
     </Container>
+    {/* <UserQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} /> */}
 
+        <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content="Are you sure want to delete?"
+        action={
+            <Button variant="contained" color="error">
+            Delete
+            </Button>
+        }
+        />
+</>
   );
 }
