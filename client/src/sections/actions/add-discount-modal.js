@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 // @mui
 import LoadingButton from '@mui/lab/LoadingButton';
 import Box from '@mui/material/Box';
@@ -49,6 +50,15 @@ export default function AddDiscountModal({ editing, open, onClose }) {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productQueries, setProductQueries] = useState(null);
   const [selectedProductId, setSelectedProductId] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+
+  const [inputData, setInputData] = useState({
+    title: '',
+    percentage: null,
+    dateFrom: null,
+    dateTo: null,
+  });
 
   const fetchProducts = (value) => {
     axios
@@ -86,12 +96,11 @@ export default function AddDiscountModal({ editing, open, onClose }) {
   const changeProductType = (e) => {
     setProductType(e.target.value);
     setSelectedProductId(null);
-    setSelectedCategory(null)
+    setSelectedCategory(null);
   };
 
   const changeProductCategory = (e) => {
     setSelectedCategory(e.target.value);
-
   };
 
   const changeProductHandler = (e) => {
@@ -104,6 +113,20 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     setSelectedProductId(id);
     setProductQueries(null);
   };
+
+  const changeInputDataHandler = (e, type) => {
+    setInputData((prevState) => ({
+      ...prevState,
+      [type]: e.target.value,
+    }));
+  };
+
+  const setDateHandler = (value, type) => {
+    setInputData((prevState) => ({
+        ...prevState,
+        [type]: new Date(value)
+      }));
+  }
 
   const renderProductsQuery = () => {
     if (productType === 'single') {
@@ -165,7 +188,11 @@ export default function AddDiscountModal({ editing, open, onClose }) {
   };
 
   const renderDiscountForm = () => {
-    if (productType === 'all' || selectedCategory !== null || (productType === 'single' && selectedProductId !== null)) {
+    if (
+      productType === 'all' ||
+      selectedCategory !== null ||
+      (productType === 'single' && selectedProductId !== null)
+    ) {
       return (
         <Box
           component="form"
@@ -176,11 +203,20 @@ export default function AddDiscountModal({ editing, open, onClose }) {
           autoComplete="off"
         >
           <div>
-            <TextField required id="outlined-required" label="Discount Title" defaultValue="" />
+            <TextField
+              required
+              id="outlined-required"
+              value={inputData.title}
+              onChange={(e) => changeInputDataHandler(e, 'title')}
+              label="Discount Title"
+              defaultValue=""
+            />
             <TextField
               id="outlined-number"
               label="Percentage (0 - 100)"
               type="number"
+              value={inputData.percentage}
+              onChange={(e) => changeInputDataHandler(e, 'percentage')}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -189,8 +225,16 @@ export default function AddDiscountModal({ editing, open, onClose }) {
             <div style={{ overflow: 'hidden', width: 'fit-content' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['DatePicker']}>
-                  <DatePicker label="Runs From" />
-                  <DatePicker label="End date" />
+                  <DatePicker
+                    value={inputData.dateFrom}
+                    onChange={(value) => setDateHandler(value, 'dateFrom')}
+                    label="Runs From"
+                  />
+                  <DatePicker
+                    value={inputData.dateTo}
+                    onChange={(value) => setDateHandler(value, 'dateTo')}
+                    label="End date"
+                  />
                 </DemoContainer>
               </LocalizationProvider>
             </div>
@@ -200,6 +244,35 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     }
     return <></>;
   };
+
+  const submitDiscountForm = () => {
+    if(!inputData.title || !inputData.percentage || !inputData.dateFrom || !inputData.dateTo) {
+        alert('Please fill in all fields')
+        return
+    }
+    if(inputData.percentage > 100 || inputData.percentage < 0) {
+        alert('Percentage value must be between 0 and 100')
+        return
+    }
+
+    setLoading(true)
+    const formData = new FormData()
+
+    formData.append('product', productType)
+    formData.append('productCategory', selectedCategory)
+    formData.append('selectedProductId', selectedProductId)
+    formData.append('title', inputData.title)
+    formData.append('percentage', inputData.percentage)
+    formData.append('dateFrom', JSON.stringify(inputData.dateFrom))
+    formData.append('dateTo', JSON.stringify(inputData.dateTo))
+
+
+
+  }
+
+
+  console.log(inputData)
+
   return (
     <Dialog
       fullWidth
@@ -210,7 +283,7 @@ export default function AddDiscountModal({ editing, open, onClose }) {
         sx: { maxWidth: 720 },
       }}
     >
-      <DialogTitle>Add/Edit Discount</DialogTitle>
+      <DialogTitle>Apply Discount</DialogTitle>
 
       <DialogContent>
         <Grid container spacing={2} mt={3}>
@@ -245,8 +318,8 @@ export default function AddDiscountModal({ editing, open, onClose }) {
           Cancel
         </Button>
 
-        <LoadingButton type="submit" variant="contained">
-          Add
+        <LoadingButton type="submit" onClick={submitDiscountForm} variant="contained" loading={loading}>
+          Activate Discount
         </LoadingButton>
       </DialogActions>
     </Dialog>
