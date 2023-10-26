@@ -43,108 +43,163 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function AddDiscountModal({ editing, open, onClose }) {
+  const [productType, setProductType] = useState(null);
+  const [categories, setCategories] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [productQueries, setProductQueries] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
 
-    const [productType, setProductType] = useState(null);
-    const [categories, setCategories] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(null);
+  const fetchProducts = (value) => {
+    axios
+      .get('/api/products')
+      .then((res) => {
+        const result = res.data.products.filter(
+          (product) =>
+            value && product && product.name && product.name.toLowerCase().includes(value)
+        ); // filter products only when user types on input
+        setProductQueries(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-    useEffect(() => {
-        const fetchCategories = () => {
-            axios.get('/api/categories')
-            .then(res => {
-                if(res.status === 200) {
-                    setCategories(res.data.categories)
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-        }
-        if(productType === 'category') {
-            fetchCategories()
-        }
-        // if(productType === 'all') {
-        //     setSelectedCategory(null)
-        // }
+  useEffect(() => {
+    const fetchCategories = () => {
+      axios
+        .get('/api/categories')
+        .then((res) => {
+          if (res.status === 200) {
+            setCategories(res.data.categories);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    if (productType === 'category') {
+      fetchCategories();
+    }
+  }, [productType]);
 
-    }, [productType])
+  const changeProductType = (e) => {
+    setProductType(e.target.value);
+    setSelectedProductId(null);
+    setSelectedCategory(null)
+  };
 
+  const changeProductCategory = (e) => {
+    setSelectedCategory(e.target.value);
 
+  };
 
-    const changeProductType = e => {
-        setProductType(e.target.value)
+  const changeProductHandler = (e) => {
+    setSelectedProduct(e.target.value);
+    fetchProducts(e.target.value);
+  };
+
+  const addProductasValue = (name, id) => {
+    setSelectedProduct(name);
+    setSelectedProductId(id);
+    setProductQueries(null);
+  };
+
+  const renderProductsQuery = () => {
+    if (productType === 'single') {
+      return (
+        <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+          <TextField
+            id="outlined-search"
+            value={selectedProduct}
+            onChange={changeProductHandler}
+            label="Search field"
+            type="search"
+          />
+          <ul>
+            {productQueries
+              ? productQueries.map((el, index) => (
+                  <li
+                    style={{ fontSize: '.8rem', cursor: 'pointer' }}
+                    key={index}
+                    onClick={() => addProductasValue(el.name, el._id)}
+                  >
+                    {el.name}
+                  </li>
+                ))
+              : ''}
+          </ul>
+          <FormHelperText>Select product you want to apply a discount on</FormHelperText>
+        </FormControl>
+      );
     }
 
-    const changeProductCategory = e => {
-        setSelectedCategory(e.target.value)
-    }
+    return <></>;
+  };
 
-    const renderProductCategories = () => {
-        if(categories && productType === 'category') {
-            return (
-                <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-helper-label">Product Categories</InputLabel>
-                    <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={selectedCategory}
-                    label="Product Categories"
-                    onChange={changeProductCategory}
-                    >
-                        {categories.map((el, i) => (
-                         <MenuItem value={el._id}>{el.name}</MenuItem>
-                        ))}
-                    </Select>
-                    <FormHelperText>Which category of products do you want to apply discounts on?</FormHelperText>
-              </FormControl>
-            )
-        }
-        return (<></>)
+  const renderProductCategories = () => {
+    if (categories !== null && productType === 'category') {
+      return (
+        <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+          <InputLabel id="demo-simple-select-helper-label">Product Categories</InputLabel>
+          <Select
+            labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper"
+            value={selectedCategory}
+            label="Product Categories"
+            onChange={changeProductCategory}
+          >
+            {categories.map((el, i) => (
+              <MenuItem key={i} value={el._id}>
+                {el.name}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>
+            Which category of products do you want to apply discounts on?
+          </FormHelperText>
+        </FormControl>
+      );
     }
+    return <></>;
+  };
 
-    const renderDiscountForm = () => {
-        if(productType === 'all' || selectedCategory !== null) {
-            return (
-                <Box
-                component="form"
-                sx={{
-                  '& .MuiTextField-root': { m: 1, width: '100%' },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <div>
-                  <TextField
-                    required
-                    id="outlined-required"
-                    label="Discount Title"
-                    defaultValue=""
-                  />
-                  <TextField
-                    id="outlined-number"
-                    label="Percentage (0 - 100)"
-                    type="number"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    placeholder='e.g 10% dicount of N2000 is leaves the price at N1800'
-                  />
-                  <div style={{ overflow: 'hidden', width: 'fit-content'}}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DatePicker']}>
-                      <DatePicker label="Runs From" />
-                      <DatePicker label="End date" />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  </div>
-     
-                  {/* <TextField id="outlined-search" label="Search field" type="search" /> */}
-                </div>
-              </Box>
-            )
-        }
-        return (<></>) 
-
+  const renderDiscountForm = () => {
+    if (productType === 'all' || selectedCategory !== null || (productType === 'single' && selectedProductId !== null)) {
+      return (
+        <Box
+          component="form"
+          sx={{
+            '& .MuiTextField-root': { m: 1, width: '100%' },
+          }}
+          noValidate
+          autoComplete="off"
+        >
+          <div>
+            <TextField required id="outlined-required" label="Discount Title" defaultValue="" />
+            <TextField
+              id="outlined-number"
+              label="Percentage (0 - 100)"
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+              placeholder="e.g 10% dicount of N2000 is leaves the price at N1800"
+            />
+            <div style={{ overflow: 'hidden', width: 'fit-content' }}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DemoContainer components={['DatePicker']}>
+                  <DatePicker label="Runs From" />
+                  <DatePicker label="End date" />
+                </DemoContainer>
+              </LocalizationProvider>
+            </div>
+          </div>
+        </Box>
+      );
     }
+    return <></>;
+  };
   return (
     <Dialog
       fullWidth
@@ -158,47 +213,31 @@ export default function AddDiscountModal({ editing, open, onClose }) {
       <DialogTitle>Add/Edit Discount</DialogTitle>
 
       <DialogContent>
-
-          <Grid container spacing={2} mt={3}>
-            <Grid item xs={12} md={5} lg={4}>
-              <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={productType}
-                  label="Product"
-                  onChange={changeProductType}
-                >
-                  <MenuItem value="" />
-                  <MenuItem value="all">All Products</MenuItem>
-                  <MenuItem value="category">Select by Category</MenuItem>
-                  <MenuItem value="single">Select Single Product</MenuItem>
-                </Select>
-                <FormHelperText>Which products do you want to apply discounts on?</FormHelperText>
-              </FormControl>
-              {renderProductCategories()}
-              {/* <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={10}
-                  label="Age"
-                  // onChange={handleChange}
-                >
-                  <MenuItem value="" />
-                  <MenuItem value="all">All Products</MenuItem>
-                  <MenuItem value="category">Select by Category</MenuItem>
-                  <MenuItem value="single">Select Single Product</MenuItem>
-                </Select>
-                <FormHelperText>Select product you want to apply a discount on</FormHelperText>
-              </FormControl> */}
-            </Grid>
-            <Grid item xs={12} md={7} lg={8}>
-                {renderDiscountForm()}
-            </Grid>
+        <Grid container spacing={2} mt={3}>
+          <Grid item xs={12} md={5} lg={4}>
+            <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+              <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
+              <Select
+                labelId="demo-simple-select-helper-label"
+                id="demo-simple-select-helper"
+                value={productType}
+                label="Product"
+                onChange={changeProductType}
+              >
+                <MenuItem value="" />
+                <MenuItem value="all">All Products</MenuItem>
+                <MenuItem value="category">Select by Category</MenuItem>
+                <MenuItem value="single">Select Single Product</MenuItem>
+              </Select>
+              <FormHelperText>Which products do you want to apply discounts on?</FormHelperText>
+            </FormControl>
+            {renderProductCategories()}
+            {renderProductsQuery()}
           </Grid>
+          <Grid item xs={12} md={7} lg={8}>
+            {renderDiscountForm()}
+          </Grid>
+        </Grid>
       </DialogContent>
 
       <DialogActions>
