@@ -10,7 +10,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
+import Image from 'src/components/image';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
@@ -61,7 +61,21 @@ export default function CategoryListView() {
     getCategories();
   }, []);
 
+  const [formEditing, setFormEditing] = useState(false)
+  const [selectedCat, setSelectedCat] = useState(null)
 
+
+  const initEditCategoryHandler = (type, data) => {
+    if(type === 'new') {
+        setFormEditing(false)
+        setSelectedCat(null)
+        quickEdit.onTrue()
+    } else {
+        setFormEditing(true)
+        setSelectedCat(data)
+        quickEdit.onTrue()
+    }
+  }
   return (
     <>
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -78,6 +92,7 @@ export default function CategoryListView() {
               href={paths.dashboard.categories.new}
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
+              onClick={() => initEditCategoryHandler('new')}
             >
               New Category
             </Button>
@@ -105,10 +120,18 @@ export default function CategoryListView() {
                     {el.name}
                   </TableCell>
                   <TableCell align="right">{el.description}</TableCell>
-                  <TableCell align="right">{el.imageUrl}</TableCell>
+                  <TableCell align="right">
+                    <Image
+                        key={el.imageUrl}
+                        alt='category dp'
+                        src={el.imageUrl}
+                        ratio="1/1"
+                        sx={{ width: '50%', cursor: 'zoom-in' }}
+                    />
+                  </TableCell>
                   <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
                     <Tooltip title="Quick Edit" placement="top" arrow>
-                        <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
+                        <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => initEditCategoryHandler('', el)}>
                         <Iconify icon="solar:pen-bold" />
                         </IconButton>
                     </Tooltip>
@@ -124,8 +147,7 @@ export default function CategoryListView() {
       </Table>
     </TableContainer>
     </Container>
-    <CategoryQuickEditForm categories={categories} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
+    <CategoryQuickEditForm category={selectedCat} editing={formEditing} open={quickEdit.value} onClose={quickEdit.onFalse} />
         <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}

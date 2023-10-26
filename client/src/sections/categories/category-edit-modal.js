@@ -13,7 +13,8 @@ import { fData } from 'src/utils/format-number';
 import { styled } from '@mui/material/styles';
 import Iconify from 'src/components/iconify';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 const VisuallyHiddenInput = styled('input')({
@@ -28,8 +29,23 @@ const VisuallyHiddenInput = styled('input')({
   width: 1,
 });
 
-export default function CategoryQuickEditForm({ categories, open, onClose }) {
+export default function CategoryQuickEditForm({ category, editing, open, onClose }) {
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+
+  useEffect(() => {
+    if(editing) {
+        setInputData((prevState) => ({
+            ...prevState,
+            name: category.name,
+            description: category.description,
+            imagePreviewUrl: category.imageUrl
+          }));
+    }
+  }, [editing, category])
+
   const [inputData, setInputData] = useState({
     name: '',
     description: '',
@@ -61,7 +77,42 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
   };
 
   const submitCategory = () => {
-    console.log(inputData)
+    if(inputData.name === '') {
+        setIsSubmitting(false)
+        setErrorMessage('Name field cannot be empty')
+        return
+    }
+    if(inputData.imagePreviewUrl === null || inputData.imagePreviewUrl === '') {
+        setIsSubmitting(false)
+        setErrorMessage('Category must contain an image')
+        return
+    }
+    setIsSubmitting(true)
+    setErrorMessage(null)
+
+    const formData = new FormData();
+    formData.append('name', inputData.name);
+    formData.append('description', inputData.description);
+    formData.append('image', inputData.imageUrl);
+    axios.post('/api/category/new', formData)
+    .then(res => {
+        if(res.status === 201) {
+            setInputData((prevState) => ({
+                ...prevState,
+                name: '',
+                description: '',
+                imageUrl: null,
+                imagePreviewUrl: null,
+              }));
+        }
+        setIsSubmitting(false)
+        setErrorMessage(null)
+        window.location.reload()
+    }).catch(err => {
+        console.log(err)
+        setIsSubmitting(false)
+        setErrorMessage('Server eror. Check connection or try again later')
+    })
   }
 
   return (
@@ -74,7 +125,7 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
         sx: { maxWidth: 720 },
       }}
     >
-      <DialogTitle>Edit Category</DialogTitle>
+      <DialogTitle>{editing ? 'Edit Category' : 'Add Category'}</DialogTitle>
 
       <DialogContent>
         <Box
@@ -141,7 +192,7 @@ export default function CategoryQuickEditForm({ categories, open, onClose }) {
         </Button>
 
         <LoadingButton type="submit" variant="contained" onClick={submitCategory} loading={isSubmitting}>
-          Update
+          {editing ? 'Update' : 'Add'}
         </LoadingButton>
       </DialogActions>
     </Dialog>
@@ -157,7 +208,9 @@ const imageStyles = {
 };
 
 CategoryQuickEditForm.propTypes = {
-  categories: PropTypes.object,
+  category: PropTypes.object,
   onClose: PropTypes.func,
   open: PropTypes.bool,
+  editing: PropTypes.bool,
+
 };
