@@ -79,11 +79,6 @@ export function useNavData() {
             title: 'categories',
             path: paths.dashboard.categories.root,
             icon: ICONS.folder,
-            children: [
-              { title: 'List', path: paths.dashboard.categories.root },
-              { title: 'Add', path: paths.dashboard.categories.add },
-              // { title: 'Details', path: paths.dashboard.products.details },
-            ],
           },
           {
             title: 'products',

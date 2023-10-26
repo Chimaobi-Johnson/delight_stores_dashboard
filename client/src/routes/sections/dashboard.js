@@ -26,9 +26,6 @@ const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 
 // CATEGORIES
 const AllCategories = lazy(() => import('src/pages/dashboard/categories/list'));
-const AddCategory = lazy(() => import('src/pages/dashboard/categories/new'));
-const CategoryDetailsPage = lazy(() => import('src/pages/dashboard/categories/details'));
-const CategoryEditPage = lazy(() => import('src/pages/dashboard/categories/edit'));
 
 // SITE CONTENT
 const HomeContent = lazy(() => import('src/pages/dashboard/sitecontent/home'));
@@ -75,9 +72,6 @@ export const dashboardRoutes = [
         path: 'categories',
         children: [
           { element: <AllCategories />, index: true },
-          { path: 'add', element: <AddCategory /> },
-          { path: ':id', element: <CategoryDetailsPage /> },
-          { path: ':id/edit', element: <CategoryEditPage /> },
         ],
       },
       {

@@ -9,6 +9,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import Alert from '@mui/material/Alert';
+
 import { fData } from 'src/utils/format-number';
 import { styled } from '@mui/material/styles';
 import Iconify from 'src/components/iconify';
@@ -82,7 +84,7 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
         setErrorMessage('Name field cannot be empty')
         return
     }
-    if(inputData.imagePreviewUrl === null || inputData.imagePreviewUrl === '') {
+    if(inputData.imagePreviewUrl === null) {
         setIsSubmitting(false)
         setErrorMessage('Category must contain an image')
         return
@@ -91,29 +93,56 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
     setErrorMessage(null)
 
     const formData = new FormData();
+    formData.append('categoryId', category._id)
     formData.append('name', inputData.name);
     formData.append('description', inputData.description);
     formData.append('image', inputData.imageUrl);
-    axios.post('/api/category/new', formData)
-    .then(res => {
-        if(res.status === 201) {
-            setInputData((prevState) => ({
-                ...prevState,
-                name: '',
-                description: '',
-                imageUrl: null,
-                imagePreviewUrl: null,
-              }));
-        }
-        setIsSubmitting(false)
-        setErrorMessage(null)
-        window.location.reload()
-    }).catch(err => {
-        console.log(err)
-        setIsSubmitting(false)
-        setErrorMessage('Server eror. Check connection or try again later')
-    })
+
+    if(editing) {
+        axios.post('/api/category/update', formData)
+        .then(res => {
+            if(res.status === 201) {
+                setInputData((prevState) => ({
+                    ...prevState,
+                    name: '',
+                    description: '',
+                    imageUrl: null,
+                    imagePreviewUrl: null,
+                  }));
+            }
+            setIsSubmitting(false)
+            setErrorMessage(null)
+            window.location.reload()
+        }).catch(err => {
+            console.log(err)
+            setIsSubmitting(false)
+            setErrorMessage('Server eror. Check connection or try again later')
+        })
+    } else {
+        axios.post('/api/category/new', formData)
+        .then(res => {
+            if(res.status === 201) {
+                setInputData((prevState) => ({
+                    ...prevState,
+                    name: '',
+                    description: '',
+                    imageUrl: null,
+                    imagePreviewUrl: null,
+                  }));
+            }
+            setIsSubmitting(false)
+            setErrorMessage(null)
+            window.location.reload()
+        }).catch(err => {
+            console.log(err)
+            setIsSubmitting(false)
+            setErrorMessage('Server eror. Check connection or try again later')
+        })
+    }
+
   }
+
+  console.log(errorMessage)
 
   return (
     <Dialog
@@ -128,6 +157,11 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
       <DialogTitle>{editing ? 'Edit Category' : 'Add Category'}</DialogTitle>
 
       <DialogContent>
+        {errorMessage ? (
+            <Alert severity="error" sx={{ mb: 3 }}>
+                {errorMessage}
+          </Alert>
+        ) : ''}
         <Box
           rowGap={3}
           columnGap={2}
