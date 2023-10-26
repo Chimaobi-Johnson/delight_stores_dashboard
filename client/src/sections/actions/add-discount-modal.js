@@ -266,6 +266,14 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     formData.append('dateFrom', JSON.stringify(inputData.dateFrom))
     formData.append('dateTo', JSON.stringify(inputData.dateTo))
 
+    axios.post('/api/discount/apply', formData).then(res => {
+        if(res.status === 200) {
+            console.log(res)
+        }
+    }).catch(err => {
+        console.log(err)
+    })
+
 
 
   }

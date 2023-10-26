@@ -17,6 +17,8 @@ require('./models/Product');
 require('./models/User');
 require('./models/Category');
 require('./models/Payment');
+require('./models/Discount');
+
 
 
 require('./services/passport');
@@ -27,6 +29,8 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const discountRoutes = require('./routes/discountRoutes');
+
 
 
 
@@ -60,6 +64,8 @@ app.use(userRoutes);
 app.use(productRoutes);
 app.use(categoryRoutes);
 app.use(paymentRoutes);
+app.use(discountRoutes);
+
 
 if(process.env.NODE_ENV === 'production') {
   // to make sure that express will serve up production assets like main.js files
