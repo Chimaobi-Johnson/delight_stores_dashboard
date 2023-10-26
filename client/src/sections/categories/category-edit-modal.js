@@ -142,7 +142,6 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
 
   }
 
-  console.log(errorMessage)
 
   return (
     <Dialog

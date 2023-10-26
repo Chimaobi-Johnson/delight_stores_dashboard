@@ -11,13 +11,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Image from 'src/components/image';
+import Alert from '@mui/material/Alert';
+import LoadingButton from '@mui/lab/LoadingButton';
+
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 // hooks
 import { useBoolean } from 'src/hooks/use-boolean';
-
 
 import { useSettingsContext } from 'src/components/settings';
 
@@ -32,10 +34,7 @@ import { RouterLink } from 'src/routes/components';
 import axios from 'axios';
 import CategoryQuickEditForm from './category-edit-modal';
 
-
-
 export default function CategoryListView() {
-
   const settings = useSettingsContext();
 
   const popover = usePopover();
@@ -43,7 +42,6 @@ export default function CategoryListView() {
   const quickEdit = useBoolean();
 
   const confirm = useBoolean();
-
 
   const [categories, setCategories] = useState([]);
 
@@ -61,24 +59,49 @@ export default function CategoryListView() {
     getCategories();
   }, []);
 
-  const [formEditing, setFormEditing] = useState(false)
-  const [selectedCat, setSelectedCat] = useState(null)
-
+  const [formEditing, setFormEditing] = useState(false);
+  const [selectedCat, setSelectedCat] = useState(null);
 
   const initEditCategoryHandler = (type, data) => {
-    if(type === 'new') {
-        setFormEditing(false)
-        setSelectedCat(null)
-        quickEdit.onTrue()
+    if (type === 'new') {
+      setFormEditing(false);
+      setSelectedCat(null);
+      quickEdit.onTrue();
     } else {
-        setFormEditing(true)
-        setSelectedCat(data)
-        quickEdit.onTrue()
+      setFormEditing(true);
+      setSelectedCat(data);
+      quickEdit.onTrue();
     }
-  }
+  };
+
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  const initDeleteHandler = (cat) => {
+    setSelectedCat(cat);
+    confirm.onTrue();
+  };
+  const deleteCategoryHandler = () => {
+    setLoading(true);
+    setErrorMessage(null);
+    axios
+      .post(`/api/category/delete/?id=${selectedCat._id}`)
+      .then((res) => {
+        if (res.status === 200) {
+          setLoading(false);
+          window.location.reload();
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        setErrorMessage('Server eror. Check connection or try again later');
+        confirm.onFalse()
+      });
+  };
+
   return (
     <>
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="List"
           links={[
@@ -101,64 +124,90 @@ export default function CategoryListView() {
             mb: { xs: 3, md: 5 },
           }}
         />
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell align="right">Description</TableCell>
-            <TableCell align="right">Image</TableCell>
-            <TableCell align="right">Action</TableCell>
+        {errorMessage ? (
+          <Alert severity="error" sx={{ mb: 3 }}>
+            {errorMessage}
+          </Alert>
+        ) : (
+          ''
+        )}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell align="right">Description</TableCell>
+                <TableCell align="right">Image</TableCell>
+                <TableCell align="right">Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {categories.length !== 0
+                ? categories.map((el) => (
+                    <TableRow
+                      key={el.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {el.name}
+                      </TableCell>
+                      <TableCell align="right">{el.description}</TableCell>
+                      <TableCell align="right">
+                        <Image
+                          key={el.imageUrl}
+                          alt="category dp"
+                          src={el.imageUrl}
+                          ratio="1/1"
+                          sx={{ width: '50%', cursor: 'zoom-in' }}
+                        />
+                      </TableCell>
+                      <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+                        <Tooltip title="Quick Edit" placement="top" arrow>
+                          <IconButton
+                            color={quickEdit.value ? 'inherit' : 'default'}
+                            onClick={() => initEditCategoryHandler('', el)}
+                          >
+                            <Iconify icon="solar:pen-bold" />
+                          </IconButton>
+                        </Tooltip>
 
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {categories.length !== 0
-            ? categories.map((el) => (
-                <TableRow key={el.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell component="th" scope="row">
-                    {el.name}
-                  </TableCell>
-                  <TableCell align="right">{el.description}</TableCell>
-                  <TableCell align="right">
-                    <Image
-                        key={el.imageUrl}
-                        alt='category dp'
-                        src={el.imageUrl}
-                        ratio="1/1"
-                        sx={{ width: '50%', cursor: 'zoom-in' }}
-                    />
-                  </TableCell>
-                  <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-                    <Tooltip title="Quick Edit" placement="top" arrow>
-                        <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={() => initEditCategoryHandler('', el)}>
-                        <Iconify icon="solar:pen-bold" />
+                        <IconButton
+                          style={{ color: '#d57f7f' }}
+                          onClick={() => initDeleteHandler(el)}
+                        >
+                          <Iconify icon="solar:trash-bin-trash-bold" />
                         </IconButton>
-                    </Tooltip>
-
-                    <IconButton style={{ color: '#d57f7f'}} onClick={() => confirm.onTrue()}>
-                        <Iconify icon="solar:trash-bin-trash-bold" />
-                    </IconButton>
-                    </TableCell>
-                </TableRow>
-              ))
-            : ''}
-        </TableBody>
-      </Table>
-    </TableContainer>
-    </Container>
-    <CategoryQuickEditForm category={selectedCat} editing={formEditing} open={quickEdit.value} onClose={quickEdit.onFalse} />
-        <ConfirmDialog
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : ''}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+      <CategoryQuickEditForm
+        category={selectedCat}
+        editing={formEditing}
+        open={quickEdit.value}
+        onClose={quickEdit.onFalse}
+      />
+      <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
         content="Are you sure want to delete?"
         action={
-            <Button variant="contained" color="error">
+          <LoadingButton
+            loading={loading}
+            variant="contained"
+            type='submit'
+            onClick={() => deleteCategoryHandler()}
+            color="error"
+          >
             Delete
-            </Button>
+          </LoadingButton>
         }
-        />
-</>
+      />
+    </>
   );
 }
