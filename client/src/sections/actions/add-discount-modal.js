@@ -43,83 +43,68 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function AddDiscountModal({ editing, open, onClose }) {
-  return (
-    <Dialog
-      fullWidth
-      maxWidth={false}
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: { maxWidth: 720 },
-      }}
-    >
-      <DialogTitle>Add/Edit Discount</DialogTitle>
 
-      <DialogContent>
-        {/* <Box
-          rowGap={3}
-          columnGap={2}
-          display="grid"
-          component="form"
-          mt={2}
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-          }}
-        > */}
-          <Grid container spacing={2} mt={3}>
-            <Grid item xs={12} md={5} lg={4}>
-              <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={10}
-                  label="Age"
-                  // onChange={handleChange}
-                >
-                  <MenuItem value="" />
-                  <MenuItem value="all">All Products</MenuItem>
-                  <MenuItem value="category">Select by Category</MenuItem>
-                  <MenuItem value="single">Select Single Product</MenuItem>
-                </Select>
-                <FormHelperText>Which products do you want to apply discounts on?</FormHelperText>
+    const [productType, setProductType] = useState(null);
+    const [categories, setCategories] = useState(null);
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
+    useEffect(() => {
+        const fetchCategories = () => {
+            axios.get('/api/categories')
+            .then(res => {
+                if(res.status === 200) {
+                    setCategories(res.data.categories)
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+        if(productType === 'category') {
+            fetchCategories()
+        }
+        // if(productType === 'all') {
+        //     setSelectedCategory(null)
+        // }
+
+    }, [productType])
+
+
+
+    const changeProductType = e => {
+        setProductType(e.target.value)
+    }
+
+    const changeProductCategory = e => {
+        setSelectedCategory(e.target.value)
+    }
+
+    const renderProductCategories = () => {
+        if(categories && productType === 'category') {
+            return (
+                <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-helper-label">Product Categories</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={selectedCategory}
+                    label="Product Categories"
+                    onChange={changeProductCategory}
+                    >
+                        {categories.map((el, i) => (
+                         <MenuItem value={el._id}>{el.name}</MenuItem>
+                        ))}
+                    </Select>
+                    <FormHelperText>Which category of products do you want to apply discounts on?</FormHelperText>
               </FormControl>
-              <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={10}
-                  label="Age"
-                  // onChange={handleChange}
-                >
-                  <MenuItem value="" />
-                  <MenuItem value="all">All Products</MenuItem>
-                  <MenuItem value="category">Select by Category</MenuItem>
-                  <MenuItem value="single">Select Single Product</MenuItem>
-                </Select>
-                <FormHelperText>Which category of products do you want to apply discounts on?</FormHelperText>
-              </FormControl>
-              <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
-                <Select
-                  labelId="demo-simple-select-helper-label"
-                  id="demo-simple-select-helper"
-                  value={10}
-                  label="Age"
-                  // onChange={handleChange}
-                >
-                  <MenuItem value="" />
-                  <MenuItem value="all">All Products</MenuItem>
-                  <MenuItem value="category">Select by Category</MenuItem>
-                  <MenuItem value="single">Select Single Product</MenuItem>
-                </Select>
-                <FormHelperText>Select product you want to apply a discount on</FormHelperText>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={7} lg={8}>
-              <Box
+            )
+        }
+        return (<></>)
+    }
+
+    const renderDiscountForm = () => {
+        if(productType === 'all' || selectedCategory !== null) {
+            return (
+                <Box
                 component="form"
                 sx={{
                   '& .MuiTextField-root': { m: 1, width: '100%' },
@@ -155,9 +140,65 @@ export default function AddDiscountModal({ editing, open, onClose }) {
                   {/* <TextField id="outlined-search" label="Search field" type="search" /> */}
                 </div>
               </Box>
+            )
+        }
+        return (<></>) 
+
+    }
+  return (
+    <Dialog
+      fullWidth
+      maxWidth={false}
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: { maxWidth: 720 },
+      }}
+    >
+      <DialogTitle>Add/Edit Discount</DialogTitle>
+
+      <DialogContent>
+
+          <Grid container spacing={2} mt={3}>
+            <Grid item xs={12} md={5} lg={4}>
+              <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={productType}
+                  label="Product"
+                  onChange={changeProductType}
+                >
+                  <MenuItem value="" />
+                  <MenuItem value="all">All Products</MenuItem>
+                  <MenuItem value="category">Select by Category</MenuItem>
+                  <MenuItem value="single">Select Single Product</MenuItem>
+                </Select>
+                <FormHelperText>Which products do you want to apply discounts on?</FormHelperText>
+              </FormControl>
+              {renderProductCategories()}
+              {/* <FormControl sx={{ m: 1, mt: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-helper-label">Product</InputLabel>
+                <Select
+                  labelId="demo-simple-select-helper-label"
+                  id="demo-simple-select-helper"
+                  value={10}
+                  label="Age"
+                  // onChange={handleChange}
+                >
+                  <MenuItem value="" />
+                  <MenuItem value="all">All Products</MenuItem>
+                  <MenuItem value="category">Select by Category</MenuItem>
+                  <MenuItem value="single">Select Single Product</MenuItem>
+                </Select>
+                <FormHelperText>Select product you want to apply a discount on</FormHelperText>
+              </FormControl> */}
+            </Grid>
+            <Grid item xs={12} md={7} lg={8}>
+                {renderDiscountForm()}
             </Grid>
           </Grid>
-        {/* </Box> */}
       </DialogContent>
 
       <DialogActions>
