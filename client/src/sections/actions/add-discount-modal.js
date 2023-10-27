@@ -256,6 +256,7 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     }
 
     setLoading(true)
+
     const formData = new FormData()
 
     formData.append('product', productType)
@@ -266,11 +267,16 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     formData.append('dateFrom', JSON.stringify(inputData.dateFrom))
     formData.append('dateTo', JSON.stringify(inputData.dateTo))
 
-    axios.post('/api/discount/apply', formData).then(res => {
+    axios.post('/api/discount/apply', formData)
+    .then(res => {
         if(res.status === 200) {
-            console.log(res)
+            setLoading(false)
+            alert('Discount applied successfully')
+            window.location.reload()
         }
     }).catch(err => {
+        setLoading(false)
+
         console.log(err)
     })
 
@@ -326,7 +332,7 @@ export default function AddDiscountModal({ editing, open, onClose }) {
           Cancel
         </Button>
 
-        <LoadingButton type="submit" onClick={submitDiscountForm} variant="contained" loading={loading}>
+        <LoadingButton type='submit' onClick={submitDiscountForm} variant="contained" loading={loading}>
           Activate Discount
         </LoadingButton>
       </DialogActions>

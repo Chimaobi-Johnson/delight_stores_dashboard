@@ -13,8 +13,8 @@ const discountSchema = new Schema(
       required: false,
     },
     productId: {
-      type: String,
-      required: false,
+        type: String,
+        required: false,
     },
     title: {
       type: String,
