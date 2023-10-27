@@ -75,6 +75,7 @@ exports.storeProduct = async (req, res) => {
       saleLabel: JSON.parse(req.body.saleLabel),
       imagesUrl: imagesUrl,
       imagesId: imagesId,
+      postedBy: req.user._id
     });
     product
       .save()
