@@ -6,6 +6,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
+import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import TextareaAutosize from '@mui/base/TextareaAutosize';
@@ -183,6 +184,24 @@ export default function SiteProductDetailsView() {
 
   }
 
+  const renderAlert = () => {
+    if(successMessage !== '') { 
+        return (
+            <Alert severity="success" sx={{ ml: 2, mr: 2, mb: 3 }}>
+                {successMessage}
+           </Alert>
+        )
+    }
+    if(errorMessage !== '') {
+        return (
+            <Alert severity="error" sx={{ ml: 2, mr: 2, mb: 3 }}>
+                {errorMessage}
+           </Alert>
+        )
+    }
+    return (<></>)
+  }
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -199,7 +218,10 @@ export default function SiteProductDetailsView() {
         />
       </Container>
       <Grid container>
+
         <Grid item lg={6} xs={12}>
+        {renderAlert()}
+
         <Grid container pl={2} pr={2}>
 
           <Grid item xs={5}>
