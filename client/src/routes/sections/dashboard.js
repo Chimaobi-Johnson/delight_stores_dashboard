@@ -30,7 +30,7 @@ const AllCategories = lazy(() => import('src/pages/dashboard/categories/list'));
 // SITE CONTENT
 const HomeContent = lazy(() => import('src/pages/dashboard/sitecontent/home'));
 const AboutContent = lazy(() => import('src/pages/dashboard/sitecontent/about'));
-const ProductContent = lazy(() => import('src/pages/dashboard/sitecontent/productdetails'));
+const SiteProductDetails = lazy(() => import('src/pages/dashboard/sitecontent/productdetails'));
 const ContactDetails = lazy(() => import('src/pages/dashboard/sitecontent/contact'));
 
 
@@ -85,7 +85,7 @@ export const dashboardRoutes = [
         children: [
           { element: <HomeContent />, index: true },
           { path: 'about', element: <AboutContent /> },
-          { path: 'product-details', element: <ProductContent /> },
+          { path: 'product-details', element: <SiteProductDetails /> },
           { path: 'contact-details', element: <ContactDetails /> },
         ],
       },
