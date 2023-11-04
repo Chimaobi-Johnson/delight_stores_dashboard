@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 // @mui
 import Container from '@mui/material/Container';
@@ -20,65 +21,129 @@ import Iconify from 'src/components/iconify';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
+import { LoadingButton } from '@mui/lab';
+
 import LocationItem from './components/LocationItems';
+
+const blue = {
+    100: '#DAECFF',
+    200: '#b6daff',
+    400: '#3399FF',
+    500: '#007FFF',
+    600: '#0072E5',
+    900: '#003A75',
+  };
+
+  const grey = {
+    50: '#F3F6F9',
+    100: '#E5EAF2',
+    200: '#DAE2ED',
+    300: '#C7D0DD',
+    400: '#B0B8C4',
+    500: '#9DA8B7',
+    600: '#6B7A90',
+    700: '#434D5B',
+    800: '#303740',
+    900: '#1C2025',
+  };
+
+  const Textarea = styled(TextareaAutosize)(
+    ({ theme }) => `
+    width: 320px;
+    font-family: IBM Plex Sans, sans-serif;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 12px;
+    border-radius: 12px 12px 0 12px;
+    color: ${theme.palette.mode === 'dark' ? '#d1cbcb' : grey[900]};
+    background: ${theme.palette.mode === 'dark' ? '#161c24' : '#fff'};
+    border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+    box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
+
+    &:hover {
+      border-color: '#ffffff';
+    }
+
+    &:focus {
+      outline: 0;
+      border-color: '#ffffff';
+      box-shadow: 0 0 0 1px ${theme.palette.mode === 'dark' ? '#ffffff' : blue[200]};
+    }
+
+    // firefox
+    &:focus-visible {
+      outline: 0;
+    }
+  `,
+  );
+
 
 export default function SiteProductDetailsView() {
 
-    const blue = {
-        100: '#DAECFF',
-        200: '#b6daff',
-        400: '#3399FF',
-        500: '#007FFF',
-        600: '#0072E5',
-        900: '#003A75',
-      };
-    
-      const grey = {
-        50: '#F3F6F9',
-        100: '#E5EAF2',
-        200: '#DAE2ED',
-        300: '#C7D0DD',
-        400: '#B0B8C4',
-        500: '#9DA8B7',
-        600: '#6B7A90',
-        700: '#434D5B',
-        800: '#303740',
-        900: '#1C2025',
-      };
-    
-      const Textarea = styled(TextareaAutosize)(
-        ({ theme }) => `
-        width: 320px;
-        font-family: IBM Plex Sans, sans-serif;
-        font-size: 0.875rem;
-        font-weight: 400;
-        line-height: 1.5;
-        padding: 12px;
-        border-radius: 12px 12px 0 12px;
-        color: ${theme.palette.mode === 'dark' ? '#d1cbcb' : grey[900]};
-        background: ${theme.palette.mode === 'dark' ? '#161c24' : '#fff'};
-        border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
-        box-shadow: 0px 2px 2px ${theme.palette.mode === 'dark' ? grey[900] : grey[50]};
-    
-        &:hover {
-          border-color: '#ffffff';
+  useEffect(() => {
+    getShippingLocations()
+  }, [])
+
+  const getShippingLocations = async () => {
+    try {
+        const result = await axios.get('/api/site-content/filter?type=productdetails')
+        if(result.status === 200) {
+            console.log(result)
         }
-    
-        &:focus {
-          outline: 0;
-          border-color: '#ffffff';
-          box-shadow: 0 0 0 1px ${theme.palette.mode === 'dark' ? '#ffffff' : blue[200]};
-        }
-    
-        // firefox
-        &:focus-visible {
-          outline: 0;
-        }
-      `,
-      );
+    } catch (error) {
+        console.log(error)
+
+    }
+  }
+
+  const [ inputData, setInputData] = useState({
+    locationName: '',
+    locationPrice: null,
+    shippingInfo: ''
+  })
+  const [loading, setLoading] = useState(false)
+  const [loadingUpdate, setLoadingUpdate] = useState(false)
 
 
   const settings = useSettingsContext();
+
+  const changeInputHandler = (e, type) => {
+    setInputData((prevState) => ({
+        ...prevState,
+        [type]: e.target.value,
+      }));
+  }
+
+  const addLocation = async () => {
+    setLoading(true)
+    const data = {
+        locationName: inputData.locationName,
+        locationPrice: inputData.locationPrice
+    }
+    try {
+        const result = await axios.post('/api/site-content/add/location', data)
+        if(result.status === 200) {
+            setLoading(false)
+            setInputData((prevState) => ({
+                ...prevState,
+                locationName: '',
+                locationPrice: null
+              }));
+              getShippingLocations()
+        }
+    } catch (error) {
+        setLoading(false)
+        alert('Error adding location. Check connection or try again later')
+        console.log(error)
+    }
+}
+
+  const updateShippingInfo = () => {
+    setLoadingUpdate(true)
+    console.log(inputData)
+
+  }
 
   return (
     <>
@@ -100,21 +165,24 @@ export default function SiteProductDetailsView() {
         <Grid container pl={2} pr={2}>
 
           <Grid item xs={5}>
-            <TextField required id="location-name" value="" label="Location" defaultValue="" />
+            <TextField required id="location-name" value={inputData.locationName} onChange={(e) => changeInputHandler(e, 'locationName')} label="Location" defaultValue="" />
           </Grid>
           <Grid item xs={5}>
-            <TextField id="location-price" label="Price*" type="number" value={0} />
+            <TextField id="location-price" label="Price*" type="number" value={inputData.locationPrice} onChange={(e) => changeInputHandler(e, 'locationPrice')} />
           </Grid>
           <Grid item xs={2}>
-            <Button>Add</Button>
+            <LoadingButton loading={loading} variant='contained' onClick={addLocation}>Add</LoadingButton>
           </Grid>
           </Grid>
 
           {/* SHIPPING INFO */}
           <Grid container pl={2} pr={2} mt={10}>
-            <Textarea aria-label="Shipping information" placeholder="Shipping information" />
-            
-            <Button>Update</Button>
+          <Grid item xs={10}>
+            <Textarea aria-label="Shipping information" onChange={(e) => changeInputHandler(e, 'shippingInfo')} value={inputData.shippingInfo} placeholder="Shipping information" />
+            </Grid>
+            <Grid item xs={2}>
+              <LoadingButton loading={loadingUpdate} variant='contained' onClick={updateShippingInfo}>Update</LoadingButton>
+           </Grid>
           </Grid>
         </Grid>
         <Grid item lg={6} xs={12}>
