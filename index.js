@@ -30,6 +30,7 @@ const productRoutes = require('./routes/productRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const discountRoutes = require('./routes/discountRoutes');
+const siteContentRoutes = require('./routes/siteContentRoutes');
 
 
 
@@ -65,6 +66,8 @@ app.use(productRoutes);
 app.use(categoryRoutes);
 app.use(paymentRoutes);
 app.use(discountRoutes);
+app.use(siteContentRoutes);
+
 
 
 if(process.env.NODE_ENV === 'production') {
