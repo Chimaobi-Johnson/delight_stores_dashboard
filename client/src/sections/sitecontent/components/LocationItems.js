@@ -22,7 +22,7 @@ export default function LocationItem () {
                   <ListItemText
                     primary="Single-line item"
                   />
-                </ListItem>,
+                </ListItem>
             </List>
     )
 }
