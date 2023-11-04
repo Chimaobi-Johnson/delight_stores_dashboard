@@ -105,6 +105,8 @@ export default function SiteProductDetailsView() {
   const [loading, setLoading] = useState(false)
   const [loadingUpdate, setLoadingUpdate] = useState(false)
   const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+
 
   const settings = useSettingsContext();
 
@@ -122,6 +124,7 @@ export default function SiteProductDetailsView() {
     }
     setLoading(true)
     setSuccessMessage('')
+    setErrorMessage('')
     const data = {
         locationName: inputData.locationName,
         locationPrice: Number(inputData.locationPrice)
@@ -151,15 +154,29 @@ export default function SiteProductDetailsView() {
 }
 
   const updateShippingInfo = async () => {
+    if(inputData.shippingInfo === '') {
+        alert('Shipping field cannot be empty')
+        return
+    }
     setLoadingUpdate(true)
     setSuccessMessage('')
+    setErrorMessage('')
+    const data = {
+        data: inputData.shippingInfo
+    }
     try {
-        const result = await axios.post('/api/site-content/')
+        const result = await axios.post('/api/site-content/add/shipping', data)
         if(result.status === 200) {
-            setLoading(false)
+            setLoadingUpdate(false)
+            setInputData((prevState) => ({
+                ...prevState,
+                shippingInfo: ''
+              }));
             setSuccessMessage('Shipping Info updated successfully')
         }
     } catch (error) {
+        setLoadingUpdate(false)
+        setErrorMessage('Error. Check connection settings')
         console.log(error)
     }
 

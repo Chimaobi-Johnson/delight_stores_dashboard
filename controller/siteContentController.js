@@ -2,7 +2,6 @@ const SiteContent = require("../models/SiteContent");
 
 
 exports.updateSiteLocations = (req, res) => {
-    console.log(req.body)
     function isInArray(item) {
         return item.locationName === req.body.locationName;
     }
@@ -11,7 +10,6 @@ exports.updateSiteLocations = (req, res) => {
         const shippingLocationArr = items[0].shippingLocations
         // check if item exists using location name
         const checkItem = shippingLocationArr.find(isInArray)
-        console.log(checkItem)
 
         if(checkItem) {
             console.log(checkItem)
@@ -29,5 +27,20 @@ exports.updateSiteLocations = (req, res) => {
     .catch(err => {
         console.log(err)
         res.status(err.httpStatusCode).send({ data: 'Error check connection' });
+    })
+}
+
+exports.updateSiteShippingInfo = (req, res) => {
+    SiteContent.find()
+    .then(items => {
+        items[0].shippingInfo = req.body.data
+        return items[0].save()
+    })
+    .then(success => {
+        res.status(200).send({ data: 'Success' });
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(500).send({ data: 'Error check connection' });
     })
 }
