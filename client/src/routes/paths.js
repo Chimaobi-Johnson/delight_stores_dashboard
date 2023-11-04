@@ -42,10 +42,10 @@ export const paths = {
       edit: (id) => `${ROOTS.DASHBOARD}/categories/${id}/edit`,
     },
     site: {
-      root: `${ROOTS.DASHBOARD}/site/home`,
+      root: `${ROOTS.DASHBOARD}/site`,
       about: `${ROOTS.DASHBOARD}/site/about`,
       product: `${ROOTS.DASHBOARD}/site/product-details`,
-      contact: `${ROOTS.DASHBOARD}/site/contact`,
+      contact: `${ROOTS.DASHBOARD}/site/contact-details`,
     },
   },
 };

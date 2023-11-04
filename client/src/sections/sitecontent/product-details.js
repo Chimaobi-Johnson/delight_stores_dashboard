@@ -3,9 +3,6 @@ import axios from 'axios';
 
 // @mui
 import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
@@ -16,12 +13,9 @@ import { styled } from '@mui/system';
 // hooks
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import Iconify from 'src/components/iconify';
 
 // routes
 import { paths } from 'src/routes/paths';
-import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
 import { LoadingButton } from '@mui/lab';
 
 import LocationItem from './components/LocationItems';
