@@ -104,7 +104,7 @@ export default function SiteProductDetailsView() {
   })
   const [loading, setLoading] = useState(false)
   const [loadingUpdate, setLoadingUpdate] = useState(false)
-
+  const [successMessage, setSuccessMessage] = useState('')
 
   const settings = useSettingsContext();
 
@@ -117,6 +117,7 @@ export default function SiteProductDetailsView() {
 
   const addLocation = async () => {
     setLoading(true)
+    setSuccessMessage('')
     const data = {
         locationName: inputData.locationName,
         locationPrice: inputData.locationPrice
@@ -139,9 +140,19 @@ export default function SiteProductDetailsView() {
     }
 }
 
-  const updateShippingInfo = () => {
+  const updateShippingInfo = async () => {
     setLoadingUpdate(true)
-    console.log(inputData)
+    setSuccessMessage('')
+    try {
+        const result = await axios.post('/api/site-content/create')
+        if(result.status === 200) {
+            setLoading(false)
+            setSuccessMessage('Shipping Info updated successfully')
+        }
+    } catch (error) {
+        console.log(error)
+    }
+
 
   }
 
