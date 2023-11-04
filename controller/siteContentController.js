@@ -22,7 +22,6 @@ exports.updateSiteLocations = (req, res) => {
         const checkItem = shippingLocationArr.find(isInArray)
 
         if(checkItem) {
-            console.log(checkItem)
             const error = new Error('item exists')
             error.httpStatusCode = 409
             throw(error)
@@ -52,5 +51,35 @@ exports.updateSiteShippingInfo = (req, res) => {
     .catch(err => {
         console.log(err)
         res.status(500).send({ data: 'Error check connection' });
+    })
+}
+
+exports.deleteItem = (req, res) => {
+    function checkArray(item) {
+        return item.locationName === req.query.item
+    }
+    SiteContent.find()
+    .then(items => {
+        // get index of item using location name
+        const shippingLocationArr = items[0].shippingLocations
+        const matchedItem = shippingLocationArr.find(checkArray)
+        if(!matchedItem) {
+            const error = new Error('item does not exist')
+            error.httpStatusCode = 404
+            throw(error)
+        }
+        const arrIndex = shippingLocationArr.indexOf(matchedItem)
+        // remove item using splice method
+        shippingLocationArr.splice(arrIndex, 1)
+        // update
+        items[0].shippingLocations = shippingLocationArr
+        return items[0].save()
+    })
+    .then(success => {
+        res.status(200).send({ data: 'Success' });
+    })
+    .catch(err => {
+        console.log(err)
+        res.status(err.httpStatusCode).send({ data: 'Error check connection' });
     })
 }
