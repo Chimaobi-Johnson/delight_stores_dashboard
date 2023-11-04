@@ -99,7 +99,7 @@ export default function SiteProductDetailsView() {
 
   const [ inputData, setInputData] = useState({
     locationName: '',
-    locationPrice: null,
+    locationPrice: '',
     shippingInfo: ''
   })
   const [loading, setLoading] = useState(false)
@@ -116,11 +116,15 @@ export default function SiteProductDetailsView() {
   }
 
   const addLocation = async () => {
+    if(inputData.locationName === '' || inputData.locationPrice === '') {
+        alert('Fields cannot be empty')
+        return
+    }
     setLoading(true)
     setSuccessMessage('')
     const data = {
         locationName: inputData.locationName,
-        locationPrice: inputData.locationPrice
+        locationPrice: Number(inputData.locationPrice)
     }
     try {
         const result = await axios.post('/api/site-content/add/location', data)
@@ -129,14 +133,20 @@ export default function SiteProductDetailsView() {
             setInputData((prevState) => ({
                 ...prevState,
                 locationName: '',
-                locationPrice: null
+                locationPrice: ''
               }));
               getShippingLocations()
         }
     } catch (error) {
         setLoading(false)
-        alert('Error adding location. Check connection or try again later')
-        console.log(error)
+        if(error.response.status === 409) {
+            alert('Item already exist!')
+        } else {
+            alert('Error adding location. Check connection or try again later')
+        }
+        console.log(error.response)
+
+
     }
 }
 
@@ -144,7 +154,7 @@ export default function SiteProductDetailsView() {
     setLoadingUpdate(true)
     setSuccessMessage('')
     try {
-        const result = await axios.post('/api/site-content/create')
+        const result = await axios.post('/api/site-content/')
         if(result.status === 200) {
             setLoading(false)
             setSuccessMessage('Shipping Info updated successfully')
