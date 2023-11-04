@@ -82,31 +82,41 @@ const blue = {
 
 export default function SiteProductDetailsView() {
 
+const [ inputData, setInputData] = useState({
+    locationName: '',
+    locationPrice: '',
+    shippingInfo: ''
+    })
+    const [loading, setLoading] = useState(false)
+    const [loadingUpdate, setLoadingUpdate] = useState(false)
+    const [loadingShipping, setLoadingShipping] = useState(false)
+    const [successMessage, setSuccessMessage] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
+    const [shippingLocations, setShippingLocations] = useState([])
+
   useEffect(() => {
     getShippingLocations()
   }, [])
 
   const getShippingLocations = async () => {
+    setLoadingShipping(true)
     try {
-        const result = await axios.get('/api/site-content/filter?type=productdetails')
+        const result = await axios.get('/api/site-content')
         if(result.status === 200) {
-            console.log(result)
+            setLoadingShipping(false)
+            setInputData((prevState) => ({
+                ...prevState,
+                shippingInfo: result.data.document.shippingInfo,
+              }));
+            setShippingLocations(result.data.document.shippingLocations)
         }
     } catch (error) {
         console.log(error)
-
+        setLoadingShipping(false)
+        setErrorMessage('Error loading shipping locations. Check connection or refresh page')
     }
   }
 
-  const [ inputData, setInputData] = useState({
-    locationName: '',
-    locationPrice: '',
-    shippingInfo: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [loadingUpdate, setLoadingUpdate] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
 
 
   const settings = useSettingsContext();
@@ -246,7 +256,7 @@ export default function SiteProductDetailsView() {
           </Grid>
         </Grid>
         <Grid item lg={6} xs={12}>
-            <LocationItem />
+            {loadingShipping ? 'Loading shipping locations...' : <LocationItem shippingLocations={shippingLocations} />}
         </Grid>
       </Grid>
     </>
