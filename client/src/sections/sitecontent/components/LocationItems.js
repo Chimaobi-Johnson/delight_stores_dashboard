@@ -50,7 +50,9 @@ export default function LocationItem (props) {
             </List>
             ))
         }
-        return (<></>)
+        return (<>
+            <p>Shipping locations unavailable - add from the form fields</p>
+        </>)
     }
 
     return (
