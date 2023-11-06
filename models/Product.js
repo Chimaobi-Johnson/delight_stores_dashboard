@@ -30,9 +30,9 @@ const productSchema = new Schema(
     },
     imagesUrl: [ String ],
     imagesId: [ String ],
-    status: { 
-      type: String, 
-      default: "published" 
+    published: {
+      type: Boolean,
+      default: true
     },
     deliveryStatus: { 
       type: String, 

@@ -89,7 +89,7 @@ export default function ProductNewEditForm({ currentProduct }) {
   });
   const [colorsArray, setColorsArray] = useState([]);
   const [sizesArray, setSizesArray] = useState([]);
-
+  const [publish, setPublish] = useState(true)
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     images: Yup.array().min(1, 'Images is required'),
@@ -130,6 +130,7 @@ export default function ProductNewEditForm({ currentProduct }) {
       deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
+      published: currentProduct?.name || true
     }),
     [currentProduct]
   );
@@ -198,6 +199,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append('quantity', data.quantity);
     formData.append('priceSale', data.priceSale);
     formData.append('sku', data.sku);
+    formData.append('publish', publish);
     formData.append('deliveryStatus', data.deliveryStatus);
     formData.append('newLabel', JSON.stringify(data.newLabel));
     formData.append('saleLabel', JSON.stringify(data.saleLabel));
@@ -569,6 +571,7 @@ export default function ProductNewEditForm({ currentProduct }) {
             <RHFTextField
               name="priceSale"
               label="Sale Price"
+              disabled
               placeholder="0.00"
               type="number"
               InputLabelProps={{ shrink: true }}
@@ -612,6 +615,10 @@ export default function ProductNewEditForm({ currentProduct }) {
     </>
   );
 
+  const changePublishMethod = (e) => {
+    setPublish(e.target.checked)
+  }
+
   const renderActions = (
     <>
       {mdUp && <Grid md={4} />}
@@ -619,6 +626,7 @@ export default function ProductNewEditForm({ currentProduct }) {
         <FormControlLabel
           control={<Switch defaultChecked />}
           label="Publish"
+          onChange={changePublishMethod}
           sx={{ flexGrow: 1, pl: 3 }}
         />
 
