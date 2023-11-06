@@ -72,7 +72,11 @@ const productSchema = new Schema(
       type: Object
     } ],
     code: String,
-
+    discountID: {
+      type: Schema.Types.ObjectId,
+      ref: "Discount",
+      required: false,
+    },
     postedBy: {
       type: Schema.Types.ObjectId,
       ref: "User",
