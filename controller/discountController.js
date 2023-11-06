@@ -61,7 +61,27 @@ exports.applyDiscount = async (req, res) => {
 
         }
 
+exports.updateStatus = (req, res) => {
+    console.log(req.query)
+    Discount.findById(req.query.id)
+    .then(discount => {
+        discount.active = !discount.active
+        return discount.save()
+    })
+    .then(success => {
+        res.status(200).send({ messsage: 'Success'})
+    })
+    .catch(err => {
+        res.status(500).send({ message: 'Backend error' })
+    })
+}
 
-
-
-
+exports.getDiscounts = (req, res) => {
+    Discount.find().sort({ active: 1 })
+    .then(data => {
+        res.status(200).send({ data: data })
+    })
+    .catch(err => {
+        res.status(500).send({ message: 'Backend error' })
+    })
+}
