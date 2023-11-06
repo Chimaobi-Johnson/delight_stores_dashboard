@@ -4,15 +4,27 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-
 import Typography from '@mui/material/Typography';
+
 import { LoadingButton } from '@mui/lab';
+import { ConfirmDialog } from 'src/components/custom-dialog';
+
 import axios from 'axios';
+
+// hooks
+import { useBoolean } from 'src/hooks/use-boolean';
+import { useState } from 'react';
+
 
 
 export default function DiscountCard(props) {
 
+    const confirm = useBoolean();
+
     const { data, fetchDiscounts } = props;
+
+    const [loadingDelete, setLoadingDelete] = useState(false)
+    const [currentId, setCurrentId] = useState(null)
 
     // DATE FORMATTING
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -28,6 +40,26 @@ export default function DiscountCard(props) {
             }
         } catch (error) {
             console.log(error)
+        }
+    }
+
+    const initDeleteHandler = (id) => {
+        setCurrentId(id)
+        confirm.onTrue();
+    }
+
+    const deleteDiscount = async () => {
+        setLoadingDelete(true)
+        try {
+            const result = await axios.post(`/api/discount/delete?id=${currentId}`)
+            if(result.status === 200) {
+                fetchDiscounts()
+                setLoadingDelete(false)
+            }
+        } catch (error) {
+            console.log(error)
+            setLoadingDelete(false)
+            alert('Error. Check connection or try again later.')
         }
     }
 
@@ -71,7 +103,7 @@ export default function DiscountCard(props) {
                 <Grid container>
                    <Grid item xs={6}>
                      <LoadingButton variant="outlined" onClick={(id) => updateDiscountStatus(data._id)}>{data.active ? 'Deactivate' : 'Activate'}</LoadingButton>
-                     <LoadingButton sx={{ ml: 2 }} variant='outlined' color='error'>Delete</LoadingButton>
+                     <LoadingButton sx={{ ml: 2 }} variant='outlined' color='error' onClick={() => initDeleteHandler(data._id)}>Delete</LoadingButton>
                     </Grid>
                 </Grid>
             </Grid>
@@ -82,6 +114,23 @@ export default function DiscountCard(props) {
             </Grid>
         </Grid>
       </Paper>
+      <ConfirmDialog
+        open={confirm.value}
+        onClose={confirm.onFalse}
+        title="Delete"
+        content="Are you sure want to delete this discount?"
+        action={
+          <LoadingButton
+            loading={loadingDelete}
+            variant="contained"
+            type='submit'
+            onClick={() => deleteDiscount()}
+            color="error"
+          >
+            Delete
+          </LoadingButton>
+        }
+      />
     </Box>
   );
 }

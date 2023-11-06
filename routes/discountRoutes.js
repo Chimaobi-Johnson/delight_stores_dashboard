@@ -10,6 +10,7 @@ const router = express.Router();
 router.get('/api/discounts', isLoggedIn, discountController.getDiscounts)
 router.post('/api/discount/apply', isLoggedIn, upload.none(), discountController.applyDiscount)
 router.post('/api/discount/status', isLoggedIn, discountController.updateStatus)
+router.post('/api/discount/delete', isLoggedIn, discountController.deleteDiscount)
 
 
 module.exports = router;
