@@ -56,7 +56,45 @@ exports.applyDiscount = async (req, res) => {
            
         }
 
+    } else if (product === 'category') {
+
+    } else {
+        // DISCOUNT IS APPLIED ON ONE PRODUCT 
+        const product = await Product.findById(selectedProductId)
+        if(product) {
+
+            // update the discounted price on the priceSale field for product
+            product.priceSale = discountPrice(product.price, percentage)
+        } else {
+          const error = new Error('Product could not be found') 
+          error.httpStatusCode = 404;
+          throw error 
         }
+        const result = await product.save()
+        if(result) {
+            // SAVE DISCOUNT DATA
+            const discount = new Discount({
+                productType: product,
+                productCategory: productCategory,
+                productId: selectedProductId,
+                title: title,
+                percentage: percentage,
+                dateFrom: JSON.parse(dateFrom),
+                dateTo: JSON.parse(dateTo),
+                appliedBy: req.user._id
+            })
+            try {
+                const savedDiscount = await discount.save()
+                if(savedDiscount) {
+                    res.status(200).send({ message: 'Discount applied'})             
+                }
+            } catch (error) {
+                console.log(error)
+                res.status(500).send({ message: 'Server error'})
+            }
+        }
+    }
+
 
 
         }
