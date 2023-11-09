@@ -26,14 +26,13 @@ export default function DiscountCard(props) {
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [currentId, setCurrentId] = useState(null)
 
-    console.log(data)
 
     const renderType = () => {
-        if(data.type === 'single') {
+        if(data.productType === 'single') {
             return 'Discount on single product'
         }
-        if(data.type === 'category') {
-            return `Discount on "${data.productCategory}" category`
+        if(data.productType === 'category') {
+            return `Discount on according to category`
         }
         return 'Discount on all products'
     }
