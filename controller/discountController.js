@@ -85,10 +85,12 @@ exports.applyDiscount = async (req, res) => {
             const result = product.save()
             if(result) {
                 res.status(200).send({ message: 'Discount applied' })
+            } else {
+                const err = new Error('Server error')
+                err.httpStatusCode = 500;
+                throw err
             }
-            const err = new Error('Server error')
-            err.httpStatusCode = 500;
-            throw err
+
         } else {
             const err = new Error('Product not found')
             err.httpStatusCode = 404;

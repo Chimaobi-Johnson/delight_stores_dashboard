@@ -26,6 +26,18 @@ export default function DiscountCard(props) {
     const [loadingDelete, setLoadingDelete] = useState(false)
     const [currentId, setCurrentId] = useState(null)
 
+    console.log(data)
+
+    const renderType = () => {
+        if(data.type === 'single') {
+            return 'Discount on single product'
+        }
+        if(data.type === 'category') {
+            return `Discount on "${data.productCategory}" category`
+        }
+        return 'Discount on all products'
+    }
+
     // DATE FORMATTING
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
@@ -53,8 +65,9 @@ export default function DiscountCard(props) {
         try {
             const result = await axios.post(`/api/discount/delete?id=${currentId}`)
             if(result.status === 200) {
-                fetchDiscounts()
                 setLoadingDelete(false)
+                confirm.onFalse()
+                fetchDiscounts()
             }
         } catch (error) {
             console.log(error)
@@ -81,7 +94,7 @@ export default function DiscountCard(props) {
                     {data.title}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                    Type: 
+                    Type: {renderType()}
                 </Typography>
                 <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                     Percentage: {data.percentage}
