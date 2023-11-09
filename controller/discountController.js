@@ -60,6 +60,60 @@ exports.applyDiscount = async (req, res) => {
       }
     }
   } else if (product === "category") {
+
+        // DISCOUNT IS APPLIED BY CATEGORY
+
+        // GET PRODUCTS BY CATEGORY AND STORE IN ARRAY
+
+            // SAVE DISCOUNT DATA
+        const discount = new Discount({
+            productType: product,
+            productCategory: productCategory,
+            productId: selectedProductId,
+            title: title,
+            percentage: percentage,
+            dateFrom: JSON.parse(dateFrom),
+            dateTo: JSON.parse(dateTo),
+            appliedBy: req.user._id,
+        });
+        const savedDiscount = await discount.save();
+        if (savedDiscount) {
+            try {
+
+            const products = await Product.find({ category: req.body.productCategory })
+            if(products) {
+                console.log(products.length)
+                for (let index = 0; index < products.length; index++) {
+                    // update the discounted price on the priceSale field for all products in array
+                    const result = await Product.findByIdAndUpdate(products[index]._id, {
+                      priceSale: discountPrice(products[index].price, percentage),
+                      discountID: savedDiscount._id
+                    });
+                    if (result) {
+                        console.log(result.length)
+                      successUpdates++;
+                      if (successUpdates === products.length) {
+                        // update is done on all documents successfully
+                        // SAVE DISCOUNT DATA
+                        res.status(200).send({ message: 'Discount applied' })
+                      }
+                    }
+                  }
+            }
+            } catch (error) {
+            console.log(error)
+            // delete saved discount
+            const delData = await Discount.findByIdAndDelete(savedDiscount._id)
+            if(delData) {
+                console.log('Saved discount deleted')
+            }
+            } 
+        } 
+        else {
+            res.status(500).send({ message: 'Server error'})
+        }
+
+
   } else {
     // DISCOUNT IS APPLIED ON ONE PRODUCT
 
@@ -105,6 +159,8 @@ exports.applyDiscount = async (req, res) => {
             console.log('Saved discount deleted')
         }
       }
+    } else {
+        res.status(500).send({ message: 'Server error'})
     }
   }
 };
