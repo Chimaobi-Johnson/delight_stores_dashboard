@@ -40,7 +40,7 @@ export default function NavUpgrade() {
               borderBottomLeftRadius: 2,
             }}
           >
-            Free
+            New
           </Label>
         </Box>
 

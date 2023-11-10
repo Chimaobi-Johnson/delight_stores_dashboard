@@ -10,10 +10,8 @@ passport.use(
     passwordField: 'password'
   },
   function (email, password, done) {
-    User.findOne({ email: email }, function (err, user) {
-      if (err) {
-        return done(err);
-      }
+    User.findOne({ email: email })
+    .then(user => {
       if (!user) {
         return done(null, false, { message: 'User not found.' });
       }
@@ -23,7 +21,11 @@ passport.use(
         }
         return done(null, user);
     })
-    });
+    })
+    .catch(err => {
+      console.log(err)
+      return done(err);
+    })
   })
 );
 

@@ -8,10 +8,9 @@ exports.getAllProducts = (req, res) => {
   const currentPage = req.query.page || 1; // if page is not set default to page 1
   const perPage = 25;
   let totalItems;
-
   if(req.query.id) {
     Product.aggregate([
-      { $match: { category : ObjectId(req.query.id) } },
+      { $match: { category : new ObjectId(req.query.id) } },
       { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
       { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
       { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1, discount: 1, discountDetails: 1 }}
@@ -92,8 +91,9 @@ exports.storeProduct = async (req, res) => {
 
 exports.getProduct = (req, res) => {
   const ObjectId = mongoose.Types.ObjectId;
+  console.log(req.query.id)
   Product.aggregate([
-    { $match: { _id : ObjectId(req.query.id) } },
+    { $match: { _id : new ObjectId(req.query.id) } },
     { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
     { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
     { $project: { imagesId: 0 }}
