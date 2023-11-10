@@ -122,7 +122,7 @@ export default function ProductDetailsSummary({
 
   const renderPrice = (
     <Box sx={{ typography: 'h5' }}>
-      {discountDetails[0].active && (
+      {discountDetails.length !== 0 ? discountDetails[0].active && (
         <Box
           component="span"
           sx={{
@@ -133,7 +133,7 @@ export default function ProductDetailsSummary({
         >
           {fCurrency(priceSale)}
         </Box>
-      )}
+      ) : ''}
 
       {fCurrency(price)}
     </Box>
