@@ -97,6 +97,7 @@ const [ inputData, setInputData] = useState({
     try {
         const result = await axios.get('/api/site-content')
         if(result.status === 200) {
+            console.log(result)
             setLoadingShipping(false)
             setInputData((prevState) => ({
                 ...prevState,
