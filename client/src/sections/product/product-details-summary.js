@@ -56,6 +56,7 @@ export default function ProductDetailsSummary({
     // totalReviews,
     inventoryType,
     description,
+    discountDetails
     // subDescription,
   } = product;
 

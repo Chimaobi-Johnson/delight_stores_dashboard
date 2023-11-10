@@ -13,7 +13,8 @@ exports.getAllProducts = (req, res) => {
     Product.aggregate([
       { $match: { category : ObjectId(req.query.id) } },
       { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
-      { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1 }}
+      { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
+      { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1, discount: 1, discountDetails: 1 }}
     ])
     .then((products) => {
       res.status(200).send({ products: products });
@@ -29,6 +30,7 @@ exports.getAllProducts = (req, res) => {
       totalItems = count;
       return Product.aggregate([
         { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
+        { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
         { $project: { imagesId: 0 }}
       ])
         .sort({ createdAt: -1 })
@@ -53,8 +55,6 @@ exports.storeProduct = async (req, res) => {
     const images = req.files;
     const imagesUrl = [];
     const imagesId = [];
-
-    console.log(req.body)
 
     for (const image of images) {
       const { path } = image;
@@ -91,18 +91,15 @@ exports.storeProduct = async (req, res) => {
 };
 
 exports.getProduct = (req, res) => {
-  let productData
-  Product.findById(req.query.id)
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({ message: "Product not found" });
-      } 
-      productData = data;
-      return Category.findById(data.category)
-      // res.status(200).json({ product: data });
-    })
-    .then(cat => {
-      res.status(200).send({ product: productData, category: cat })
+  const ObjectId = mongoose.Types.ObjectId;
+  Product.aggregate([
+    { $match: { _id : ObjectId(req.query.id) } },
+    { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
+    { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
+    { $project: { imagesId: 0 }}
+  ])
+    .then(product => {
+      res.status(200).send({ product: product })
     })
     .catch((err) => {
       console.log(err);
