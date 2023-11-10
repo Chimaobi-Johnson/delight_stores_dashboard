@@ -74,8 +74,8 @@ export default function ProductDetailsView({ id }) {
         const result = await axios.get(`/api/product/?id=${id}`)
         if(result) {
           setProductLoading(false)
-          setProduct(result.data.product)
-          setCategory(result.data.category)
+          setProduct(result.data.product[0])
+          setCategory(result.data.product[0].categoryDetails[0])
           console.log(result)
         }
       } catch (error) {
