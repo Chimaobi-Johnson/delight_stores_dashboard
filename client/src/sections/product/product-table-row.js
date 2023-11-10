@@ -42,6 +42,7 @@ export default function ProductTableRow({
     published,
     available,
     stock,
+    quantity,
     categoryDetails,
     createdAt,
     inventoryType,
@@ -102,7 +103,7 @@ export default function ProductTableRow({
 
         <TableCell sx={{ typography: 'caption', color: 'text.secondary' }}>
           <LinearProgress
-            value={(available * 100) / stock}
+            value={(available * 100) / quantity}
             variant="determinate"
             color={
               (inventoryType === 'out of stock' && 'error') ||

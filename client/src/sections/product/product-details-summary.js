@@ -71,8 +71,8 @@ export default function ProductDetailsSummary({
     coverUrl,
     available,
     price,
-    colors: colors[0].colorCode,
-    size: sizes[0].sizeName,
+    colors: colors.length !== 0 ? colors[0].colorCode : '',
+    size: sizes.length !== 0 ? sizes[0].sizeName : '',
     quantity: available < 1 ? 0 : 1,
   };
 

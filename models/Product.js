@@ -13,7 +13,8 @@ const productSchema = new Schema(
       required: true,
     },
     priceSale: {
-      type: Number
+      type: Number,
+      default: 0
     },
     sku: Number,
     saleLabel: {
@@ -46,13 +47,9 @@ const productSchema = new Schema(
       type: String, 
       default: "in-stock" 
     },
-    stock: { 
-      type: Number, 
-      default: 0 
-    },
     available: { 
       type: Number, 
-      default: 30 
+      default: 0 
     },
     totalSold: Number,
     purchases: { type: Number },

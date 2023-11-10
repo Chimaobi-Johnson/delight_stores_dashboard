@@ -67,6 +67,7 @@ exports.storeProduct = async (req, res) => {
     }
     const product = new Product({
       ...req.body,
+      available: req.body.quantity,
       gender: JSON.parse(req.body.gender),
       colors: JSON.parse(req.body.colors),
       tags: JSON.parse(req.body.tags),
@@ -160,6 +161,7 @@ exports.updateProduct = async (req, res) => {
         productData.newLabel = JSON.parse(req.body.newLabel);
         productData.saleLabel = JSON.parse(req.body.saleLabel);
         productData.quantity = req.body.quantity;
+        productData.available = req.body.quantity;
         productData.sku = req.body.sku;
         productData.code = req.body.code;
         productData.category = req.body.category;
@@ -196,6 +198,7 @@ exports.updateProduct = async (req, res) => {
           data.newLabel = JSON.parse(req.body.newLabel);
           data.saleLabel = JSON.parse(req.body.saleLabel);
           data.quantity = req.body.quantity;
+          data.available = req.body.quantity;
           data.sku = req.body.sku;
           data.code = req.body.code;
           data.category = req.body.category;

@@ -184,10 +184,6 @@ const [ inputData, setInputData] = useState({
         const result = await axios.post('/api/site-content/add/shipping', data)
         if(result.status === 200) {
             setLoadingUpdate(false)
-            setInputData((prevState) => ({
-                ...prevState,
-                shippingInfo: ''
-              }));
             setSuccessMessage('Shipping Info updated successfully')
         }
     } catch (error) {
