@@ -60,11 +60,11 @@ export default function ProductDetailsSummary({
     // subDescription,
   } = product;
 
-  const existProduct = !!items?.length && items.map((item) => item._id).includes(_id);
+  // const existProduct = !!items?.length && items.map((item) => item._id).includes(_id);
 
-  const isMaxQuantity =
-    !!items?.length &&
-    items.filter((item) => item._id === _id).map((item) => item.quantity)[0] >= available;
+  // const isMaxQuantity =
+  //   !!items?.length &&
+  //   items.filter((item) => item._id === _id).map((item) => item.quantity)[0] >= available;
 
   const defaultValues = {
     _id,

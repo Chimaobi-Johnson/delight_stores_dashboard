@@ -27,9 +27,10 @@ export default function ProductEditView({ id }) {
     const getProduct = () => {
       axios.get(`/api/product/?id=${id}`)
       .then(data => {
+        console.log(data)
         if(data.status === 200) {
-          setProduct(data.data.product)
-          setCategory(data.data.category)
+          setProduct(data.data.product[0])
+          setCategory(data.data.product[0].categoryDetails[0])
         }
       }).catch(error => {
         console.log(error)
