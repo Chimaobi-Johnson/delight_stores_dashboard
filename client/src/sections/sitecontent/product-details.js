@@ -19,6 +19,7 @@ import { paths } from 'src/routes/paths';
 import { LoadingButton } from '@mui/lab';
 
 import LocationItem from './components/LocationItems';
+import { isEmpty } from 'lodash';
 
 const blue = {
     100: '#DAECFF',
@@ -97,13 +98,22 @@ const [ inputData, setInputData] = useState({
     try {
         const result = await axios.get('/api/site-content')
         if(result.status === 200) {
-            console.log(result)
             setLoadingShipping(false)
-            setInputData((prevState) => ({
-                ...prevState,
-                shippingInfo: result.data.document.shippingInfo,
-              }));
-            setShippingLocations(result.data.document.shippingLocations)
+
+            if(isEmpty(result.data)) {
+                setInputData((prevState) => ({
+                    ...prevState,
+                    shippingInfo: '',
+                }));
+                setShippingLocations([])
+            } else {
+                setInputData((prevState) => ({
+                    ...prevState,
+                    shippingInfo: result.data.document.shippingInfo,
+                }));
+                setShippingLocations(result.data.document.shippingLocations)
+            }
+
         }
     } catch (error) {
         console.log(error)
