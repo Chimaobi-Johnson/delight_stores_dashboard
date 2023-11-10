@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { isEmpty } from 'lodash';
 
 // @mui
 import Container from '@mui/material/Container';
@@ -19,7 +20,6 @@ import { paths } from 'src/routes/paths';
 import { LoadingButton } from '@mui/lab';
 
 import LocationItem from './components/LocationItems';
-import { isEmpty } from 'lodash';
 
 const blue = {
     100: '#DAECFF',
