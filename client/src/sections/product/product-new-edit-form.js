@@ -153,6 +153,9 @@ export default function ProductNewEditForm({ currentProduct }) {
   useEffect(() => {
     if (currentProduct) {
       reset(defaultValues);
+      setColorsArray(currentProduct.colors)
+      setSizesArray(currentProduct.sizes)
+
     }
   }, [currentProduct, defaultValues, reset]);
 
@@ -174,13 +177,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     getCategories();
   }, []);
 
-  // useEffect(() => {
-  //   if (includeTaxes) {
-  //     setValue('taxes', 0);
-  //   } else {
-  //     setValue('taxes', currentProduct?.taxes || 0);
-  //   }
-  // }, [currentProduct?.taxes, includeTaxes, setValue]);
 
   const onSubmit = handleSubmit(async (data) => {
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
@@ -217,6 +213,8 @@ export default function ProductNewEditForm({ currentProduct }) {
       const result = await axios.post(`/api/product/${crudType}`, formData);
       if (result.status === 201 || result.status === 200) {
         reset();
+        setColorsArray([])
+        setSizesArray([])
         window.scrollTo(0, 0);
         setResData({
           type: 'info',
@@ -431,7 +429,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                           >
                             {el.colorName}:{' '}
                             <span style={{ backgroundColor: el.colorCode, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType} ${' '} ${el.colorPrice}` : 'free'}</span>
+                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType ? el.colorPriceType : '+'} ${' '} ${el.colorPrice}` : 'free'}</span>
                           </li>
                         ))
                       : ''}
@@ -654,6 +652,10 @@ export default function ProductNewEditForm({ currentProduct }) {
   };
 
   const addColorToArray = () => {
+    if(!colorInputData.colorCode) {
+      alert('Color code not selected')
+      return
+    }
     const colorsArr = [...colorsArray];
     colorsArr.push(colorInputData);
     setColorsArray(colorsArr);

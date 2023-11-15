@@ -91,7 +91,6 @@ exports.storeProduct = async (req, res) => {
 
 exports.getProduct = (req, res) => {
   const ObjectId = mongoose.Types.ObjectId;
-  console.log(req.query.id)
   Product.aggregate([
     { $match: { _id : new ObjectId(req.query.id) } },
     { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
