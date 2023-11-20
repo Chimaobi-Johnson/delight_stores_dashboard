@@ -55,13 +55,12 @@ import { set } from 'lodash';
 import { convertCloudinaryImagetoId } from 'src/utils/customFunctions';
 import { Input, MenuItem, Select } from '@mui/material';
 import Label from 'src/components/label/label';
+import SpecificationDetails from './view/specification-details';
 
 // ----------------------------------------------------------------------
 
 export default function ProductNewEditForm({ currentProduct }) {
   const router = useRouter();
-
-  console.log(currentProduct);
 
   // const confirm = useBoolean();
 
@@ -80,16 +79,25 @@ export default function ProductNewEditForm({ currentProduct }) {
     colorName: '',
     colorPriceType: '+',
     colorPrice: null,
-    colorStock: 0
+    colorStock: 0,
   });
   const [sizeInputData, setSizeInputData] = useState({
-    sizeName: '',
-    sizePrice: null,
-    sizeStock: 0
+    label: '',
+    price: 0,
+    stock: 0,
+    priceType: '+',
+    colors: []
   });
   const [colorsArray, setColorsArray] = useState([]);
   const [sizesArray, setSizesArray] = useState([]);
-  const [publish, setPublish] = useState(true)
+  const [publish, setPublish] = useState(true);
+  
+  const [ specifications, setSpecifications ] = useState({
+    type: '',
+    colors: '',
+    sizes: []
+  })
+
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     images: Yup.array().min(1, 'Images is required'),
@@ -130,7 +138,7 @@ export default function ProductNewEditForm({ currentProduct }) {
       deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
-      published: currentProduct?.name || true
+      published: currentProduct?.name || true,
     }),
     [currentProduct]
   );
@@ -153,9 +161,8 @@ export default function ProductNewEditForm({ currentProduct }) {
   useEffect(() => {
     if (currentProduct) {
       reset(defaultValues);
-      setColorsArray(currentProduct.colors)
-      setSizesArray(currentProduct.sizes)
-
+      setColorsArray(currentProduct.colors);
+      setSizesArray(currentProduct.sizes);
     }
   }, [currentProduct, defaultValues, reset]);
 
@@ -176,7 +183,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
     getCategories();
   }, []);
-
 
   const onSubmit = handleSubmit(async (data) => {
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
@@ -213,8 +219,8 @@ export default function ProductNewEditForm({ currentProduct }) {
       const result = await axios.post(`/api/product/${crudType}`, formData);
       if (result.status === 201 || result.status === 200) {
         reset();
-        setColorsArray([])
-        setSizesArray([])
+        setColorsArray([]);
+        setSizesArray([]);
         window.scrollTo(0, 0);
         setResData({
           type: 'info',
@@ -391,14 +397,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
               <RHFTextField name="sku" label="Product SKU" />
 
-              <RHFTextField
-                name="quantity"
-                label="Quantity"
-                placeholder="0"
-                type="number"
-                InputLabelProps={{ shrink: true }}
-              />
-
               <RHFSelect native name="category" label="Category" InputLabelProps={{ shrink: true }}>
                 {categories
                   ? categories.map((category) => (
@@ -409,14 +407,19 @@ export default function ProductNewEditForm({ currentProduct }) {
                   : 'No categories found. Please refresh page'}
               </RHFSelect>
 
-              {/* <RHFMultiSelect
-                checkbox
-                name="colors"
-                label="Colors"
-                options={PRODUCT_COLOR_NAME_OPTIONS}
-              /> */}
               <div>
-                <Button onClick={() => setColorDialog(true)} variant="outlined">
+                <RHFSelect
+                  native
+                  name="specifications"
+                  label="Specifications"
+                  InputLabelProps={{ shrink: true }}
+                >
+                  <option value="" />
+                  <option value="add-specs">Add Specifications</option>
+                  <option value="no-specs">Non available</option>
+                </RHFSelect>
+
+                {/* <Button onClick={() => setColorDialog(true)} variant="outlined">
                   Add color
                 </Button>
                 <div>
@@ -434,11 +437,20 @@ export default function ProductNewEditForm({ currentProduct }) {
                         ))
                       : ''}
                   </ul>
-                </div>
+                </div> */}
               </div>
 
               <div>
-                <div>
+                <RHFTextField
+                  name="quantity"
+                  label="Quantity"
+                  placeholder="0"
+                  disabled={values.specifications !== 'no-specs'}
+                  type="number"
+                  InputLabelProps={{ shrink: true }}
+                />
+
+                {/* <div>
                   <Button onClick={() => setSizeDialog(true)} variant="outlined">
                     Add size
                   </Button>
@@ -458,9 +470,28 @@ export default function ProductNewEditForm({ currentProduct }) {
                         ))
                       : ''}
                   </ul>
-                </div>
+                </div> */}
               </div>
-        
+
+              {values.specifications === 'add-specs' ? (
+                <>
+                <RHFSelect
+                  native
+                  name="specificationType"
+                  label="Specification Type"
+                  InputLabelProps={{ shrink: true }}
+                >
+                  <option value="" />
+                  <option value="add-size-and-color">Add Size and color</option>
+                  <option value="add-sizes-only">Add Sizes only</option>
+                  <option value="add-colors-only">Add Colors only</option>
+                </RHFSelect>
+                <SpecificationDetails specifications={specifications} />
+                </>
+              ) : (
+                ''
+              )}
+
               <RHFSelect
                 native
                 name="deliveryStatus"
@@ -614,8 +645,8 @@ export default function ProductNewEditForm({ currentProduct }) {
   );
 
   const changePublishMethod = (e) => {
-    setPublish(e.target.checked)
-  }
+    setPublish(e.target.checked);
+  };
 
   const renderActions = (
     <>
@@ -641,7 +672,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     </>
   );
 
-
   // ADD COLOR LOGIC
 
   const changeColorHandler = (e, inputData) => {
@@ -652,23 +682,22 @@ export default function ProductNewEditForm({ currentProduct }) {
   };
 
   const addColorToArray = () => {
-    if(!colorInputData.colorCode) {
-      alert('Color code not selected')
-      return
+    if (!colorInputData.colorCode) {
+      alert('Color code not selected');
+      return;
     }
     const colorsArr = [...colorsArray];
     colorsArr.push(colorInputData);
     setColorsArray(colorsArr);
     setColorDialog(false);
-    setColorInputData([])
+    setColorInputData([]);
   };
 
   const removeColorFromArray = (colorCode) => {
     const colorsArr = [...colorsArray];
-    const newColorsArr = colorsArr.filter(item => item.colorCode !== colorCode)
-    setColorsArray(newColorsArr)
-  }
-
+    const newColorsArr = colorsArr.filter((item) => item.colorCode !== colorCode);
+    setColorsArray(newColorsArr);
+  };
 
   const colorDialogFunc = (
     <ConfirmDialog
@@ -712,8 +741,8 @@ export default function ProductNewEditForm({ currentProduct }) {
               onChange={(e) => changeColorHandler(e, 'colorPriceType')}
               value={colorInputData.colorPriceType}
             >
-              <MenuItem value='+'>+</MenuItem>
-              <MenuItem value='-'>-</MenuItem>
+              <MenuItem value="+">+</MenuItem>
+              <MenuItem value="-">-</MenuItem>
             </Select>
           </div>
           <div>
@@ -735,24 +764,59 @@ export default function ProductNewEditForm({ currentProduct }) {
     />
   );
 
-  
   // ADD SIZE LOGIC
 
-  
   const addSizeToArray = () => {
-    const sizesArr = [...sizesArray];
+    // const specObj = {
+    //   specificationType: '',
+    //   colors: '',
+    //   sizes: [
+    //     {
+    //       label: 'lg',
+    //       priceType: '+',
+    //       price: null,
+    //       stock: 0,
+    //       colors: [
+    //         {
+    //           colorCode: '#fff',
+    //           colorLabel: 'white',
+    //           stock: 1,
+    //           priceType: '+',
+    //           price: 10,
+    //       }
+    //       ]
+    //     }
+    //   ]
+    // }
+
+    const sizesArr = [...specifications.sizes];
     sizesArr.push(sizeInputData);
-    setSizesArray(sizesArr);
-    setSizeDialog(false);
-    setSizeInputData([]);
+    setSpecifications((prevState) => ({
+      ...prevState,
+      type: values.specificationType,
+      sizes: sizesArr
+    }))
+    setSizeInputData((prevState) => ({
+      ...prevState,
+      label: '',
+      price: 0,
+      stock: 0,
+      priceType: '+',
+      colors: []
+    }));
+
+
   };
+
+  console.log(values)
+
+  console.log(specifications)
 
   const removeSizeFromArray = (sizeName) => {
     const sizesArr = [...sizesArray];
-    const newSizesArr = sizesArr.filter(item => item.sizeName !== sizeName)
-    setSizesArray(newSizesArr)
-  }
-
+    const newSizesArr = sizesArr.filter((item) => item.sizeName !== sizeName);
+    setSizesArray(newSizesArr);
+  };
 
   const changeSizeHandler = (e, inputData) => {
     setSizeInputData({
@@ -761,55 +825,184 @@ export default function ProductNewEditForm({ currentProduct }) {
     });
   };
 
-  const sizeDialogFunc = (
-    <ConfirmDialog
-      open={sizeDialog}
-      onClose={() => setSizeDialog(false)}
-      title="Add Size (e.g MD, LG, 1litre, 2litre)"
-      content={
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>
-            <Label>Size Label</Label>
-            <Input
-              type="text"
-              id="sizename"
-              onChange={(e) => changeSizeHandler(e, 'sizeName')}
-              value={sizeInputData.sizeName}
-            />
-          </div>
-          <div>
-            <Label>Size Price</Label>
-            <Input
-              type="number"
-              id="sizePrice"
-              onChange={(e) => changeSizeHandler(e, 'sizePrice')}
-              value={sizeInputData.sizePrice}
-            />
-          </div>
-          <div>
-            <Label>Available Stock</Label>
-            <Input
-              type="number"
-              id="sizeStock"
-              onChange={(e) => changeSizeHandler(e, 'sizeStock')}
-              value={sizeInputData.sizeStock}
-            />
-          </div>
-        </div>
-      }
-      action={
-        <Button variant="contained" color="success" onClick={addSizeToArray}>
-          Add
-        </Button>
-      }
-    />
-  );
+  const sizeDialogFunc = () => {
+    if (values.specificationType === 'add-size-and-color') {
+      return (
+        <ConfirmDialog
+          open
+          onClose={() => setValue('specificationType', '')}
+          title="Add Size Specifications"
+          content={
+            <Grid container spacing={3} style={{ overflow : 'hidden'}}
+            >
+              <Grid container mt={4}>
+                <Grid sm={6}>
+                  <Label>Size Label</Label>
+                  <Input
+                    type="text"
+                    id="sizename"
+                    onChange={(e) => changeSizeHandler(e, 'label')}
+                    value={sizeInputData.label}
+                  />
+                </Grid>
+                <Grid sm={6}>
+                  <Label>Price Addition/Subtraction</Label>
+                  <Input
+                    type="number"
+                    id="sizePrice"
+                    onChange={(e) => changeSizeHandler(e, 'price')}
+                    value={sizeInputData.price}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid sm={6}>
+                  <Label>Price Type</Label>
+                  <Select
+                    onChange={(e) => changeSizeHandler(e, 'priceType')}
+                    value={sizeInputData.priceType}
+                  >
+                    <MenuItem value="+">+</MenuItem>
+                    <MenuItem value="-">-</MenuItem>
+                  </Select>
+                </Grid>
+                <Grid sm={6}>
+                  <Label>Available Stock</Label>
+                  <Input
+                    type="number"
+                    id="sizeStock"
+                    onChange={(e) => changeSizeHandler(e, 'stock')}
+                    value={sizeInputData.stock}
+                  />
+                </Grid>
 
+              </Grid>
+
+              {/* COLORS */}
+              {/* <Grid container mt={4}>
+              <Typography variant="subtitle2">Add Colors</Typography>
+
+                <Grid container>
+                  <Grid sm={6}>
+                    <Label>Color Picker</Label>
+
+                    <Input
+                      style={{ width: '20%' }}
+                      type="color"
+                      onChange={(e) => changeColorHandler(e, 'colorCode')}
+                      id="favcolor"
+                      value={colorInputData.colorCode}
+                    />
+                  </Grid>
+                  <Grid sm={6}>
+                    <Label>Color Name</Label>
+                    <Input
+                      type="text"
+                      id="colorname"
+                      onChange={(e) => changeColorHandler(e, 'colorName')}
+                      value={colorInputData.colorName}
+                    />
+                  </Grid>
+                </Grid>
+
+                <Grid container>
+                  <Grid sm={6}>
+                    <Label>Price Addition/Subtraction</Label>
+                    <Input
+                      type="number"
+                      id="colorprice"
+                      onChange={(e) => changeColorHandler(e, 'colorPrice')}
+                      value={colorInputData.colorPrice}
+                    />
+                  </Grid>
+                  <Grid sm={6}>
+                    <Label>Price Type</Label>
+                    <Select
+                      onChange={(e) => changeColorHandler(e, 'colorPriceType')}
+                      value={colorInputData.colorPriceType}
+                    >
+                      <MenuItem value="+">+</MenuItem>
+                      <MenuItem value="-">-</MenuItem>
+                    </Select>
+                  </Grid>
+                </Grid>
+
+                <Grid container>
+                  <Grid sm={6}>
+                    <Label>Available Stock</Label>
+                    <Input
+                      type="number"
+                      id="colorstock"
+                      onChange={(e) => changeColorHandler(e, 'colorStock')}
+                      value={colorInputData.colorStock}
+                    />
+                  </Grid>
+                  <Grid sm={6}>
+                    <Button variant="contained" color="primary" onClick={addColorToArray}>Add Color</Button>
+                  </Grid>
+                </Grid>
+              </Grid> */}
+            </Grid>
+          }
+          action={
+            <Button variant="contained" color="success" onClick={addSizeToArray}>
+              Add
+            </Button>
+          }
+        />
+      );
+    }
+    return <></>;
+  };
+
+  // const sizeDialogFunc = (
+  //   <ConfirmDialog
+  //     open={sizeDialog}
+  //     onClose={() => setSizeDialog(false)}
+  //     title="Add Size (e.g MD, LG, 1litre, 2litre)"
+  //     content={
+  //       <div style={{ display: 'flex', flexDirection: 'column' }}>
+  //         <div>
+  //           <Label>Size Label</Label>
+  //           <Input
+  //             type="text"
+  //             id="sizename"
+  //             onChange={(e) => changeSizeHandler(e, 'sizeName')}
+  //             value={sizeInputData.sizeName}
+  //           />
+  //         </div>
+  //         <div>
+  //           <Label>Size Price</Label>
+  //           <Input
+  //             type="number"
+  //             id="sizePrice"
+  //             onChange={(e) => changeSizeHandler(e, 'sizePrice')}
+  //             value={sizeInputData.sizePrice}
+  //           />
+  //         </div>
+  //         <div>
+  //           <Label>Available Stock</Label>
+  //           <Input
+  //             type="number"
+  //             id="sizeStock"
+  //             onChange={(e) => changeSizeHandler(e, 'sizeStock')}
+  //             value={sizeInputData.sizeStock}
+  //           />
+  //         </div>
+  //       </div>
+  //     }
+  //     action={
+  //       <Button variant="contained" color="success" onClick={addSizeToArray}>
+  //         Add
+  //       </Button>
+  //     }
+  //   />
+  // );
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       {colorDialogFunc}
-      {sizeDialogFunc}
+      {sizeDialogFunc()}
       <ConfirmDialog
         open={confirmDialog}
         onClose={closeConfirmDialog}
