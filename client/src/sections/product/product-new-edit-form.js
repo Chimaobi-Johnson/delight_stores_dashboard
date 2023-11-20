@@ -75,11 +75,11 @@ export default function ProductNewEditForm({ currentProduct }) {
   const [colorDialog, setColorDialog] = useState(false);
   const [sizeDialog, setSizeDialog] = useState(false);
   const [colorInputData, setColorInputData] = useState({
-    colorCode: '',
-    colorName: '',
-    colorPriceType: '+',
-    colorPrice: null,
-    colorStock: 0,
+    changeSizeHandlerode: '',
+    label: '',
+    priceType: '+',
+    price: null,
+    stock: 0,
   });
   const [sizeInputData, setSizeInputData] = useState({
     label: '',
@@ -168,6 +168,13 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
+
+  const updateSpecifications = (array) => {
+    setSpecifications((prevState) => ({
+      ...prevState,
+      sizes: array  
+    }))
+  }
 
   useEffect(() => {
     const getCategories = () => {
@@ -486,7 +493,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                   <option value="add-sizes-only">Add Sizes only</option>
                   <option value="add-colors-only">Add Colors only</option>
                 </RHFSelect>
-                <SpecificationDetails specifications={specifications} />
+                <SpecificationDetails specifications={specifications} updateSpecifications={updateSpecifications} />
                 </>
               ) : (
                 ''
@@ -674,12 +681,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   // ADD COLOR LOGIC
 
-  const changeColorHandler = (e, inputData) => {
-    setColorInputData({
-      ...colorInputData,
-      [inputData]: e.target.value,
-    });
-  };
 
   const addColorToArray = () => {
     if (!colorInputData.colorCode) {
@@ -699,70 +700,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     setColorsArray(newColorsArr);
   };
 
-  const colorDialogFunc = (
-    <ConfirmDialog
-      open={colorDialog}
-      onClose={() => setColorDialog(false)}
-      title="Add Color"
-      content={
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>
-            <Label>Color Picker</Label>
-            <Input
-              style={{ width: '20%' }}
-              type="color"
-              onChange={(e) => changeColorHandler(e, 'colorCode')}
-              id="favcolor"
-              value={colorInputData.colorCode}
-            />
-          </div>
-          <div>
-            <Label>Color Name</Label>
-            <Input
-              type="text"
-              id="colorname"
-              onChange={(e) => changeColorHandler(e, 'colorName')}
-              value={colorInputData.colorName}
-            />
-          </div>
-
-          <div>
-            <Label>Price Addition/Subtraction</Label>
-            <Input
-              type="number"
-              id="colorprice"
-              onChange={(e) => changeColorHandler(e, 'colorPrice')}
-              value={colorInputData.colorPrice}
-            />
-          </div>
-          <div>
-            <Label>Price Type</Label>
-            <Select
-              onChange={(e) => changeColorHandler(e, 'colorPriceType')}
-              value={colorInputData.colorPriceType}
-            >
-              <MenuItem value="+">+</MenuItem>
-              <MenuItem value="-">-</MenuItem>
-            </Select>
-          </div>
-          <div>
-            <Label>Available Stock</Label>
-            <Input
-              type="number"
-              id="colorstock"
-              onChange={(e) => changeColorHandler(e, 'colorStock')}
-              value={colorInputData.colorStock}
-            />
-          </div>
-        </div>
-      }
-      action={
-        <Button variant="contained" color="success" onClick={addColorToArray}>
-          Add
-        </Button>
-      }
-    />
-  );
 
   // ADD SIZE LOGIC
 
@@ -1001,7 +938,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      {colorDialogFunc}
       {sizeDialogFunc()}
       <ConfirmDialog
         open={confirmDialog}
