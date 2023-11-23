@@ -683,7 +683,7 @@ export default function ProductNewEditForm({ currentProduct }) {
 
 
   const addColorToArray = () => {
-    if (!colorInputData.colorCode) {
+    if (!colorInputData.code) {
       alert('Color code not selected');
       return;
     }

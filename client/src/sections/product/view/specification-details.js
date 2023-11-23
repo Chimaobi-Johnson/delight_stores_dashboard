@@ -14,6 +14,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
 
     const [colorDialog, setColorDialog] = useState(false);
     const [colorInputData, setColorInputData] = useState({
+        code: '',
         label: '',
         priceType: '+',
         price: null,
@@ -34,7 +35,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
     setCurrentSize(label)
 }
   const addColorToArray = () => {
-    if (!colorInputData.colorCode) {
+    if (!colorInputData.code) {
       alert('Color code not selected');
       return
     }
@@ -44,6 +45,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
     updateSpecifications(sizesArr)
     setColorInputData((prevState) => ({
         ...prevState,
+        code: '',
         label: '',
         priceType: '+',
         price: null,
@@ -66,9 +68,9 @@ export default function SpecificationDetails({ specifications, updateSpecificati
                 <Input
                   style={{ width: '20%' }}
                   type="color"
-                  onChange={(e) => changeColorHandler(e, 'colorCode')}
+                  onChange={(e) => changeColorHandler(e, 'code')}
                   id="favcolor"
-                  value={colorInputData.colorCode}
+                  value={colorInputData.code}
                 />
               </div>
               <div>
@@ -132,20 +134,21 @@ export default function SpecificationDetails({ specifications, updateSpecificati
             <Grid container>
                 {specifications.sizes !== 0 ? specifications.sizes.map(size => (
                     <Grid container>
-                        <Grid sm={6}>
-                            <p>{size.label}</p>
+                        <Grid sm={12}>
+                            <p style={{ border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
                         </Grid>
-                        <Grid sm={6}>
-                            <p onClick={() => initAddColorDialog(size.label)}>add colors to {size.label}</p>
+                        <Grid sm={12}>
+                            <p style={{ fontSize: '.8rem', color: 'greenyellow', cursor: 'pointer' }} onClick={() => initAddColorDialog(size.label)}>add colors</p>
                             <ul>
                               {size.colors.length !== 0
                             ? size.colors.map((el) => (
                                 <li key={Math.random() * 100}
                                 style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
                                 >
-                                    {el.colorName}:{' '}
+                                    {el.label}:{' '}
                                     <span style={{ backgroundColor: el.code, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
                                     <span style={{ fontSize: '.8rem' }}>{el.price ? ` ${el.priceType ? el.priceType : '+'} ${' '} ${el.price}` : 'free'}</span>
+
                                 </li>
                                 ))
                             : ''}
