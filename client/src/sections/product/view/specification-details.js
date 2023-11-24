@@ -34,6 +34,8 @@ const SizeListContainer = styled(Grid)({
         }
     }
   });
+
+
 export default function SpecificationDetails({ specifications, updateSpecifications, updateQuantity }) {
 
     const [colorDialog, setColorDialog] = useState(false);
@@ -170,7 +172,8 @@ export default function SpecificationDetails({ specifications, updateSpecificati
                     <Grid key={Math.random() * 5} container>
                         <p onClick={() => deleteSizeHandler(size.label)}>Click to delete</p>
                         <Grid sm={12}>
-                            <p style={{border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
+                            <p style={{border: '1px solid #eaeaea', marginBottom: '0', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
+                            <p style={{ fontSize: '.6rem' }}>Qty - {size.stock}</p>
                         </Grid>
                         <Grid sm={12}>
                             <p style={{ fontSize: '.8rem', color: 'greenyellow', cursor: 'pointer' }} onClick={() => initAddColorDialog(size.label)}>add colors</p>

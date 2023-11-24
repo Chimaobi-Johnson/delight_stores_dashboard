@@ -56,6 +56,7 @@ import { convertCloudinaryImagetoId } from 'src/utils/customFunctions';
 import { Input, MenuItem, Select } from '@mui/material';
 import Label from 'src/components/label/label';
 import SpecificationDetails from './view/specification-details';
+import SpecificationDialogBox from './view/specification-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -77,17 +78,17 @@ export default function ProductNewEditForm({ currentProduct }) {
     price: 0,
     stock: 0,
     priceType: '+',
-    colors: []
+    colors: [],
   });
   const [colorsArray, setColorsArray] = useState([]);
   const [sizesArray, setSizesArray] = useState([]);
   const [publish, setPublish] = useState(true);
-  
-  const [ specifications, setSpecifications ] = useState({
+
+  const [specifications, setSpecifications] = useState({
     type: '',
     colors: '',
-    sizes: []
-  })
+    sizes: [],
+  });
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -163,9 +164,9 @@ export default function ProductNewEditForm({ currentProduct }) {
   const updateSpecifications = (array) => {
     setSpecifications((prevState) => ({
       ...prevState,
-      sizes: array  
-    }))
-  }
+      sizes: array,
+    }));
+  };
 
   useEffect(() => {
     const getCategories = () => {
@@ -182,10 +183,9 @@ export default function ProductNewEditForm({ currentProduct }) {
     getCategories();
   }, []);
 
-  
   const updateQuantity = (val) => {
-    setValue('quantity', val)
-  }
+    setValue('quantity', val);
+  };
 
   // ADD SIZE LOGIC
 
@@ -196,23 +196,22 @@ export default function ProductNewEditForm({ currentProduct }) {
     setSpecifications((prevState) => ({
       ...prevState,
       type: values.specificationType,
-      sizes: sizesArr
-    }))
+      sizes: sizesArr,
+    }));
     // Update quantity
-    for (let index = 0; index < sizesArr.length; index+= 1) {
-      totalQty += Number(sizesArr[index].stock)       
+    for (let index = 0; index < sizesArr.length; index += 1) {
+      totalQty += Number(sizesArr[index].stock);
     }
-    updateQuantity(totalQty)
+    updateQuantity(totalQty);
     setSizeInputData((prevState) => ({
       ...prevState,
       label: '',
       price: 0,
       stock: 0,
       priceType: '+',
-      colors: []
+      colors: [],
     }));
-    setValue('specificationType', '')
-
+    setValue('specificationType', '');
   };
 
   const changeSizeHandler = (e, inputData) => {
@@ -513,18 +512,22 @@ export default function ProductNewEditForm({ currentProduct }) {
 
               {values.specifications === 'add-specs' ? (
                 <>
-                <RHFSelect
-                  native
-                  name="specificationType"
-                  label="Specification Type"
-                  InputLabelProps={{ shrink: true }}
-                >
-                  <option value="" />
-                  <option value="add-size-and-color">Add Size and color</option>
-                  <option value="add-sizes-only">Add Sizes only</option>
-                  <option value="add-colors-only">Add Colors only</option>
-                </RHFSelect>
-                <SpecificationDetails specifications={specifications} updateSpecifications={updateSpecifications} updateQuantity={updateQuantity} />
+                  <RHFSelect
+                    native
+                    name="specificationType"
+                    label="Specification Type"
+                    InputLabelProps={{ shrink: true }}
+                  >
+                    <option value="" />
+                    <option value="add-size-and-color">Add Size and color</option>
+                    <option value="add-sizes-only">Add Sizes only</option>
+                    <option value="add-colors-only">Add Colors only</option>
+                  </RHFSelect>
+                  <SpecificationDetails
+                    specifications={specifications}
+                    updateSpecifications={updateSpecifications}
+                    updateQuantity={updateQuantity}
+                  />
                 </>
               ) : (
                 ''
@@ -711,15 +714,17 @@ export default function ProductNewEditForm({ currentProduct }) {
   );
 
   const sizeDialogFunc = () => {
-    if (values.specificationType === 'add-size-and-color') {
+    if (
+      values.specificationType === 'add-size-and-color' ||
+      values.specificationType === 'add-sizes-only'
+    ) {
       return (
         <ConfirmDialog
           open
           onClose={() => setValue('specificationType', '')}
           title="Add Size Specifications"
           content={
-            <Grid container spacing={3} style={{ overflow : 'hidden'}}
-            >
+            <Grid container spacing={3} style={{ overflow: 'hidden' }}>
               <Grid container mt={4}>
                 <Grid sm={6}>
                   <Label>Size Label</Label>
@@ -760,9 +765,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                     value={sizeInputData.stock}
                   />
                 </Grid>
-
               </Grid>
-
             </Grid>
           }
           action={
@@ -773,13 +776,20 @@ export default function ProductNewEditForm({ currentProduct }) {
         />
       );
     }
+
     return <></>;
   };
 
-
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
-      {sizeDialogFunc()}
+      {/* {sizeDialogFunc()} */}
+      <SpecificationDialogBox
+        setValue={setValue}
+        updateQuantity={updateQuantity}
+        specificationType={values.specificationType}
+        specifications={specifications}
+        setSpecifications={setSpecifications}
+      />
       <ConfirmDialog
         open={confirmDialog}
         onClose={closeConfirmDialog}
