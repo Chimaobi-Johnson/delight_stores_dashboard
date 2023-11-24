@@ -72,14 +72,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   // const [includeTaxes, setIncludeTaxes] = useState(false);
 
-  const [colorDialog, setColorDialog] = useState(false);
-  const [colorInputData, setColorInputData] = useState({
-    changeSizeHandlerode: '',
-    label: '',
-    priceType: '+',
-    price: null,
-    stock: 0,
-  });
   const [sizeInputData, setSizeInputData] = useState({
     label: '',
     price: 0,
@@ -189,6 +181,46 @@ export default function ProductNewEditForm({ currentProduct }) {
 
     getCategories();
   }, []);
+
+  
+  const updateQuantity = (val) => {
+    setValue('quantity', val)
+  }
+
+  // ADD SIZE LOGIC
+
+  const addSizeToArray = () => {
+    let totalQty = 0;
+    const sizesArr = [...specifications.sizes];
+    sizesArr.push(sizeInputData);
+    setSpecifications((prevState) => ({
+      ...prevState,
+      type: values.specificationType,
+      sizes: sizesArr
+    }))
+    // Update quantity
+    for (let index = 0; index < sizesArr.length; index+= 1) {
+      totalQty += Number(sizesArr[index].stock)       
+    }
+    updateQuantity(totalQty)
+    setSizeInputData((prevState) => ({
+      ...prevState,
+      label: '',
+      price: 0,
+      stock: 0,
+      priceType: '+',
+      colors: []
+    }));
+    setValue('specificationType', '')
+
+  };
+
+  const changeSizeHandler = (e, inputData) => {
+    setSizeInputData({
+      ...sizeInputData,
+      [inputData]: e.target.value,
+    });
+  };
 
   const onSubmit = handleSubmit(async (data) => {
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
@@ -492,7 +524,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                   <option value="add-sizes-only">Add Sizes only</option>
                   <option value="add-colors-only">Add Colors only</option>
                 </RHFSelect>
-                <SpecificationDetails specifications={specifications} updateSpecifications={updateSpecifications} />
+                <SpecificationDetails specifications={specifications} updateSpecifications={updateSpecifications} updateQuantity={updateQuantity} />
                 </>
               ) : (
                 ''
@@ -677,89 +709,6 @@ export default function ProductNewEditForm({ currentProduct }) {
       </Grid>
     </>
   );
-
-  // ADD COLOR LOGIC
-
-
-  const addColorToArray = () => {
-    if (!colorInputData.code) {
-      alert('Color code not selected');
-      return;
-    }
-    const colorsArr = [...colorsArray];
-    colorsArr.push(colorInputData);
-    setColorsArray(colorsArr);
-    setColorDialog(false);
-    setColorInputData([]);
-  };
-
-  const removeColorFromArray = (colorCode) => {
-    const colorsArr = [...colorsArray];
-    const newColorsArr = colorsArr.filter((item) => item.colorCode !== colorCode);
-    setColorsArray(newColorsArr);
-  };
-
-
-  // ADD SIZE LOGIC
-
-  const addSizeToArray = () => {
-    // const specObj = {
-    //   specificationType: '',
-    //   colors: '',
-    //   sizes: [
-    //     {
-    //       label: 'lg',
-    //       priceType: '+',
-    //       price: null,
-    //       stock: 0,
-    //       colors: [
-    //         {
-    //           colorCode: '#fff',
-    //           colorLabel: 'white',
-    //           stock: 1,
-    //           priceType: '+',
-    //           price: 10,
-    //       }
-    //       ]
-    //     }
-    //   ]
-    // }
-
-    const sizesArr = [...specifications.sizes];
-    sizesArr.push(sizeInputData);
-    setSpecifications((prevState) => ({
-      ...prevState,
-      type: values.specificationType,
-      sizes: sizesArr
-    }))
-    setSizeInputData((prevState) => ({
-      ...prevState,
-      label: '',
-      price: 0,
-      stock: 0,
-      priceType: '+',
-      colors: []
-    }));
-
-
-  };
-
-  console.log(values)
-
-  console.log(specifications)
-
-  const removeSizeFromArray = (sizeName) => {
-    const sizesArr = [...sizesArray];
-    const newSizesArr = sizesArr.filter((item) => item.sizeName !== sizeName);
-    setSizesArray(newSizesArr);
-  };
-
-  const changeSizeHandler = (e, inputData) => {
-    setSizeInputData({
-      ...sizeInputData,
-      [inputData]: e.target.value,
-    });
-  };
 
   const sizeDialogFunc = () => {
     if (values.specificationType === 'add-size-and-color') {

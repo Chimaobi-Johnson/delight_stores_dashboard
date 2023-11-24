@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import React, { useState } from 'react'
 import Grid from '@mui/material/Unstable_Grid2';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { Input, MenuItem, Select } from '@mui/material';
@@ -35,8 +34,7 @@ const SizeListContainer = styled(Grid)({
         }
     }
   });
-export default function SpecificationDetails({ specifications, updateSpecifications }) {
-    console.log(specifications)
+export default function SpecificationDetails({ specifications, updateSpecifications, updateQuantity }) {
 
     const [colorDialog, setColorDialog] = useState(false);
     const [colorInputData, setColorInputData] = useState({
@@ -82,8 +80,14 @@ export default function SpecificationDetails({ specifications, updateSpecificati
   };
 
   const deleteSizeHandler = (size) => {
+    let totalQty = 0;
     const sizesArr = specifications.sizes;
     const newSizeArr = sizesArr.filter((item) => item.label !== size);
+    // Update quantity
+    for (let index = 0; index < newSizeArr.length; index+= 1) {
+        totalQty += Number(newSizeArr[index].stock)       
+        }
+    updateQuantity(totalQty)
     updateSpecifications(newSizeArr)
 
   }
@@ -163,7 +167,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
         return (
             <SizeListContainer container>
                 {specifications.sizes !== 0 ? specifications.sizes.map(size => (
-                    <Grid container>
+                    <Grid key={Math.random() * 5} container>
                         <p onClick={() => deleteSizeHandler(size.label)}>Click to delete</p>
                         <Grid sm={12}>
                             <p style={{border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
@@ -202,5 +206,6 @@ export default function SpecificationDetails({ specifications, updateSpecificati
 SpecificationDetails.propTypes = {
     specifications: PropTypes.object,
     updateSpecifications: PropTypes.func,
+    updateQuantity: PropTypes.func
   };
   
