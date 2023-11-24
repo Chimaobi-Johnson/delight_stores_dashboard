@@ -4,11 +4,37 @@ import React, { useState } from 'react'
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 import { Input, MenuItem, Select } from '@mui/material';
 import Label from 'src/components/label/label';
 
 import { ConfirmDialog } from 'src/components/custom-dialog';
 
+const SizeListContainer = styled(Grid)({
+    '> div > p': {
+        display: 'none',
+        position: 'absolute',
+        width: '100%',
+        backgroundColor: '#000000a6',
+        color: '#ffabab', 
+        top: '10%', 
+        left: '50%', 
+        transform: 'translate(-50%, -50%)', 
+        fontSize: '.7rem'
+    },
+    '> div': {
+        position: 'relative',
+        paddingLeft: '1rem',
+        transition: 'all 1s',
+        cursor: 'pointer'
+    },
+    '> div:hover': {
+        backgroundColor: '#000000a6',
+        '> p': {
+            display: 'block'
+        }
+    }
+  });
 export default function SpecificationDetails({ specifications, updateSpecifications }) {
     console.log(specifications)
 
@@ -121,8 +147,6 @@ export default function SpecificationDetails({ specifications, updateSpecificati
         />
       );
 
-
-
     const renderSpecifications = () => {
         if(specifications.type === 'colors-only') {
             return (
@@ -131,11 +155,12 @@ export default function SpecificationDetails({ specifications, updateSpecificati
             )
         }
         return (
-            <Grid container>
+            <SizeListContainer container>
                 {specifications.sizes !== 0 ? specifications.sizes.map(size => (
                     <Grid container>
+                        <p>Click to delete</p>
                         <Grid sm={12}>
-                            <p style={{ border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
+                            <p style={{border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
                         </Grid>
                         <Grid sm={12}>
                             <p style={{ fontSize: '.8rem', color: 'greenyellow', cursor: 'pointer' }} onClick={() => initAddColorDialog(size.label)}>add colors</p>
@@ -156,7 +181,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
                         </Grid>
                     </Grid>
                 )) : ''}
-            </Grid>
+            </SizeListContainer>
         )
     }
 

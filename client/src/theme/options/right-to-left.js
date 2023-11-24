@@ -16,7 +16,7 @@ export default function RTL({ children, themeDirection }) {
   const cacheRtl = createCache({
     key: 'rtl',
     prepend: true,
-    // https://github.com/styled-components/stylis-plugin-rtl/issues/35
+    // https://github.com/ponents/stylis-plugin-rtl/issues/35
     stylisPlugins: [rtlPlugin],
   });
 
