@@ -15,7 +15,7 @@ const SizeListContainer = styled(Grid)({
         display: 'none',
         position: 'absolute',
         width: '100%',
-        backgroundColor: '#000000a6',
+        backgroundColor: '#0000004a',
         color: '#ffabab', 
         top: '10%', 
         left: '50%', 
@@ -67,7 +67,6 @@ export default function SpecificationDetails({ specifications, updateSpecificati
     }
     const sizesArr = specifications.sizes;
     sizesArr.map(el => el.label === currentSize ? el.colors.push(colorInputData) : '')
-    console.log(sizesArr)
     updateSpecifications(sizesArr)
     setColorInputData((prevState) => ({
         ...prevState,
@@ -81,6 +80,13 @@ export default function SpecificationDetails({ specifications, updateSpecificati
 
     console.log(sizesArr)
   };
+
+  const deleteSizeHandler = (size) => {
+    const sizesArr = specifications.sizes;
+    const newSizeArr = sizesArr.filter((item) => item.label !== size);
+    updateSpecifications(newSizeArr)
+
+  }
 
     const colorDialogFunc = (
         <ConfirmDialog
@@ -158,7 +164,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
             <SizeListContainer container>
                 {specifications.sizes !== 0 ? specifications.sizes.map(size => (
                     <Grid container>
-                        <p>Click to delete</p>
+                        <p onClick={() => deleteSizeHandler(size.label)}>Click to delete</p>
                         <Grid sm={12}>
                             <p style={{border: '1px solid #eaeaea', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
                         </Grid>

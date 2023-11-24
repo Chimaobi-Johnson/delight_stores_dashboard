@@ -73,7 +73,6 @@ export default function ProductNewEditForm({ currentProduct }) {
   // const [includeTaxes, setIncludeTaxes] = useState(false);
 
   const [colorDialog, setColorDialog] = useState(false);
-  const [sizeDialog, setSizeDialog] = useState(false);
   const [colorInputData, setColorInputData] = useState({
     changeSizeHandlerode: '',
     label: '',
@@ -815,70 +814,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
               </Grid>
 
-              {/* COLORS */}
-              {/* <Grid container mt={4}>
-              <Typography variant="subtitle2">Add Colors</Typography>
-
-                <Grid container>
-                  <Grid sm={6}>
-                    <Label>Color Picker</Label>
-
-                    <Input
-                      style={{ width: '20%' }}
-                      type="color"
-                      onChange={(e) => changeColorHandler(e, 'colorCode')}
-                      id="favcolor"
-                      value={colorInputData.colorCode}
-                    />
-                  </Grid>
-                  <Grid sm={6}>
-                    <Label>Color Name</Label>
-                    <Input
-                      type="text"
-                      id="colorname"
-                      onChange={(e) => changeColorHandler(e, 'colorName')}
-                      value={colorInputData.colorName}
-                    />
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid sm={6}>
-                    <Label>Price Addition/Subtraction</Label>
-                    <Input
-                      type="number"
-                      id="colorprice"
-                      onChange={(e) => changeColorHandler(e, 'colorPrice')}
-                      value={colorInputData.colorPrice}
-                    />
-                  </Grid>
-                  <Grid sm={6}>
-                    <Label>Price Type</Label>
-                    <Select
-                      onChange={(e) => changeColorHandler(e, 'colorPriceType')}
-                      value={colorInputData.colorPriceType}
-                    >
-                      <MenuItem value="+">+</MenuItem>
-                      <MenuItem value="-">-</MenuItem>
-                    </Select>
-                  </Grid>
-                </Grid>
-
-                <Grid container>
-                  <Grid sm={6}>
-                    <Label>Available Stock</Label>
-                    <Input
-                      type="number"
-                      id="colorstock"
-                      onChange={(e) => changeColorHandler(e, 'colorStock')}
-                      value={colorInputData.colorStock}
-                    />
-                  </Grid>
-                  <Grid sm={6}>
-                    <Button variant="contained" color="primary" onClick={addColorToArray}>Add Color</Button>
-                  </Grid>
-                </Grid>
-              </Grid> */}
             </Grid>
           }
           action={
@@ -892,49 +827,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     return <></>;
   };
 
-  // const sizeDialogFunc = (
-  //   <ConfirmDialog
-  //     open={sizeDialog}
-  //     onClose={() => setSizeDialog(false)}
-  //     title="Add Size (e.g MD, LG, 1litre, 2litre)"
-  //     content={
-  //       <div style={{ display: 'flex', flexDirection: 'column' }}>
-  //         <div>
-  //           <Label>Size Label</Label>
-  //           <Input
-  //             type="text"
-  //             id="sizename"
-  //             onChange={(e) => changeSizeHandler(e, 'sizeName')}
-  //             value={sizeInputData.sizeName}
-  //           />
-  //         </div>
-  //         <div>
-  //           <Label>Size Price</Label>
-  //           <Input
-  //             type="number"
-  //             id="sizePrice"
-  //             onChange={(e) => changeSizeHandler(e, 'sizePrice')}
-  //             value={sizeInputData.sizePrice}
-  //           />
-  //         </div>
-  //         <div>
-  //           <Label>Available Stock</Label>
-  //           <Input
-  //             type="number"
-  //             id="sizeStock"
-  //             onChange={(e) => changeSizeHandler(e, 'sizeStock')}
-  //             value={sizeInputData.sizeStock}
-  //           />
-  //         </div>
-  //       </div>
-  //     }
-  //     action={
-  //       <Button variant="contained" color="success" onClick={addSizeToArray}>
-  //         Add
-  //       </Button>
-  //     }
-  //   />
-  // );
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
