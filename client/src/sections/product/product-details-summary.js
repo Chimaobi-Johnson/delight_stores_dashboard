@@ -42,10 +42,9 @@ export default function ProductDetailsSummary({
   const {
     _id,
     name,
-    sizes,
     price,
     coverUrl,
-    colors,
+    specifications,
     quantity,
     // newLabel,
     available,
@@ -72,8 +71,8 @@ export default function ProductDetailsSummary({
     coverUrl,
     available,
     price,
-    colors: colors.length !== 0 ? colors[0].colorCode : '',
-    size: sizes.length !== 0 ? sizes[0].sizeName : '',
+    // colors: colors.length !== 0 ? colors[0].colorCode : '',
+    // size: sizes.length !== 0 ? sizes[0].sizeName : '',
     quantity: available < 1 ? 0 : 1,
   };
 
@@ -223,11 +222,11 @@ export default function ProductDetailsSummary({
           },
         }}
       >
-        {sizes.map((size) => (
+        {/* {sizes.map((size) => (
           <MenuItem key={Math.random() * 10} value={size.sizeName}>
             {size.sizeName} - {size.sizePrice}
           </MenuItem>
-        ))}
+        ))} */}
       </RHFSelect>
     </Stack>
   );
