@@ -180,6 +180,8 @@ exports.updateProduct = async (req, res) => {
               message: "Product may have been deleted, create new product",
             });
         } else {
+          console.log(req.body.specifications)
+
           data.name = req.body.name;
           data.price = req.body.price;
           data.subheading = req.body.subheading;

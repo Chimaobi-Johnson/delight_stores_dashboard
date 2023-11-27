@@ -222,7 +222,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
                                     >
                                         {el.label}:{' '}
                                         <span style={{ backgroundColor: el.code, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                                        <span style={{ fontSize: '.8rem' }}>{el.price ? ` ${el.priceType ? el.priceType : '+'} ${' '} ${el.price}` : 'free'}</span>
+                                        <span style={{ fontSize: '.8rem' }}>{`${el.priceType}  ${el.price}`}</span>
     
                                     </li>
                                     ))

@@ -113,16 +113,16 @@ export default function ProductNewEditForm({ currentProduct }) {
       quantity: currentProduct?.quantity || 0,
       priceSale: currentProduct?.priceSale || 0,
       tags: currentProduct?.tags || [],
+      specops: currentProduct?.specifications.type !== '' ? 'add-specs' : 'no-specs',
       taxes: currentProduct?.taxes || 0,
       gender: currentProduct?.gender || '',
       category: currentProduct?.category || '',
-      specifications: currentProduct?.specifications || specifications,
       deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
       published: currentProduct?.name || true,
     }),
-    [currentProduct, specifications]
+    [currentProduct]
   );
 
   const methods = useForm({
@@ -140,17 +140,17 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const values = watch();
 
-  // useEffect(() => {
-  //   if (currentProduct) {
-  //     reset(defaultValues);
-  //     setSpecifications(currentProduct.specifications);
-  //   }
-  // }, [currentProduct, specifications, defaultValues, reset]);
+  useEffect(() => {
+    if (currentProduct) {
+      reset(defaultValues);
+      setSpecifications(currentProduct.specifications);
+    }
+  }, [currentProduct, defaultValues, reset]);
 
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
 
-
+  console.log(specifications);
   useEffect(() => {
     const getCategories = () => {
       axios
@@ -169,7 +169,7 @@ export default function ProductNewEditForm({ currentProduct }) {
   const updateQuantity = (val) => {
     setValue('quantity', val);
   };
-  
+
   const updateSpecifications = (array) => {
     setSpecifications((prevState) => ({
       ...prevState,
@@ -184,11 +184,24 @@ export default function ProductNewEditForm({ currentProduct }) {
     }));
   };
 
-
   const onSubmit = handleSubmit(async (data) => {
+    console.log(values.specops)
+
+
+
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
-    console.log(defaultValues);
     setResData(null);
+    if (
+      values.specops === 'no-specs' ||
+      (specifications.colors.length === 0 && specifications.sizes.length === 0)
+    ) {
+      console.log('passed')
+
+      setSpecifications((prevState) => ({
+        ...prevState,
+        type: '',
+      }));
+    }
 
     const formData = new FormData();
     formData.append('name', data.name);
@@ -223,7 +236,7 @@ export default function ProductNewEditForm({ currentProduct }) {
           ...prevState,
           type: '',
           sizes: [],
-          colors: []
+          colors: [],
         }));
         window.scrollTo(0, 0);
         setResData({
@@ -414,7 +427,7 @@ export default function ProductNewEditForm({ currentProduct }) {
               <div>
                 <RHFSelect
                   native
-                  name="specifications"
+                  name="specops"
                   label="Specifications"
                   InputLabelProps={{ shrink: true }}
                 >
@@ -422,7 +435,6 @@ export default function ProductNewEditForm({ currentProduct }) {
                   <option value="add-specs">Add Specifications</option>
                   <option value="no-specs">Non available</option>
                 </RHFSelect>
-
               </div>
 
               <div>
@@ -430,14 +442,13 @@ export default function ProductNewEditForm({ currentProduct }) {
                   name="quantity"
                   label="Quantity"
                   placeholder="0"
-                  disabled={values.specifications !== 'no-specs'}
+                  disabled={values.specops !== 'no-specs'}
                   type="number"
                   InputLabelProps={{ shrink: true }}
                 />
-
               </div>
 
-              {values.specifications === 'add-specs' ? (
+              {values.specops === 'add-specs' ? (
                 <>
                   <RHFSelect
                     native
@@ -640,7 +651,6 @@ export default function ProductNewEditForm({ currentProduct }) {
       </Grid>
     </>
   );
-
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
