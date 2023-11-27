@@ -88,7 +88,7 @@ export default function ProductListView() {
 
   useEffect(() => {
     const getproducts = () => {
-        axios.get('/api/products')
+        axios.get('/api/products?type=all')
         .then(data => {
             console.log(data.data.products)
             setTableData(data.data.products)
@@ -139,7 +139,6 @@ export default function ProductListView() {
   //   },
   //   [dataInPage.length, table, tableData]
   // );
-
 
   const deleteProductHandler = (id) => {
     axios.post(`/api/product/delete/?id=${id}`).then(res => {

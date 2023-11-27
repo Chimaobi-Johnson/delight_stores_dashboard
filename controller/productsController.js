@@ -1,49 +1,85 @@
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const cloudinary = require("../utils/cloudinary");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 exports.getAllProducts = (req, res) => {
   const ObjectId = mongoose.Types.ObjectId;
   const currentPage = req.query.page || 1; // if page is not set default to page 1
   const perPage = 25;
   let totalItems;
-  if(req.query.id) {
+  if (req.query.id) {
     Product.aggregate([
-      { $match: { category : new ObjectId(req.query.id) } },
-      { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
-      { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
-      { $project: { name: 1, price: 1, imagesUrl: 1, category: 1, categoryDetails: 1, discount: 1, discountDetails: 1 }}
+      { $match: { category: new ObjectId(req.query.id) } },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categoryDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "discounts",
+          localField: "discountID",
+          foreignField: "_id",
+          as: "discountDetails",
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          imagesUrl: 1,
+          category: 1,
+          categoryDetails: 1,
+          discount: 1,
+          discountDetails: 1,
+        },
+      },
     ])
-    .then((products) => {
-      res.status(200).send({ products: products });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+      .then((products) => {
+        res.status(200).send({ products: products });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   } else {
-    Product.find()
-    .sort({ createdAt: -1 })
-    .countDocuments()
-    .then((count) => {
-      totalItems = count;
-      return Product.aggregate([
-        { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
-        { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
-        { $project: { imagesId: 0 }}
-      ])
-        .sort({ createdAt: -1 })
-        .skip((currentPage - 1) * perPage)
-        .limit(perPage);
-    })
-    .then((products) => {
-      res.status(200).send({ products: products });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    
+    // if query type is all, query is coming from the admin dashboard
+    // therefore display all products, else display only published
+    const queryType = req.query.type === "all" ? {} : { publish: true };
+    Product.aggregate([
+      { $match: queryType },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categoryDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "discounts",
+          localField: "discountID",
+          foreignField: "_id",
+          as: "discountDetails",
+        },
+      },
+      { $project: { imagesId: 0 } },
+    ])
+      .sort({ createdAt: -1 })
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage)
+      .then((products) => {
+        res.status(200).send({ products: products });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-
 };
 
 exports.storeProduct = async (req, res) => {
@@ -74,7 +110,7 @@ exports.storeProduct = async (req, res) => {
       saleLabel: JSON.parse(req.body.saleLabel),
       imagesUrl: imagesUrl,
       imagesId: imagesId,
-      postedBy: req.user._id
+      postedBy: req.user._id,
     });
     product
       .save()
@@ -91,13 +127,27 @@ exports.storeProduct = async (req, res) => {
 exports.getProduct = (req, res) => {
   const ObjectId = mongoose.Types.ObjectId;
   Product.aggregate([
-    { $match: { _id : new ObjectId(req.query.id) } },
-    { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'categoryDetails' }},
-    { $lookup: { from: 'discounts', localField: 'discountID', foreignField: '_id', as: 'discountDetails' }},
-    { $project: { imagesId: 0 }}
+    { $match: { _id: new ObjectId(req.query.id) } },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "categoryDetails",
+      },
+    },
+    {
+      $lookup: {
+        from: "discounts",
+        localField: "discountID",
+        foreignField: "_id",
+        as: "discountDetails",
+      },
+    },
+    { $project: { imagesId: 0 } },
   ])
-    .then(product => {
-      res.status(200).send({ product: product })
+    .then((product) => {
+      res.status(200).send({ product: product });
     })
     .catch((err) => {
       console.log(err);
@@ -105,7 +155,6 @@ exports.getProduct = (req, res) => {
 };
 
 exports.updateProduct = async (req, res) => {
-
   if (req.files.length !== 0) {
     console.log("updating with image change");
 
@@ -113,7 +162,6 @@ exports.updateProduct = async (req, res) => {
 
     const imagesId = [];
     const imagesUrl = [];
-
 
     for (const image of newImages) {
       const { path } = image;
@@ -128,11 +176,9 @@ exports.updateProduct = async (req, res) => {
     Product.findById(req.query.id)
       .then((data) => {
         if (!data) {
-          res
-            .status(404)
-            .json({
-              message: "Product may have been deleted, create new product",
-            });
+          res.status(404).json({
+            message: "Product may have been deleted, create new product",
+          });
         } else {
           return data;
         }
@@ -175,13 +221,10 @@ exports.updateProduct = async (req, res) => {
     Product.findById(req.query.id)
       .then((data) => {
         if (!data) {
-          res
-            .status(404)
-            .json({
-              message: "Product may have been deleted, create new product",
-            });
+          res.status(404).json({
+            message: "Product may have been deleted, create new product",
+          });
         } else {
-
           data.name = req.body.name;
           data.price = req.body.price;
           data.subheading = req.body.subheading;
@@ -254,34 +297,33 @@ exports.deleteSingleImage = (req, res) => {
         })
         .catch((err) => {
           console.log(err);
-          res.status(500).json({ message: 'Error deleting image' });
+          res.status(500).json({ message: "Error deleting image" });
         });
     }
   });
 };
 
-
 exports.getProductIds = (req, res) => {
-  Product.find({}, {_id: 1})
-  .then(ids => {
-    res.status(200).send({ ids: ids })
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-}
-
+  Product.find({}, { _id: 1 })
+    .then((ids) => {
+      res.status(200).send({ ids: ids });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 exports.filterProductsByCatgory = (req, res) => {
   Product.aggregate([
-    { $match: { category : req.query.id } },
+    { $match: { category: req.query.id } },
     // { $project: { name: 1, price: 1, imagesUrl: 1 }}
   ])
-  // Product.find({ category: req.body.category._id })
-  .then(data => {
-    console.log(data)
-    res.status(200).json({ products: data })
-  }).catch(err => {
-    console.log(err)
-  })
-}
+    // Product.find({ category: req.body.category._id })
+    .then((data) => {
+      console.log(data);
+      res.status(200).json({ products: data });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
