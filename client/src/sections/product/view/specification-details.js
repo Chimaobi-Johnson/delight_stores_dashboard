@@ -68,7 +68,7 @@ const SizeListContainer = styled(Grid)({
   })
 
 
-export default function SpecificationDetails({ specifications, updateSpecifications, updateQuantity }) {
+export default function SpecificationDetails({ specifications, updateSpecifications, updateColorSpecifications, updateQuantity }) {
 
     const [colorDialog, setColorDialog] = useState(false);
     const [colorInputData, setColorInputData] = useState({
@@ -124,6 +124,17 @@ export default function SpecificationDetails({ specifications, updateSpecificati
     updateQuantity(totalQty)
     updateSpecifications(newSizeArr)
 
+  }
+
+  const deleteColorHandler = (color) => {
+    let totalQty = 0;
+    const colorsArr = specifications.colors;
+    const newColorsArr = colorsArr.filter((item) => item.label !== color);
+    for (let index = 0; index < newColorsArr.length; index += 1) {
+        totalQty += Number(colorsArr[index].stock);
+    }
+    updateQuantity(totalQty)
+    updateColorSpecifications(newColorsArr)
   }
 
     const colorDialogFunc = (
@@ -230,11 +241,11 @@ export default function SpecificationDetails({ specifications, updateSpecificati
                <ColorListContainer container>
                     {specifications.colors !== 0 ? specifications.colors.map(color => (
                         <Grid key={Math.random() * 5} container>
-                            <p>Click to delete</p>
+                            <p onClick={() => deleteColorHandler(color.label)}>Click to delete</p>
                             <ColorListUL>
                                 <li>Label: {color.label}</li>
                                 <li>Color: <span style={{ backgroundColor: color.code, display: 'block', width: '15px', height: '15px', borderRadius: '100px' }} /></li>
-                                <li>Amount: {`${color.priceType} ${color.price ? color.price : 'free'}`} </li>
+                                <li>Amount: {`${color.priceType} ${color.price}`} </li>
                                 <li>Stock: {color.stock} </li>
                             </ColorListUL>
                         </Grid>
@@ -257,6 +268,7 @@ export default function SpecificationDetails({ specifications, updateSpecificati
 SpecificationDetails.propTypes = {
     specifications: PropTypes.object,
     updateSpecifications: PropTypes.func,
+    updateColorSpecifications: PropTypes.func,
     updateQuantity: PropTypes.func
   };
   

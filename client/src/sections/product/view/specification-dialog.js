@@ -29,7 +29,7 @@ export default function SpecificationDialogBox({
     code: '#000000',
     label: '',
     priceType: '+',
-    price: null,
+    price: 0,
     stock: 0,
   });
 
@@ -39,10 +39,6 @@ export default function SpecificationDialogBox({
       ...colorInputData,
       [inputData]: e.target.value,
     });
-  };
-
-  const updateColorStock = (val) => {
-    setValue('quantity', val);
   };
 
   // ADD SIZE LOGIC
@@ -92,7 +88,7 @@ export default function SpecificationDialogBox({
     for (let index = 0; index < colorsArr.length; index += 1) {
       totalQty += Number(colorsArr[index].stock);
     }
-    updateColorStock(totalQty);
+    updateQuantity(totalQty);
     setColorInputData((prevState) => ({
       ...prevState,
       code: '',

@@ -163,12 +163,6 @@ export default function ProductNewEditForm({ currentProduct }) {
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
 
-  const updateSpecifications = (array) => {
-    setSpecifications((prevState) => ({
-      ...prevState,
-      sizes: array,
-    }));
-  };
 
   useEffect(() => {
     const getCategories = () => {
@@ -188,40 +182,21 @@ export default function ProductNewEditForm({ currentProduct }) {
   const updateQuantity = (val) => {
     setValue('quantity', val);
   };
-
-  // ADD SIZE LOGIC
-
-  const addSizeToArray = () => {
-    let totalQty = 0;
-    const sizesArr = [...specifications.sizes];
-    sizesArr.push(sizeInputData);
+  
+  const updateSpecifications = (array) => {
     setSpecifications((prevState) => ({
       ...prevState,
-      type: values.specificationType,
-      sizes: sizesArr,
+      sizes: array,
     }));
-    // Update quantity
-    for (let index = 0; index < sizesArr.length; index += 1) {
-      totalQty += Number(sizesArr[index].stock);
-    }
-    updateQuantity(totalQty);
-    setSizeInputData((prevState) => ({
-      ...prevState,
-      label: '',
-      price: 0,
-      stock: 0,
-      priceType: '+',
-      colors: [],
-    }));
-    setValue('specificationType', '');
   };
 
-  const changeSizeHandler = (e, inputData) => {
-    setSizeInputData({
-      ...sizeInputData,
-      [inputData]: e.target.value,
-    });
+  const updateColorSpecifications = (array) => {
+    setSpecifications((prevState) => ({
+      ...prevState,
+      colors: array,
+    }));
   };
+
 
   const onSubmit = handleSubmit(async (data) => {
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
@@ -488,6 +463,7 @@ export default function ProductNewEditForm({ currentProduct }) {
                   <SpecificationDetails
                     specifications={specifications}
                     updateSpecifications={updateSpecifications}
+                    updateColorSpecifications={updateColorSpecifications}
                     updateQuantity={updateQuantity}
                   />
                 </>
