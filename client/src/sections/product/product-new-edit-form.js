@@ -86,9 +86,11 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const [specifications, setSpecifications] = useState({
     type: '',
-    colors: '',
+    colors: [],
     sizes: [],
   });
+
+  console.log(specifications)
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -456,25 +458,6 @@ export default function ProductNewEditForm({ currentProduct }) {
                   <option value="no-specs">Non available</option>
                 </RHFSelect>
 
-                {/* <Button onClick={() => setColorDialog(true)} variant="outlined">
-                  Add color
-                </Button>
-                <div>
-                  <ul>
-                    {colorsArray.length !== 0
-                      ? colorsArray.map((el) => (
-                          <li key={Math.random() * 100}
-                          style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
-                            onClick={() => removeColorFromArray(el.colorCode)}
-                          >
-                            {el.colorName}:{' '}
-                            <span style={{ backgroundColor: el.colorCode, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                            <span style={{ fontSize: '.8rem' }}>{el.colorPrice ? ` ${el.colorPriceType ? el.colorPriceType : '+'} ${' '} ${el.colorPrice}` : 'free'}</span>
-                          </li>
-                        ))
-                      : ''}
-                  </ul>
-                </div> */}
               </div>
 
               <div>
@@ -487,27 +470,6 @@ export default function ProductNewEditForm({ currentProduct }) {
                   InputLabelProps={{ shrink: true }}
                 />
 
-                {/* <div>
-                  <Button onClick={() => setSizeDialog(true)} variant="outlined">
-                    Add size
-                  </Button>
-                </div>
-
-                <div>
-                  <ul>
-                    {sizesArray.length !== 0
-                      ? sizesArray.map((el) => (
-                          <li key={Math.random() * 100}
-                          style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
-                            onClick={() => removeSizeFromArray(el.sizeName)}
-                          >
-                            {el.sizeName}:{' '}
-                            <span style={{ fontSize: '.8rem', marginLeft: '10px' }}>{el.sizePrice ? el.sizePrice : ''}</span>
-                          </li>
-                        ))
-                      : ''}
-                  </ul>
-                </div> */}
               </div>
 
               {values.specifications === 'add-specs' ? (
@@ -713,72 +675,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     </>
   );
 
-  const sizeDialogFunc = () => {
-    if (
-      values.specificationType === 'add-size-and-color' ||
-      values.specificationType === 'add-sizes-only'
-    ) {
-      return (
-        <ConfirmDialog
-          open
-          onClose={() => setValue('specificationType', '')}
-          title="Add Size Specifications"
-          content={
-            <Grid container spacing={3} style={{ overflow: 'hidden' }}>
-              <Grid container mt={4}>
-                <Grid sm={6}>
-                  <Label>Size Label</Label>
-                  <Input
-                    type="text"
-                    id="sizename"
-                    onChange={(e) => changeSizeHandler(e, 'label')}
-                    value={sizeInputData.label}
-                  />
-                </Grid>
-                <Grid sm={6}>
-                  <Label>Price Addition/Subtraction</Label>
-                  <Input
-                    type="number"
-                    id="sizePrice"
-                    onChange={(e) => changeSizeHandler(e, 'price')}
-                    value={sizeInputData.price}
-                  />
-                </Grid>
-              </Grid>
-              <Grid container>
-                <Grid sm={6}>
-                  <Label>Price Type</Label>
-                  <Select
-                    onChange={(e) => changeSizeHandler(e, 'priceType')}
-                    value={sizeInputData.priceType}
-                  >
-                    <MenuItem value="+">+</MenuItem>
-                    <MenuItem value="-">-</MenuItem>
-                  </Select>
-                </Grid>
-                <Grid sm={6}>
-                  <Label>Available Stock</Label>
-                  <Input
-                    type="number"
-                    id="sizeStock"
-                    onChange={(e) => changeSizeHandler(e, 'stock')}
-                    value={sizeInputData.stock}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          }
-          action={
-            <Button variant="contained" color="success" onClick={addSizeToArray}>
-              Add
-            </Button>
-          }
-        />
-      );
-    }
-
-    return <></>;
-  };
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>

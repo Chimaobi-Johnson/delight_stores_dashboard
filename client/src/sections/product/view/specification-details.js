@@ -35,6 +35,38 @@ const SizeListContainer = styled(Grid)({
     }
   });
 
+  const ColorListContainer = styled(Grid)({
+    fontSize: '.7rem',
+    '> div > p': {
+        display: 'none',
+        position: 'absolute',
+        width: '100%',
+        backgroundColor: '#0000004a',
+        color: '#ffabab', 
+        top: '10%', 
+        left: '50%', 
+        transform: 'translate(-50%, -50%)', 
+        fontSize: '.7rem'
+    },
+    '> div': {
+        position: 'relative',
+        paddingLeft: '1rem',
+        transition: 'all 1s',
+        cursor: 'pointer'
+    },
+    '> div:hover': {
+        backgroundColor: '#000000a6',
+        '> p': {
+            display: 'block'
+        }
+    }
+  });
+
+  const ColorListUL = styled('ul')({
+    listStyle: 'none',
+    paddingLeft: '1rem'
+  })
+
 
 export default function SpecificationDetails({ specifications, updateSpecifications, updateQuantity }) {
 
@@ -160,42 +192,58 @@ export default function SpecificationDetails({ specifications, updateSpecificati
       );
 
     const renderSpecifications = () => {
-        if(specifications.type === 'colors-only') {
+        if(specifications.type === 'add-size-and-color' || specifications.type === 'add-sizes-only') {
             return (
-                <>
-                </>
+                <SizeListContainer container>
+                    {specifications.sizes !== 0 ? specifications.sizes.map(size => (
+                        <Grid key={Math.random() * 5} container>
+                            <p onClick={() => deleteSizeHandler(size.label)}>Click to delete</p>
+                            <Grid sm={12}>
+                                <p style={{border: '1px solid #eaeaea', marginBottom: '0', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
+                                <p style={{ fontSize: '.6rem' }}>Qty - {size.stock}</p>
+                            </Grid>
+                            <Grid sm={12}>
+                                <p style={{ fontSize: '.8rem', color: 'greenyellow', cursor: 'pointer' }} onClick={() => initAddColorDialog(size.label)}>add colors</p>
+                                <ul>
+                                  {size.colors.length !== 0
+                                ? size.colors.map((el) => (
+                                    <li key={Math.random() * 100}
+                                    style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
+                                    >
+                                        {el.label}:{' '}
+                                        <span style={{ backgroundColor: el.code, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
+                                        <span style={{ fontSize: '.8rem' }}>{el.price ? ` ${el.priceType ? el.priceType : '+'} ${' '} ${el.price}` : 'free'}</span>
+    
+                                    </li>
+                                    ))
+                                : ''}
+                                </ul>
+                            </Grid>
+                        </Grid>
+                    )) : ''}
+                </SizeListContainer>
             )
         }
-        return (
-            <SizeListContainer container>
-                {specifications.sizes !== 0 ? specifications.sizes.map(size => (
-                    <Grid key={Math.random() * 5} container>
-                        <p onClick={() => deleteSizeHandler(size.label)}>Click to delete</p>
-                        <Grid sm={12}>
-                            <p style={{border: '1px solid #eaeaea', marginBottom: '0', width: 'fit-content', padding: '3px 8px'}}>{size.label}</p>
-                            <p style={{ fontSize: '.6rem' }}>Qty - {size.stock}</p>
+        if(specifications.type === 'add-colors-only') {
+            return (
+                
+               <ColorListContainer container>
+                    {specifications.colors !== 0 ? specifications.colors.map(color => (
+                        <Grid key={Math.random() * 5} container>
+                            <p>Click to delete</p>
+                            <ColorListUL>
+                                <li>Label: {color.label}</li>
+                                <li>Color: <span style={{ backgroundColor: color.code, display: 'block', width: '15px', height: '15px', borderRadius: '100px' }} /></li>
+                                <li>Amount: {`${color.priceType} ${color.price ? color.price : 'free'}`} </li>
+                                <li>Stock: {color.stock} </li>
+                            </ColorListUL>
                         </Grid>
-                        <Grid sm={12}>
-                            <p style={{ fontSize: '.8rem', color: 'greenyellow', cursor: 'pointer' }} onClick={() => initAddColorDialog(size.label)}>add colors</p>
-                            <ul>
-                              {size.colors.length !== 0
-                            ? size.colors.map((el) => (
-                                <li key={Math.random() * 100}
-                                style={{ display: 'flex', alignItems: 'center', fontSize: '.8rem', cursor: 'pointer' }}
-                                >
-                                    {el.label}:{' '}
-                                    <span style={{ backgroundColor: el.code, width: '16px', height: '16px', marginLeft: '10px', marginRight: '5px', borderRadius: '100%', display: 'block' }} />
-                                    <span style={{ fontSize: '.8rem' }}>{el.price ? ` ${el.priceType ? el.priceType : '+'} ${' '} ${el.price}` : 'free'}</span>
-
-                                </li>
-                                ))
-                            : ''}
-                            </ul>
-                        </Grid>
-                    </Grid>
-                )) : ''}
-            </SizeListContainer>
-        )
+                    )) : ''}
+                </ColorListContainer>
+            )
+        }
+        return (<></>)
+        
     }
 
     return (
