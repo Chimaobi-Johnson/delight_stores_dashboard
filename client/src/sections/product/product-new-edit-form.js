@@ -120,7 +120,6 @@ export default function ProductNewEditForm({ currentProduct }) {
       deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
-      published: currentProduct?.name || true,
     }),
     [currentProduct]
   );
@@ -144,13 +143,13 @@ export default function ProductNewEditForm({ currentProduct }) {
     if (currentProduct) {
       reset(defaultValues);
       setSpecifications(currentProduct.specifications);
+      setPublish(currentProduct.publish)
     }
   }, [currentProduct, defaultValues, reset]);
 
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
 
-  console.log(specifications);
   useEffect(() => {
     const getCategories = () => {
       axios
@@ -165,6 +164,10 @@ export default function ProductNewEditForm({ currentProduct }) {
 
     getCategories();
   }, []);
+
+  const changePublishMethod = (e) => {
+    setPublish(e.target.checked);
+  };
 
   const updateQuantity = (val) => {
     setValue('quantity', val);
@@ -185,9 +188,6 @@ export default function ProductNewEditForm({ currentProduct }) {
   };
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(values.specops)
-
-
 
     const crudType = currentProduct ? `update/?id=${currentProduct._id}` : 'add';
     setResData(null);
@@ -195,8 +195,6 @@ export default function ProductNewEditForm({ currentProduct }) {
       values.specops === 'no-specs' ||
       (specifications.colors.length === 0 && specifications.sizes.length === 0)
     ) {
-      console.log('passed')
-
       setSpecifications((prevState) => ({
         ...prevState,
         type: '',
@@ -624,16 +622,14 @@ export default function ProductNewEditForm({ currentProduct }) {
     </>
   );
 
-  const changePublishMethod = (e) => {
-    setPublish(e.target.checked);
-  };
+
 
   const renderActions = (
     <>
       {mdUp && <Grid md={4} />}
       <Grid xs={12} md={8} sx={{ display: 'flex', alignItems: 'center' }}>
         <FormControlLabel
-          control={<Switch defaultChecked />}
+          control={<Switch checked={publish} />}
           label="Publish"
           onChange={changePublishMethod}
           sx={{ flexGrow: 1, pl: 3 }}

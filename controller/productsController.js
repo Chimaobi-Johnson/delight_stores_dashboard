@@ -155,6 +155,7 @@ exports.updateProduct = async (req, res) => {
         productData.newLabel = JSON.parse(req.body.newLabel);
         productData.saleLabel = JSON.parse(req.body.saleLabel);
         productData.quantity = req.body.quantity;
+        productData.publish = req.body.publish;
         productData.available = req.body.quantity;
         productData.sku = req.body.sku;
         productData.code = req.body.code;
@@ -180,7 +181,6 @@ exports.updateProduct = async (req, res) => {
               message: "Product may have been deleted, create new product",
             });
         } else {
-          console.log(req.body.specifications)
 
           data.name = req.body.name;
           data.price = req.body.price;
@@ -197,6 +197,8 @@ exports.updateProduct = async (req, res) => {
           data.sku = req.body.sku;
           data.code = req.body.code;
           data.category = req.body.category;
+          data.publish = req.body.publish;
+
           return data.save();
         }
       })

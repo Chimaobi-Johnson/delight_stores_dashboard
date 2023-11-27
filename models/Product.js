@@ -31,7 +31,7 @@ const productSchema = new Schema(
     },
     imagesUrl: [ String ],
     imagesId: [ String ],
-    published: {
+    publish: {
       type: Boolean,
       default: true
     },

@@ -39,7 +39,7 @@ export default function ProductTableRow({
     coverUrl,
     imagesUrl,
     category,
-    published,
+    publish,
     available,
     stock,
     quantity,
@@ -118,8 +118,8 @@ export default function ProductTableRow({
         <TableCell>{fCurrency(price)}</TableCell>
 
         <TableCell>
-          <Label variant="soft" color={published ? 'info' : 'default'}>
-            {published ? 'Published' : 'Pending'}
+          <Label variant="soft" color={publish ? 'info' : 'default'}>
+            {publish ? 'Published' : 'Pending'}
           </Label>
         </TableCell>
 

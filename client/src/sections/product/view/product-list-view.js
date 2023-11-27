@@ -55,7 +55,7 @@ const TABLE_HEAD = [
 ];
 
 const PUBLISH_OPTIONS = [
-  { value: 'published', label: 'Published' },
+  { value: 'publish', label: 'Publish' },
   { value: 'draft', label: 'Draft' },
 ];
 
