@@ -54,17 +54,14 @@ const productSchema = new Schema(
     totalSold: Number,
     purchases: { type: Number },
     purchasedBy: [ String ],
-    colors: [ {
-      type: Object
-    } ],
     tags: [ String ],
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category"    
     },
-    sizes: [ {
+    specifications: {
       type: Object
-    } ],
+    },
     gender: [ {
       type: Object
     } ],

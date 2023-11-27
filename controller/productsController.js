@@ -68,9 +68,8 @@ exports.storeProduct = async (req, res) => {
       ...req.body,
       available: req.body.quantity,
       gender: JSON.parse(req.body.gender),
-      colors: JSON.parse(req.body.colors),
+      specifications: JSON.parse(req.body.specifications),
       tags: JSON.parse(req.body.tags),
-      sizes: JSON.parse(req.body.sizes),
       newLabel: JSON.parse(req.body.newLabel),
       saleLabel: JSON.parse(req.body.saleLabel),
       imagesUrl: imagesUrl,
@@ -150,10 +149,9 @@ exports.updateProduct = async (req, res) => {
         productData.subheading = req.body.subheading;
         productData.description = req.body.description;
         productData.deliveryStatus = req.body.deliveryStatus;
-        productData.sizes = JSON.parse(req.body.sizes);
         productData.tags = JSON.parse(req.body.tags);
         productData.gender = JSON.parse(req.body.gender);
-        productData.colors = JSON.parse(req.body.colors);
+        productData.specifications = JSON.parse(req.body.specifications);
         productData.newLabel = JSON.parse(req.body.newLabel);
         productData.saleLabel = JSON.parse(req.body.saleLabel);
         productData.quantity = req.body.quantity;
@@ -187,10 +185,9 @@ exports.updateProduct = async (req, res) => {
           data.subheading = req.body.subheading;
           data.description = req.body.description;
           data.deliveryStatus = req.body.deliveryStatus;
-          data.sizes = JSON.parse(req.body.sizes);
           data.tags = JSON.parse(req.body.tags);
           data.gender = JSON.parse(req.body.gender);
-          data.colors = JSON.parse(req.body.colors);
+          data.specifications = JSON.parse(req.body.specifications);
           data.newLabel = JSON.parse(req.body.newLabel);
           data.saleLabel = JSON.parse(req.body.saleLabel);
           data.quantity = req.body.quantity;

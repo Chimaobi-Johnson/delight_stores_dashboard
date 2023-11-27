@@ -73,15 +73,6 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   // const [includeTaxes, setIncludeTaxes] = useState(false);
 
-  const [sizeInputData, setSizeInputData] = useState({
-    label: '',
-    price: 0,
-    stock: 0,
-    priceType: '+',
-    colors: [],
-  });
-  const [colorsArray, setColorsArray] = useState([]);
-  const [sizesArray, setSizesArray] = useState([]);
   const [publish, setPublish] = useState(true);
 
   const [specifications, setSpecifications] = useState({
@@ -89,8 +80,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     colors: [],
     sizes: [],
   });
-
-  console.log(specifications)
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -127,14 +116,13 @@ export default function ProductNewEditForm({ currentProduct }) {
       taxes: currentProduct?.taxes || 0,
       gender: currentProduct?.gender || '',
       category: currentProduct?.category || '',
-      colors: currentProduct?.colors || [],
-      sizes: currentProduct?.sizes || [],
+      specifications: currentProduct?.specifications || specifications,
       deliveryStatus: currentProduct?.deliveryStatus || 'ready',
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
       published: currentProduct?.name || true,
     }),
-    [currentProduct]
+    [currentProduct, specifications]
   );
 
   const methods = useForm({
@@ -152,13 +140,12 @@ export default function ProductNewEditForm({ currentProduct }) {
 
   const values = watch();
 
-  useEffect(() => {
-    if (currentProduct) {
-      reset(defaultValues);
-      setColorsArray(currentProduct.colors);
-      setSizesArray(currentProduct.sizes);
-    }
-  }, [currentProduct, defaultValues, reset]);
+  // useEffect(() => {
+  //   if (currentProduct) {
+  //     reset(defaultValues);
+  //     setSpecifications(currentProduct.specifications);
+  //   }
+  // }, [currentProduct, specifications, defaultValues, reset]);
 
   const [categories, setCategories] = useState(null);
   const [resData, setResData] = useState(null);
@@ -210,7 +197,7 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append('description', data.description);
     formData.append('code', data.code);
     formData.append('category', data.category);
-    formData.append('colors', JSON.stringify(colorsArray));
+    formData.append('specifications', JSON.stringify(specifications));
     formData.append('gender', JSON.stringify(data.gender));
     formData.append('quantity', data.quantity);
     formData.append('priceSale', data.priceSale);
@@ -220,7 +207,6 @@ export default function ProductNewEditForm({ currentProduct }) {
     formData.append('newLabel', JSON.stringify(data.newLabel));
     formData.append('saleLabel', JSON.stringify(data.saleLabel));
     formData.append('tags', JSON.stringify(data.tags));
-    formData.append('sizes', JSON.stringify(sizesArray));
 
     if (currentProduct) {
       formData.append('imagesId', data.imagesId);
@@ -233,8 +219,12 @@ export default function ProductNewEditForm({ currentProduct }) {
       const result = await axios.post(`/api/product/${crudType}`, formData);
       if (result.status === 201 || result.status === 200) {
         reset();
-        setColorsArray([]);
-        setSizesArray([]);
+        setSpecifications((prevState) => ({
+          ...prevState,
+          type: '',
+          sizes: [],
+          colors: []
+        }));
         window.scrollTo(0, 0);
         setResData({
           type: 'info',
