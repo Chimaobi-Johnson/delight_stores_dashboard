@@ -72,10 +72,10 @@ export default function SpecificationDetails({ specifications, updateSpecificati
 
     const [colorDialog, setColorDialog] = useState(false);
     const [colorInputData, setColorInputData] = useState({
-        code: '',
+        code: '#000000',
         label: '',
         priceType: '+',
-        price: null,
+        price: 0,
         stock: 0,
       });
 
@@ -102,15 +102,14 @@ export default function SpecificationDetails({ specifications, updateSpecificati
     updateSpecifications(sizesArr)
     setColorInputData((prevState) => ({
         ...prevState,
-        code: '',
+        code: '#000000',
         label: '',
         priceType: '+',
-        price: null,
+        price: 0,
         stock: 0,
     }))
     setColorDialog(false);
 
-    console.log(sizesArr)
   };
 
   const deleteSizeHandler = (size) => {

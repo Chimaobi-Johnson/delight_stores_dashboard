@@ -23,7 +23,6 @@ export default function SpecificationDialogBox({
     priceType: '+',
     colors: [],
   });
-  const [currentSize, setCurrentSize] = useState(null);
 
   const [colorInputData, setColorInputData] = useState({
     code: '#000000',
