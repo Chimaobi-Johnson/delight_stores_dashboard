@@ -55,7 +55,7 @@ export default function ProductDetailsSummary({
     // totalReviews,
     inventoryType,
     description,
-    discountDetails
+    discountDetails,
     // subDescription,
   } = product;
 
@@ -108,36 +108,37 @@ export default function ProductDetailsSummary({
   });
 
   // const handleAddCart = useCallback(() => {
-    // try {
-    //   onAddCart?.({
-    //     ...values,
-    //     colors: [values.colors],
-    //     subTotal: values.price * values.quantity,
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
+  // try {
+  //   onAddCart?.({
+  //     ...values,
+  //     colors: [values.colors],
+  //     subTotal: values.price * values.quantity,
+  //   });
+  // } catch (error) {
+  //   console.error(error);
+  // }
   // }, [onAddCart, values]);
 
-  const renderPrice = (
-    <Box sx={{ typography: 'h5' }}>
-      {discountDetails.length !== 0 ? discountDetails[0].active && (
-        <Box
-          component="span"
-          sx={{
-            color: 'text.disabled',
-            textDecoration: 'line-through',
-            mr: 0.5,
-          }}
-        >
-          {fCurrency(price)}
+  const renderPrice = () => {
+    if (discountDetails.length !== 0 && discountDetails[0].active) {
+      return (
+        <Box sx={{ typography: 'h5' }}>
+          <Box
+            component="span"
+            sx={{
+              color: 'text.disabled',
+              textDecoration: 'line-through',
+              mr: 0.5,
+            }}
+          >
+            {fCurrency(price)}
+          </Box>
+          {fCurrency(priceSale)}
         </Box>
-      ) : fCurrency(price)
+      );
     }
-
-      {fCurrency(priceSale)}
-    </Box>
-  );
+    return <Box sx={{ typography: 'h5' }}>{fCurrency(price)}</Box>;
+  };
 
   const renderShare = (
     <Stack direction="row" spacing={3} justifyContent="center">
@@ -330,7 +331,7 @@ export default function ProductDetailsSummary({
 
           {/* {renderRating} */}
 
-          {renderPrice}
+          {renderPrice()}
 
           {renderSubDescription}
         </Stack>
