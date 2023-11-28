@@ -62,7 +62,7 @@ export default function AddDiscountModal({ editing, open, onClose }) {
 
   const fetchProducts = (value) => {
     axios
-      .get('/api/products')
+      .get('/api/products?type=all')
       .then((res) => {
         const result = res.data.products.filter(
           (product) =>

@@ -130,11 +130,12 @@ export default function ProductDetailsSummary({
             mr: 0.5,
           }}
         >
-          {fCurrency(priceSale)}
+          {fCurrency(price)}
         </Box>
-      ) : ''}
+      ) : fCurrency(price)
+    }
 
-      {fCurrency(price)}
+      {fCurrency(priceSale)}
     </Box>
   );
 
