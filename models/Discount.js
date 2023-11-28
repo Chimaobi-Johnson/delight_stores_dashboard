@@ -20,6 +20,12 @@ const discountSchema = new Schema(
       type: String,
       required: true,
     },
+    label: {
+      type: String,
+    },
+    code: {
+      type: String,
+    },
     percentage: {
       type: String,
       required: true,

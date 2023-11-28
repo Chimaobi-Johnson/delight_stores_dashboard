@@ -55,6 +55,8 @@ export default function AddDiscountModal({ editing, open, onClose }) {
 
   const [inputData, setInputData] = useState({
     title: '',
+    label: '',
+    code: '',
     percentage: null,
     dateFrom: null,
     dateTo: null,
@@ -212,6 +214,20 @@ export default function AddDiscountModal({ editing, open, onClose }) {
               defaultValue=""
             />
             <TextField
+              id="outlined-required"
+              value={inputData.label}
+              onChange={(e) => changeInputDataHandler(e, 'label')}
+              label="Discount Label (e.g December Discount)"
+              defaultValue=""
+            />
+            <TextField
+              id="outlined-required"
+              value={inputData.code}
+              onChange={(e) => changeInputDataHandler(e, 'code')}
+              label="Discount Code"
+              defaultValue=""
+            />
+            <TextField
               id="outlined-number"
               label="Percentage (0 - 100)"
               type="number"
@@ -247,7 +263,7 @@ export default function AddDiscountModal({ editing, open, onClose }) {
 
   const submitDiscountForm = () => {
     if(!inputData.title || !inputData.percentage || !inputData.dateFrom || !inputData.dateTo) {
-        alert('Please fill in all fields')
+        alert('Please fill in all required fields')
         return
     }
     if(inputData.percentage > 100 || inputData.percentage < 0) {
@@ -263,6 +279,8 @@ export default function AddDiscountModal({ editing, open, onClose }) {
     formData.append('productCategory', selectedCategory)
     formData.append('selectedProductId', selectedProductId)
     formData.append('title', inputData.title)
+    formData.append('label', inputData.label)
+    formData.append('code', inputData.code)
     formData.append('percentage', inputData.percentage)
     formData.append('dateFrom', JSON.stringify(inputData.dateFrom))
     formData.append('dateTo', JSON.stringify(inputData.dateTo))
