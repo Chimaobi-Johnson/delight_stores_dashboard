@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
+// import { useState } from 'react';
+
 // @mui
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -21,6 +23,7 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { useState, useEffect } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -41,16 +44,27 @@ export default function ProductTableRow({
     category,
     publish,
     available,
-    stock,
     quantity,
     categoryDetails,
     createdAt,
-    inventoryType,
   } = row;
 
   const confirm = useBoolean();
 
   const popover = usePopover();
+
+  
+  const [inventoryType, setInventoryType] = useState('in-stock')
+
+  useEffect(() => {
+    if(available === 0) {
+      setInventoryType('out-of-stock')
+    } else if (available > 0 && available < 3) {
+      setInventoryType('low-stock')
+    } else {
+      setInventoryType('in-stock')
+    }
+  }, [available])
 
   return (
     <>
@@ -106,8 +120,8 @@ export default function ProductTableRow({
             value={(available * 100) / quantity}
             variant="determinate"
             color={
-              (inventoryType === 'out of stock' && 'error') ||
-              (inventoryType === 'low stock' && 'warning') ||
+              (inventoryType === 'out-of-stock' && 'error') ||
+              (inventoryType === 'low-stock' && 'warning') ||
               'success'
             }
             sx={{ mb: 1, height: 6, maxWidth: 80 }}
