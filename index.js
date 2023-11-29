@@ -50,8 +50,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 app.use((req, res, next) => {
+  // add in config file dynamically
   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Origin', 'https://delight-stores-dashboard.herokuapp.com/api');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader(
     'Access-Control-Allow-Methods',
