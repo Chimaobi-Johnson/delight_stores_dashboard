@@ -8,8 +8,17 @@ const passport = require('passport');
 const cookieSession = require('cookie-session');
 const keys = require('./config/keys');
 const multer = require('./utils/multer');
+const cors = require('cors')
 
 const app = express();
+
+app.use(
+  cors({
+    origin: 'https://delight-stores-dashboard.herokuapp.com',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true
+  })
+)
 
 
 
@@ -49,18 +58,18 @@ app.use(bodyParser.json()) // to parse incoming json data
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-app.use((req, res, next) => {
-  // add in config file dynamically
-  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  // res.setHeader('Access-Control-Allow-Credentials', true)
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'OPTIONS, GET, POST, PUT, PATCH, DELETE'
-  );
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  next();
-});
+// app.use((req, res, next) => {
+//   // add in config file dynamically
+//   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   // res.setHeader('Access-Control-Allow-Credentials', true)
+//   res.setHeader(
+//     'Access-Control-Allow-Methods',
+//     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
+//   );
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
 
 app.use(authRoutes);
 app.use(userRoutes);
