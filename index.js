@@ -53,7 +53,7 @@ app.use((req, res, next) => {
   // add in config file dynamically
   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Credentials', true)
+  // res.setHeader('Access-Control-Allow-Credentials', true)
   res.setHeader(
     'Access-Control-Allow-Methods',
     'OPTIONS, GET, POST, PUT, PATCH, DELETE'
