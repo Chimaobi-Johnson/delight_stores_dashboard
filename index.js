@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://delight-stores-dashboard.herokuapp.com',
+    origin: 'https://delight-stores-dashboard.herokuapp.com/',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
   })
