@@ -1,9 +1,9 @@
 module.exports.productReceiptConfirmation = (data) => {
-  const { firstName, lastName, location, deliveryType, email, products, paymentRef } = data;
+  const { firstName, lastName, city, streetname, houseno, deliveryType, email, products, paymentRef } = data;
 
-  deliveryLocation = 'Dlight stores - Pick up'
-  if(location) {
-    deliveryLocation = location
+  let deliveryLocation = 'Dlight stores - Pick up'
+  if(deliveryType === 'delivery') {
+    deliveryLocation = houseno + ' ' + streetname + ' ' + city;
   }
 
   const receiptInfo = {
@@ -19,6 +19,7 @@ module.exports.productReceiptConfirmation = (data) => {
   let cDate = current.getDate() + '-' + (current.getMonth() + 1) + '-' + current.getFullYear();
   let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
   let dateTime = cDate + ' ' + cTime;
+
 
   const receiptHtml = `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
@@ -205,8 +206,8 @@ body {font-family: 'Poppins', sans-serif;}
     <tbody>
       <tr>
         <td style="padding:0px 40px 30px 40px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><h4 style="text-align: inherit; font-family: inherit">SHIP TO:</h4>
-<div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Name:</strong></span><span style="color: #80817f; font-size: 12px">${firstName} ${lastName}</span></div>
-<div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Address:</strong></span><span style="color: #80817f; font-size: 12px">${deliveryLocation}</span></div>
+<div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Name: </strong></span><span style="color: #80817f; font-size: 12px">${firstName} ${lastName}</span></div>
+<div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Address: </strong></span><span style="color: #80817f; font-size: 12px">${deliveryLocation}</span></div>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Receipt No: </strong></span><span style="color: #80817f; font-size: 12px">${paymentRef.reference}</span></div>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Est. Delivery time</strong></span><span style="color: #80817f; font-size: 12px">: ${receiptInfo.estDeliveryTime}</span></div><div></div></div></td>
       </tr>
@@ -268,120 +269,304 @@ body {font-family: 'Poppins', sans-serif;}
       </tr>
     </tbody>
   </table>
-  <table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1">
-    <tbody>
-      <tr>
-        <td style="padding:0px 40px 0px 40px;" role="module-content" height="100%" valign="top" bgcolor="">
-          <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" height="2px" style="line-height:2px; font-size:2px;">
-            <tbody>
-              <tr>
-                <td style="padding:0px 0px 2px 0px;" bgcolor="#80817f"></td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" role="module" data-type="columns" style="padding:0px 40px 0px 40px;" bgcolor="#FFFFFF" data-distribution="1,1,1">
-    <tbody>
-      <tr role="module-content">
-        <td height="100%" valign="top"><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-0">
+    ${products.map(product => (
+      `
+      <table
+      class="module"
+      role="module"
+      data-type="divider"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      style="table-layout: fixed"
+      data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1"
+    >
       <tbody>
         <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.2" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">Villa Floral (120 mL)</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
+          <td
+            style="padding: 0px 40px 0px 40px"
+            role="module-content"
+            height="100%"
+            valign="top"
+            bgcolor=""
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              align="center"
+              width="100%"
+              height="2px"
+              style="
+                line-height: 2px;
+                font-size: 2px;
+              "
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style="padding: 0px 0px 2px 0px"
+                    bgcolor="#80817f"
+                  ></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
         </tr>
       </tbody>
-    </table><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-1">
+    </table>
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      align="center"
+      width="100%"
+      role="module"
+      data-type="columns"
+      style="padding: 0px 40px 0px 40px"
+      bgcolor="#FFFFFF"
+      data-distribution="1,1,1"
+    >
       <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.2" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">1</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
+        <tr role="module-content">
+          <td height="100%" valign="top">
+            <table
+              width="173"
+              style="
+                width: 173px;
+                border-spacing: 0;
+                border-collapse: collapse;
+                margin: 0px 0px 0px 0px;
+              "
+              cellpadding="0"
+              cellspacing="0"
+              align="left"
+              border="0"
+              bgcolor=""
+              class="column column-0"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style="
+                      padding: 0px;
+                      margin: 0px;
+                      border-spacing: 0;
+                    "
+                  >
+                    <table
+                      class="module"
+                      role="module"
+                      data-type="text"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      width="100%"
+                      style="table-layout: fixed"
+                      data-muid="64573b96-209a-4822-93ec-5c5c732af15c.2"
+                      data-mc-module-version="2019-10-22"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            style="
+                              padding: 15px 0px 15px
+                                0px;
+                              line-height: 22px;
+                              text-align: inherit;
+                            "
+                            height="100%"
+                            valign="top"
+                            bgcolor=""
+                            role="module-content"
+                          >
+                            <div>
+                              <div
+                                style="
+                                  font-family: inherit;
+                                  text-align: center;
+                                "
+                              >
+                                <span
+                                  style="
+                                    color: #80817f;
+                                    font-size: 12px;
+                                  "
+                                  >${product.name} <span> (${product.size ? product.size.label : ''} ${product.color ? product.color.label : '' })</span></span
+                                >
+                              </div>
+                              <div></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              width="173"
+              style="
+                width: 173px;
+                border-spacing: 0;
+                border-collapse: collapse;
+                margin: 0px 0px 0px 0px;
+              "
+              cellpadding="0"
+              cellspacing="0"
+              align="left"
+              border="0"
+              bgcolor=""
+              class="column column-1"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style="
+                      padding: 0px;
+                      margin: 0px;
+                      border-spacing: 0;
+                    "
+                  >
+                    <table
+                      class="module"
+                      role="module"
+                      data-type="text"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      width="100%"
+                      style="table-layout: fixed"
+                      data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.2"
+                      data-mc-module-version="2019-10-22"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            style="
+                              padding: 15px 0px 15px
+                                0px;
+                              line-height: 22px;
+                              text-align: inherit;
+                            "
+                            height="100%"
+                            valign="top"
+                            bgcolor=""
+                            role="module-content"
+                          >
+                            <div>
+                              <div
+                                style="
+                                  font-family: inherit;
+                                  text-align: center;
+                                "
+                              >
+                                <span
+                                  style="
+                                    color: #80817f;
+                                    font-size: 12px;
+                                  "
+                                  >${product.quantity}</span
+                                >
+                              </div>
+                              <div></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <table
+              width="173"
+              style="
+                width: 173px;
+                border-spacing: 0;
+                border-collapse: collapse;
+                margin: 0px 0px 0px 0px;
+              "
+              cellpadding="0"
+              cellspacing="0"
+              align="left"
+              border="0"
+              bgcolor=""
+              class="column column-2"
+            >
+              <tbody>
+                <tr>
+                  <td
+                    style="
+                      padding: 0px;
+                      margin: 0px;
+                      border-spacing: 0;
+                    "
+                  >
+                    <table
+                      class="module"
+                      role="module"
+                      data-type="text"
+                      border="0"
+                      cellpadding="0"
+                      cellspacing="0"
+                      width="100%"
+                      style="table-layout: fixed"
+                      data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.1.1"
+                      data-mc-module-version="2019-10-22"
+                    >
+                      <tbody>
+                        <tr>
+                          <td
+                            style="
+                              padding: 15px 0px 15px
+                                0px;
+                              line-height: 22px;
+                              text-align: inherit;
+                            "
+                            height="100%"
+                            valign="top"
+                            bgcolor=""
+                            role="module-content"
+                          >
+                            <div>
+                              <div
+                                style="
+                                  font-family: inherit;
+                                  text-align: center;
+                                "
+                              >
+                                <span
+                                  style="
+                                    color: #80817f;
+                                    font-size: 12px;
+                                  "
+                                  >N${product.price}</span
+                                >
+                              </div>
+                              <div></div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
         </tr>
       </tbody>
-    </table><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-2">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.1.1" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">N175.90</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
-        </tr>
-      </tbody>
-    </table></td>
-      </tr>
-    </tbody>
-  </table><table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1.2">
-    <tbody>
-      <tr>
-        <td style="padding:0px 40px 0px 40px;" role="module-content" height="100%" valign="top" bgcolor="">
-          <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" height="1px" style="line-height:1px; font-size:1px;">
-            <tbody>
-              <tr>
-                <td style="padding:0px 0px 1px 0px;" bgcolor="#80817f"></td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table><table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" role="module" data-type="columns" style="padding:0px 40px 0px 40px;" bgcolor="#FFFFFF" data-distribution="1,1,1">
-    <tbody>
-      <tr role="module-content">
-        <td height="100%" valign="top"><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-0">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.2.1" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">Port Toulon (40 mL)</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
-        </tr>
-      </tbody>
-    </table><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-1">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.2.1" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">1</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
-        </tr>
-      </tbody>
-    </table><table width="173" style="width:173px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-2">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.1.1.1" data-mc-module-version="2019-10-22">
-    <tbody>
-      <tr>
-        <td style="padding:15px 0px 15px 0px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #80817f; font-size: 12px">N35.90</span></div><div></div></div></td>
-      </tr>
-    </tbody>
-  </table></td>
-        </tr>
-      </tbody>
-    </table></td>
-      </tr>
-    </tbody>
-  </table><table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1.2.1">
+    </table>
+      `
+    ))}
+
+    
+    
+    
+  <table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1.2.1">
     <tbody>
       <tr>
         <td style="padding:0px 40px 0px 40px;" role="module-content" height="100%" valign="top" bgcolor="">
@@ -408,7 +593,7 @@ body {font-family: 'Poppins', sans-serif;}
         <td style="padding:10px 30px 10px 30px; line-height:22px; text-align:inherit; background-color:#80817f;" height="100%" valign="top" bgcolor="#80817f" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="color: #ffffff; font-size: 12px"><strong>${receiptInfo.bottomText}</strong></span></div><div></div></div></td>
       </tr>
     </tbody>
-  </table><div data-role="module-unsubscribe" class="module" role="module" data-type="unsubscribe" style="background-color:#ffffff; color:#4a4a4a; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;" data-muid="4e838cf3-9892-4a6d-94d6-170e474d21e5"><div class="Unsubscribe--addressLine"><p class="Unsubscribe--senderName" style="font-size:12px; line-height:20px;">{{Sender_Name}}</p><p style="font-size:12px; line-height:20px;"><span class="Unsubscribe--senderAddress">{{Sender_Address}}</span>, <span class="Unsubscribe--senderCity">{{Sender_City}}</span>, <span class="Unsubscribe--senderState">{{Sender_State}}</span> <span class="Unsubscribe--senderZip">{{Sender_Zip}}</span></p></div><p style="font-size:12px; line-height:20px;"><a class="Unsubscribe--unsubscribeLink" href="{{{unsubscribe}}}" target="_blank" style="color:#c8c8c8;">Unsubscribe</a> - <a href="{{{unsubscribe_preferences}}}" target="_blank" class="Unsubscribe--unsubscribePreferences" style="color:#c8c8c8;">Unsubscribe Preferences</a></p></div><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="04084f31-d714-4785-98c7-39de4df9fb7b">
+  </table>
       <tbody>
         <tr>
           <td align="center" bgcolor="#ffffff" class="outer-td" style="padding:20px 0px 20px 0px; background-color:#ffffff;">
