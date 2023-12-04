@@ -46,7 +46,7 @@ exports.getAllProducts = (req, res) => {
         console.log(err);
       });
   } else {
-    
+
     // if query type is all, query is coming from the admin dashboard
     // therefore display all products, else display only published
     const queryType = req.query.type === "all" ? {} : { publish: true };

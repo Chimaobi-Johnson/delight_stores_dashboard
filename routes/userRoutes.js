@@ -1,6 +1,7 @@
 const express = require('express');
 const usersController = require('../controller/usersController');
 const { isLoggedIn } = require('../middleware/isAuth');
+const cors = require('cors')
 
 
 const router = express.Router();

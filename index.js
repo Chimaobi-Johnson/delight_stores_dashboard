@@ -14,7 +14,8 @@ const app = express();
 
 app.use(
   cors({
-    origin: 'https://delighthomewarestores.com',
+    // origin: 'https://delighthomewarestores.com',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
   })
