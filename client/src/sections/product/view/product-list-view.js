@@ -147,7 +147,11 @@ export default function ProductListView() {
         window.location.reload();
       }
     }).catch(err => {
-      alert('Error deleting product. Check connection or try again later');
+      if(err.response.status === 401) {
+        alert('You are not authorized to make this change');
+      } else {
+        alert('Error deleting product. Check connection or try again later');
+      }
       confirm.onFalse();
       console.log(err)
     })

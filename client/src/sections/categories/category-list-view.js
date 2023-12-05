@@ -94,7 +94,11 @@ export default function CategoryListView() {
       })
       .catch((err) => {
         setLoading(false);
-        setErrorMessage('Server eror. Check connection or try again later');
+        if(err.response.status === 401) {
+          setErrorMessage('You are not authorized to make this change');
+        } else {
+          setErrorMessage('Server eror. Check connection or try again later');
+        }
         confirm.onFalse()
       });
   };

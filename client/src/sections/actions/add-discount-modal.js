@@ -294,6 +294,9 @@ export default function AddDiscountModal({ editing, open, onClose }) {
         }
     }).catch(err => {
         setLoading(false)
+        if(err.response.status === 401) {
+         alert('You are not allowed to make this change')
+        }
 
         console.log(err)
     })

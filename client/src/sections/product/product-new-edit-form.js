@@ -251,10 +251,18 @@ export default function ProductNewEditForm({ currentProduct }) {
       }
     } catch (error) {
       window.scrollTo(0, 0);
-      setResData({
-        type: 'error',
-        title: 'Server error. check connection or try again later',
-      });
+      if(error.response.status === 401) {
+        setResData({
+          type: 'error',
+          title: 'You are not authorized to make this change',
+        });
+      } else {
+        setResData({
+          type: 'error',
+          title: 'Server error. check connection or try again later',
+        });
+      }
+
       console.log(error);
     }
   });

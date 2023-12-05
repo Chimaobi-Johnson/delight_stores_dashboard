@@ -160,7 +160,10 @@ const [ inputData, setInputData] = useState({
         setLoading(false)
         if(error.response.status === 409) {
             alert('Item already exist!')
-        } else {
+        } else if(error.response.status === 401) {
+          alert('You are not authorized to make this change')
+        }
+        else {
             alert('Error adding location. Check connection or try again later')
         }
         console.log(error.response)

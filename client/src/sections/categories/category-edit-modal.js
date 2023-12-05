@@ -116,7 +116,11 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
         }).catch(err => {
             console.log(err)
             setIsSubmitting(false)
-            setErrorMessage('Server eror. Check connection or try again later')
+            if(err.response.status === 401) {
+              setErrorMessage('You are not allowed to make this change')
+            } else {
+              setErrorMessage('Server eror. Check connection or try again later')
+            }
         })
     } else {
         axios.post('/api/category/new', formData)
@@ -136,7 +140,11 @@ export default function CategoryQuickEditForm({ category, editing, open, onClose
         }).catch(err => {
             console.log(err)
             setIsSubmitting(false)
-            setErrorMessage('Server eror. Check connection or try again later')
+            if(err.response.status === 401) {
+              setErrorMessage('You are not allowed to make this change')
+            } else {
+              setErrorMessage('Server eror. Check connection or try again later')
+            }
         })
     }
 

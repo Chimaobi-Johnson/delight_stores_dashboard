@@ -25,6 +25,8 @@ export default function LocationItem (props) {
             console.log(error)
             if(error.response.status === 404) {
                 alert('Item has been deleted already')
+            } else if (error.response.status === 401) {
+                alert('You are not authorized to make this change')
             } else {
                 alert('Error deleting location. Check connection or try again')
             }
