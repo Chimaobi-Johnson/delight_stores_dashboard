@@ -8,9 +8,12 @@ exports.getAllProducts = (req, res) => {
   const currentPage = req.query.page || 1; // if page is not set default to page 1
   const perPage = 25;
   let totalItems;
+  const queryType = req.query.type === "all" ? {} : { publish: true };
+
   if (req.query.id) {
     Product.aggregate([
       { $match: { category: new ObjectId(req.query.id) } },
+      { $match: queryType },
       {
         $lookup: {
           from: "categories",
@@ -27,17 +30,8 @@ exports.getAllProducts = (req, res) => {
           as: "discountDetails",
         },
       },
-      {
-        $project: {
-          name: 1,
-          price: 1,
-          imagesUrl: 1,
-          category: 1,
-          categoryDetails: 1,
-          discount: 1,
-          discountDetails: 1,
-        },
-      },
+      { $project: { imagesId: 0 } },
+
     ])
       .then((products) => {
         res.status(200).send({ products: products });
@@ -49,7 +43,6 @@ exports.getAllProducts = (req, res) => {
 
     // if query type is all, query is coming from the admin dashboard
     // therefore display all products, else display only published
-    const queryType = req.query.type === "all" ? {} : { publish: true };
     Product.aggregate([
       { $match: queryType },
       {
