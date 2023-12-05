@@ -26,6 +26,7 @@ const userSchema = new Schema({
     type: String,
     default: 'suscriber'
   },
+  purchaseHistory: [Object],
   resetToken: String,
   resetTokenExpiration: Date,
   cart: {

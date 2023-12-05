@@ -1,7 +1,6 @@
 const SiteContent = require("../models/SiteContent");
 
 exports.getAllContent = (req, res) => {
-    console.log('requested.....................')
     SiteContent.find()
     .then(items => {
         res.status(200).send({ document: items[0] })
