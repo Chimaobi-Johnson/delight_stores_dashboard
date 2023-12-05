@@ -30,8 +30,17 @@ exports.getAllProducts = (req, res) => {
           as: "discountDetails",
         },
       },
-      { $project: { imagesId: 0 } },
-
+      {
+        $project: {
+          name: 1,
+          price: 1,
+          imagesUrl: 1,
+          category: 1,
+          categoryDetails: 1,
+          discount: 1,
+          discountDetails: 1,
+        },
+      },
     ])
       .then((products) => {
         res.status(200).send({ products: products });
