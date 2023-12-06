@@ -7,12 +7,12 @@ const { productReceiptConfirmation } = require('../html/emailTemplate');
 const User = require('../models/User');
 
 exports.storePaymentDetails = (req, res) => {
-    const { email, products, purchasedBy } = req.body
+    const { userEmail, products, purchasedBy } = req.body
   
     sgMail.setApiKey(keys.sendGridAPI)
-
+    console.log(req.body)
     const msg = {
-        to: email,
+        to: userEmail,
         from: 'Dlight Stores <support@delighthomewarestores.com>',
         subject: 'Thank you for shopping with us',
         text: 'Your order has been confirmed',
@@ -20,7 +20,6 @@ exports.storePaymentDetails = (req, res) => {
       }
     const payment = new Payment({
         ...req.body,
-        userEmail: email
     })
     if(purchasedBy) { // a user is logged in
         payment.save().then(data => {

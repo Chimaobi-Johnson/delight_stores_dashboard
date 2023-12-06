@@ -1,5 +1,5 @@
 module.exports.productReceiptConfirmation = (data) => {
-  const { firstName, lastName, city, streetname, houseno, deliveryType, email, products, paymentRef } = data;
+  const { firstName, lastName, shippingLocation, amount, city, streetname, houseno, deliveryType, products, paymentRef } = data;
 
   let deliveryLocation = 'Dlight stores - Pick up'
   if(deliveryType === 'delivery') {
@@ -269,6 +269,9 @@ body {font-family: 'Poppins', sans-serif;}
       </tr>
     </tbody>
   </table>
+
+
+
     ${products.map(product => (
       `
       <table
@@ -393,7 +396,7 @@ body {font-family: 'Poppins', sans-serif;}
                                     color: #80817f;
                                     font-size: 12px;
                                   "
-                                  >${product.name} <span> (${product.size ? product.size.label : ''} ${product.color ? product.color.label : '' })</span></span
+                                  >${product.name} <span> (${product.size ? product.size.label : ''} ${product.color ? product.color.label : '*' })</span></span
                                 >
                               </div>
                               <div></div>
@@ -563,8 +566,302 @@ body {font-family: 'Poppins', sans-serif;}
       `
     ))}
 
-    
-    
+  
+  
+  
+  
+  
+  <table
+  class="module"
+  role="module"
+  data-type="divider"
+  border="0"
+  cellpadding="0"
+  cellspacing="0"
+  width="100%"
+  style="table-layout: fixed"
+  data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1"
+>
+  <tbody>
+    <tr>
+      <td
+        style="padding: 0px 40px 0px 40px"
+        role="module-content"
+        height="100%"
+        valign="top"
+        bgcolor=""
+      >
+        <table
+          border="0"
+          cellpadding="0"
+          cellspacing="0"
+          align="center"
+          width="100%"
+          height="2px"
+          style="
+            line-height: 2px;
+            font-size: 2px;
+          "
+        >
+          <tbody>
+            <tr>
+              <td
+                style="padding: 0px 0px 2px 0px"
+                bgcolor="#80817f"
+              ></td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<table
+  border="0"
+  cellpadding="0"
+  cellspacing="0"
+  align="center"
+  width="100%"
+  role="module"
+  data-type="columns"
+  style="padding: 0px 40px 0px 40px"
+  bgcolor="#FFFFFF"
+  data-distribution="1,1,1"
+>
+  <tbody>
+    <tr role="module-content">
+      <td height="100%" valign="top">
+        <table
+          width="173"
+          style="
+            width: 173px;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin: 0px 0px 0px 0px;
+          "
+          cellpadding="0"
+          cellspacing="0"
+          align="left"
+          border="0"
+          bgcolor=""
+          class="column column-0"
+        >
+          <tbody>
+            <tr>
+              <td
+                style="
+                  padding: 0px;
+                  margin: 0px;
+                  border-spacing: 0;
+                "
+              >
+                <table
+                  class="module"
+                  role="module"
+                  data-type="text"
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="table-layout: fixed"
+                  data-muid="64573b96-209a-4822-93ec-5c5c732af15c.2"
+                  data-mc-module-version="2019-10-22"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        style="
+                          padding: 15px 0px 15px
+                            0px;
+                          line-height: 22px;
+                          text-align: inherit;
+                        "
+                        height="100%"
+                        valign="top"
+                        bgcolor=""
+                        role="module-content"
+                      >
+                        <div>
+                          <div
+                            style="
+                              font-family: inherit;
+                              text-align: center;
+                            "
+                          >
+                            <span
+                              style="
+                                color: #80817f;
+                                font-size: 12px;
+                                font-weight: bold;
+                              "
+                              >TOTAL <span> ${deliveryType === 'delivery' ? '+ '  + shippingLocation.locationPrice  + ' shipping cost' : ''}</span></span
+                            >
+                          </div>
+                          <div></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table
+          width="173"
+          style="
+            width: 173px;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin: 0px 0px 0px 0px;
+          "
+          cellpadding="0"
+          cellspacing="0"
+          align="left"
+          border="0"
+          bgcolor=""
+          class="column column-1"
+        >
+          <tbody>
+            <tr>
+              <td
+                style="
+                  padding: 0px;
+                  margin: 0px;
+                  border-spacing: 0;
+                "
+              >
+                <table
+                  class="module"
+                  role="module"
+                  data-type="text"
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="table-layout: fixed"
+                  data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.2"
+                  data-mc-module-version="2019-10-22"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        style="
+                          padding: 15px 0px 15px
+                            0px;
+                          line-height: 22px;
+                          text-align: inherit;
+                        "
+                        height="100%"
+                        valign="top"
+                        bgcolor=""
+                        role="module-content"
+                      >
+                        <div>
+                          <div
+                            style="
+                              font-family: inherit;
+                              text-align: center;
+                            "
+                          >
+                            <span
+                              style="
+                                color: #80817f;
+                                font-size: 12px;
+                              "
+                              >${``}</span
+                            >
+                          </div>
+                          <div></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table
+          width="173"
+          style="
+            width: 173px;
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin: 0px 0px 0px 0px;
+          "
+          cellpadding="0"
+          cellspacing="0"
+          align="left"
+          border="0"
+          bgcolor=""
+          class="column column-2"
+        >
+          <tbody>
+            <tr>
+              <td
+                style="
+                  padding: 0px;
+                  margin: 0px;
+                  border-spacing: 0;
+                "
+              >
+                <table
+                  class="module"
+                  role="module"
+                  data-type="text"
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  width="100%"
+                  style="table-layout: fixed"
+                  data-muid="64573b96-209a-4822-93ec-5c5c732af15c.1.1.1"
+                  data-mc-module-version="2019-10-22"
+                >
+                  <tbody>
+                    <tr>
+                      <td
+                        style="
+                          padding: 15px 0px 15px
+                            0px;
+                          line-height: 22px;
+                          text-align: inherit;
+                        "
+                        height="100%"
+                        valign="top"
+                        bgcolor=""
+                        role="module-content"
+                      >
+                        <div>
+                          <div
+                            style="
+                              font-family: inherit;
+                              text-align: center;
+                            "
+                          >
+                            <span
+                              style="
+                                color: #80817f;
+                                font-size: 12px;
+                                font-weight: bold;
+                              "
+                              >N${amount / 100}</span
+                            >
+                          </div>
+                          <div></div>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
     
   <table class="module" role="module" data-type="divider" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c614d8b1-248a-48ea-a30a-8dd0b2c65e10.1.2.1">
     <tbody>
@@ -600,7 +897,7 @@ body {font-family: 'Poppins', sans-serif;}
             <table border="0" cellpadding="0" cellspacing="0" class="wrapper-mobile" style="text-align:center;">
               <tbody>
                 <tr>
-                <td align="center" bgcolor="#f5f8fd" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;"><a href="https://marvtech.herokuapp.com" style="background-color:#f5f8fd; border:1px solid #f5f8fd; border-color:#f5f8fd; border-radius:25px; border-width:1px; color:##c9c9c9; display:inline-block; font-size:10px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:5px 18px 5px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:helvetica,sans-serif;" target="_blank">♥ POWERED BY MARVTECH</a></td>
+                <td align="center" bgcolor="#f5f8fd" class="inner-td" style="border-radius:6px; font-size:8px; text-align:center; background-color:inherit;"><a href="https://marvtech.herokuapp.com" style="background-color:#f5f8fd; border:1px solid #f5f8fd; border-color:#f5f8fd; border-radius:25px; border-width:1px; color:##c9c9c9; display:inline-block; font-size:5px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:5px 18px 5px 18px; text-align:center; text-decoration:none; border-style:solid; font-family:helvetica,sans-serif;" target="_blank">♥ POWERED BY MARVTECH</a></td>
                 </tr>
               </tbody>
             </table>
