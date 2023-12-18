@@ -1,5 +1,5 @@
 module.exports.productReceiptConfirmation = (data) => {
-  const { firstName, lastName, shippingLocation, amount, city, streetname, houseno, deliveryType, products, paymentRef } = data;
+  const { firstName, lastName, shippingLocation, amount, city, streetname, houseno, additionalInfo, deliveryType, products, paymentRef } = data;
 
   let deliveryLocation = 'Dlight stores - Pick up'
   if(deliveryType === 'delivery') {
@@ -208,6 +208,7 @@ body {font-family: 'Poppins', sans-serif;}
         <td style="padding:0px 40px 30px 40px; line-height:22px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><h4 style="text-align: inherit; font-family: inherit">SHIP TO:</h4>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Name: </strong></span><span style="color: #80817f; font-size: 12px">${firstName} ${lastName}</span></div>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Address: </strong></span><span style="color: #80817f; font-size: 12px">${deliveryLocation}</span></div>
+<div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Additional Info: </strong></span><span style="color: #80817f; font-size: 12px">${additionalInfo}</span></div>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Receipt No: </strong></span><span style="color: #80817f; font-size: 12px">${paymentRef.reference}</span></div>
 <div style="font-family: inherit; text-align: inherit"><span style="color: #80817f; font-size: 12px"><strong>Est. Delivery time</strong></span><span style="color: #80817f; font-size: 12px">: ${receiptInfo.estDeliveryTime}</span></div><div></div></div></td>
       </tr>

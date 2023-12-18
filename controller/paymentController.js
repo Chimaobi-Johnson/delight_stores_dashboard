@@ -10,9 +10,9 @@ exports.storePaymentDetails = (req, res) => {
     const { userEmail, products, purchasedBy } = req.body
   
     sgMail.setApiKey(keys.sendGridAPI)
-    console.log(req.body)
     const msg = {
         to: userEmail,
+        bcc: ['support@delighthomewarestores.com', 'chimaobi.dev@gmail.com'],
         from: 'Dlight Stores <support@delighthomewarestores.com>',
         subject: 'Thank you for shopping with us',
         text: 'Your order has been confirmed',
