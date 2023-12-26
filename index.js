@@ -15,7 +15,7 @@ const app = express();
 app.use(
   cors({
     origin: 'https://delighthomewarestores.com',
-    allowedHeaders: 'Content-Type,Authorization',
+    // allowedHeaders: 'Content-Type,Authorization',
     // origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
@@ -48,8 +48,8 @@ const siteContentRoutes = require('./routes/siteContentRoutes');
 
 app.use(cookieSession({
     name: 'session',
-    sameSite: 'none',
-    secure: true,
+    sameSite: 'lax',
+    // secure: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     keys: [keys.cookieKey]
 }))

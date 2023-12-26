@@ -73,8 +73,8 @@ exports.getAllProducts = (req, res) => {
       { $project: { imagesId: 0 } },
     ])
       .sort({ createdAt: -1 })
-      .skip((currentPage - 1) * perPage)
-      .limit(perPage)
+      // .skip((currentPage - 1) * perPage)
+      // .limit(perPage)
       .then((products) => {
         res.status(200).send({ products: products });
       })
