@@ -1,5 +1,4 @@
 const passport = require("passport");
-const mongoose = require("mongoose");
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcryptjs');
 const User = require("../models/User");

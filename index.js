@@ -47,6 +47,8 @@ const siteContentRoutes = require('./routes/siteContentRoutes');
 
 app.use(cookieSession({
     name: 'session',
+    sameSite: 'none',
+    secure,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     keys: [keys.cookieKey]
 }))
