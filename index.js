@@ -49,7 +49,7 @@ const siteContentRoutes = require('./routes/siteContentRoutes');
 app.use(cookieSession({
     name: 'session',
     sameSite: 'lax',
-    domain: 'delight-stores-dashboard.herokuapp.com',
+    domain: 'delighthomewarestores.com',
     // secure: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
     keys: [keys.cookieKey]
