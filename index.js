@@ -12,18 +12,18 @@ const cors = require('cors')
 
 const app = express();
 
-let whitelist = ['https://delighthomewarestores.com', 'https://delight-stores-backend-55d7b8765702.herokuapp.com', 'http://localhost:3001']
-let corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+// let whitelist = ['https://delighthomewarestores.com', 'https://delight-stores-backend-55d7b8765702.herokuapp.com', 'http://localhost:3001']
+// let corsOptions = {
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   }
+// }
 
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
 
 // app.use(
 //   cors({
