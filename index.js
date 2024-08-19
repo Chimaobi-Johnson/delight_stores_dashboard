@@ -25,15 +25,15 @@ const app = express();
 
 // app.use(cors(corsOptions))
 
-// app.use(
-//   cors({
-//     // origin: 'https://delighthomewarestores.com',
-//     // allowedHeaders: 'Content-Type, Authorization',
-//     origin: 'http://localhost:3001',
-//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-//     credentials: true
-//   })
-// )
+app.use(
+  cors({
+    origin: 'https://delighthomewarestores.com',
+    // allowedHeaders: 'Content-Type, Authorization',
+    // origin: 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    credentials: true
+  })
+)
 
 
 
@@ -73,12 +73,13 @@ app.use(passport.initialize());
 app.use(passport.authenticate('session'));
 
 app.use(bodyParser.json()) // to parse incoming json data
+
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
 // app.use((req, res, next) => {
 //   // add in config file dynamically
-//   // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  // res.setHeader('Access-Control-Allow-Origin', '*');
 //   res.setHeader('Access-Control-Allow-Origin', '*');
 //   // res.setHeader('Access-Control-Allow-Credentials', true)
 //   res.setHeader(

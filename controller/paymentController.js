@@ -8,6 +8,8 @@ const User = require('../models/User');
 
 exports.storePaymentDetails = (req, res) => {
     console.log(req.body)
+    console.log('sdsd')
+
     const { userEmail, products, purchasedBy } = req.body
   
     sgMail.setApiKey(keys.sendGridAPI)
