@@ -7,6 +7,7 @@ const { productReceiptConfirmation } = require('../html/emailTemplate');
 const User = require('../models/User');
 
 exports.storePaymentDetails = (req, res) => {
+    console.log(req.body)
     const { userEmail, products, purchasedBy } = req.body
   
     sgMail.setApiKey(keys.sendGridAPI)

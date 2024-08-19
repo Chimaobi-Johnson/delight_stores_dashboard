@@ -12,15 +12,28 @@ const cors = require('cors')
 
 const app = express();
 
-app.use(
-  cors({
-    origin: 'https://delighthomewarestores.com',
-    // allowedHeaders: 'Content-Type, Authorization',
-    // origin: 'http://localhost:3000',
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    credentials: true
-  })
-)
+let whitelist = ['https://delighthomewarestores.com', 'http://localhost:3001']
+let corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  }
+}
+
+app.use(cors(corsOptions))
+
+// app.use(
+//   cors({
+//     // origin: 'https://delighthomewarestores.com',
+//     // allowedHeaders: 'Content-Type, Authorization',
+//     origin: 'http://localhost:3001',
+//     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+//     credentials: true
+//   })
+// )
 
 
 
