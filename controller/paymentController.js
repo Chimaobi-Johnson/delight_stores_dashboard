@@ -7,7 +7,6 @@ const { productReceiptConfirmation } = require('../html/emailTemplate');
 const User = require('../models/User');
 
 exports.storePaymentDetails = (req, res) => {
-    console.log(req.body)
     console.log('sdsd')
 
     const { userEmail, products, purchasedBy } = req.body
@@ -15,7 +14,7 @@ exports.storePaymentDetails = (req, res) => {
     sgMail.setApiKey(keys.sendGridAPI)
     const msg = {
         to: userEmail,
-        bcc: ['support@delighthomewarestores.com', 'chimaobi.dev@gmail.com'],
+        bcc: ['support@delighthomewarestores.com'],
         from: 'Dlight Stores <support@delighthomewarestores.com>',
         subject: 'Thank you for shopping with us',
         text: 'Your order has been confirmed',
